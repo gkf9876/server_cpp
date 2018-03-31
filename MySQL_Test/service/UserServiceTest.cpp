@@ -1,0 +1,265 @@
+#include "UserServiceTest.h"
+
+UserServiceTest::UserServiceTest()
+{
+	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
+	this->userService = new UserService(this->dataSource);
+	this->userDao = new UserDao(this->dataSource);
+
+	this->user1 = new User();
+	user1->setSock(1);
+	user1->setName("GKF1234");
+	user1->setPassword("1234");
+	user1->setXpos(10);
+	user1->setYpos(12);
+	user1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1");
+	user1->setSeeDirection(29);
+	user1->setAction(50);
+	user1->setLogin(1);
+	user1->setLastLogin("2018-03-17 00:42:57");
+	user1->setLastLogout("2018-03-17 00:43:00");
+	user1->setJoinDate("2018-01-01 00:00:00");
+
+	this->user2 = new User();
+	user2->setSock(2);
+	user2->setName("GKF5678");
+	user2->setPassword("5678");
+	user2->setXpos(27);
+	user2->setYpos(4);
+	user2->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2");
+	user2->setSeeDirection(29);
+	user2->setAction(40);
+	user2->setLogin(1);
+	user2->setLastLogin("2018-03-17 10:42:57");
+	user2->setLastLogout("2018-03-17 10:43:00");
+	user2->setJoinDate("2018-01-01 10:00:00");
+
+	this->user3 = new User();
+	user3->setSock(3);
+	user3->setName("GKF9012");
+	user3->setPassword("9012");
+	user3->setXpos(37);
+	user3->setYpos(3);
+	user3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3");
+	user3->setSeeDirection(29);
+	user3->setAction(1);
+	user3->setLogin(1);
+	user3->setLastLogin("2018-03-17 00:42:57");
+	user3->setLastLogout("2018-03-17 00:43:00");
+	user3->setJoinDate("2018-01-01 00:00:00");
+}
+
+UserServiceTest::~UserServiceTest()
+{
+	delete this->dataSource;
+	delete this->userService;
+	delete this->userDao;
+
+	delete this->user1;
+	delete this->user2;
+	delete this->user3;
+}
+
+void UserServiceTest::assertThat(int value, int compValue)
+{
+	if (value != compValue)
+		std::cout << "\tExpected is: <" << compValue << "> but: was <" << value << ">" << std::endl;
+}
+
+void UserServiceTest::assertThat(string value, string compValue)
+{
+	if (value.compare(compValue) != 0)
+		std::cout << "\tExpected is: <" << compValue.c_str() << "> but: was <" << value.c_str() << ">" << std::endl;
+}
+
+void UserServiceTest::checkSameUser(User user1, User user2)
+{
+	assertThat(user1.getSock(), user2.getSock());
+	assertThat(user1.getName(), user2.getName());
+	assertThat(user1.getPassword(), user2.getPassword());
+	assertThat(user1.getXpos(), user2.getXpos());
+	assertThat(user1.getYpos(), user2.getYpos());
+	assertThat(user1.getField(), user2.getField());
+	assertThat(user1.getSeeDirection(), user2.getSeeDirection());
+	assertThat(user1.getAction(), user2.getAction());
+	assertThat(user1.getLogin(), user2.getLogin());
+	assertThat(user1.getLastLogin(), user2.getLastLogin());
+	assertThat(user1.getLastLogout(), user2.getLastLogout());
+	assertThat(user1.getJoinDate(), user2.getJoinDate());
+}
+
+void UserServiceTest::run()
+{
+	getUserInfo1();
+	getUserInfo2();
+	updateLogout();
+	updateLogin();
+	getLoginUserAll();
+	getFieldLoginUserAll();
+}
+
+void UserServiceTest::getUserInfo1()
+{
+	std::cout << "UserServiceTest : getUserInfo1()" << std::endl;
+
+	userDao->deleteAll();
+	userDao->add(*user1);
+	userDao->add(*user2);
+	userDao->add(*user3);
+
+	User getUser1 = userService->getUserInfo(user1->getName());
+	checkSameUser(getUser1, *user1);
+	User getUser2 = userService->getUserInfo(user2->getName());
+	checkSameUser(getUser2, *user2);
+	User getUser3 = userService->getUserInfo(user3->getName());
+	checkSameUser(getUser3, *user3);
+}
+
+void UserServiceTest::getUserInfo2()
+{
+	std::cout << "UserServiceTest : getUserInfo2()" << std::endl;
+
+	userDao->deleteAll();
+	userDao->add(*user1);
+	userDao->add(*user2);
+	userDao->add(*user3);
+
+	User getUser1 = userService->getUserInfo(user1->getSock());
+	checkSameUser(getUser1, *user1);
+	User getUser2 = userService->getUserInfo(user2->getSock());
+	checkSameUser(getUser2, *user2);
+	User getUser3 = userService->getUserInfo(user3->getSock());
+	checkSameUser(getUser3, *user3);
+}
+
+void UserServiceTest::updateLogout()
+{
+	std::cout << "UserServiceTest : updateLogout()" << std::endl;
+
+	userDao->deleteAll();
+	userDao->add(*user1);
+	userDao->add(*user2);
+	userDao->add(*user3);
+
+	userService->updateLogout(user1->getName());
+	user1->setLogin(0);
+	user1->setSock(0);
+	userService->updateLogout(user3->getName());
+	user3->setLogin(0);
+	user3->setSock(0);
+
+	User user1Update = userService->getUserInfo(user1->getName());
+	checkSameUser(user1Update, *user1);
+	User user2Update = userService->getUserInfo(user2->getName());
+	checkSameUser(user2Update, *user2);
+	User user3Update = userService->getUserInfo(user3->getName());
+	checkSameUser(user3Update, *user3);
+}
+
+void UserServiceTest::updateLogin()
+{
+	std::cout << "UserServiceTest : updateLogin()" << std::endl;
+
+	userDao->deleteAll();
+
+	user1->setLogin(0);
+	userDao->add(*user1);
+	user1->setLogin(1);
+
+	userDao->add(*user2);
+
+	user3->setLogin(0);
+	userDao->add(*user3);
+	user3->setLogin(1);
+
+	userService->updateLogin(user1->getSock(), user1->getName());
+	userService->updateLogin(user3->getSock(), user3->getName());
+
+	User user1Update = userService->getUserInfo(user1->getName());
+	checkSameUser(user1Update, *user1);
+	User user2Update = userService->getUserInfo(user2->getName());
+	checkSameUser(user2Update, *user2);
+	User user3Update = userService->getUserInfo(user3->getName());
+	checkSameUser(user3Update, *user3);
+}
+
+void UserServiceTest::getLoginUserAll()
+{
+	std::cout << "UserServiceTest : getLoginUserAll()" << std::endl;
+
+	userDao->deleteAll();
+
+	user1->setLogin(1);
+	userDao->add(*user1);
+
+	user2->setLogin(1);
+	userDao->add(*user2);
+
+	user3->setLogin(1);
+	userDao->add(*user3);
+
+	list<User> loginUserList = userService->getLoginUserAll();
+	list<User>::iterator iter;
+	iter = loginUserList.begin();
+	checkSameUser(*iter, *user1);
+
+	iter++;
+	checkSameUser(*iter, *user2);
+
+	iter++;
+	checkSameUser(*iter, *user3);
+
+	user2->setLogin(0);
+	userService->updateLogout(user2->getName());
+
+	loginUserList = userService->getLoginUserAll();
+	iter = loginUserList.begin();
+	checkSameUser(*iter, *user1);
+
+	iter++;
+	checkSameUser(*iter, *user3);
+}
+
+void UserServiceTest::getFieldLoginUserAll()
+{
+	std::cout << "UserServiceTest : getFieldLoginUserAll()" << std::endl;
+
+	userDao->deleteAll();
+	assertThat(userService->getUserCount(user1->getField()), 0);
+
+	user1->setLogin(1);
+	userDao->add(*user1);
+	assertThat(userService->getUserCount(user1->getField()), 1);
+
+	user2->setLogin(1);
+	user2->setField(user1->getField());
+	userDao->add(*user2);
+	assertThat(userService->getUserCount(user1->getField()), 2);
+
+	user3->setLogin(1);
+	user3->setField(user1->getField());
+	userDao->add(*user3);
+	assertThat(userService->getUserCount(user1->getField()), 3);
+
+	list<User> fieldLoginUserList = userService->getFieldLoginUserAll(user1->getField());
+	list<User>::iterator iter;
+	iter = fieldLoginUserList.begin();
+	checkSameUser(*iter, *user1);
+
+	iter++;
+	checkSameUser(*iter, *user2);
+
+	iter++;
+	checkSameUser(*iter, *user3);
+
+	user2->setLogin(0);
+	user2->setField("abc");
+	userService->updateLogout(user2->getName());
+
+	fieldLoginUserList = userService->getFieldLoginUserAll(user1->getField());
+	iter = fieldLoginUserList.begin();
+	checkSameUser(*iter, *user1);
+
+	iter++;
+	checkSameUser(*iter, *user3);
+}
