@@ -1,4 +1,4 @@
-#include "GameServer.h"
+﻿#include "GameServer.h"
 
 GameServer::GameServer(DataSource* dataSource)
 {
@@ -116,13 +116,13 @@ void GameServer::accept_win()
 					{
 						switch (code)
 						{
-						case REQUEST_USER_INFO:			//\C0\AF\C0\FA \C1\A4\BA\B8 \BF\E4û\BD\C3
+						case REQUEST_USER_INFO:
 							getUserInfo(reads.fd_array[i], buffer);
 							break;
-						case CHATTING_PROCESS:			//ä\C6ý\C3
+						case CHATTING_PROCESS:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
-						case REQUEST_LOGIN:				//\B7α\D7\C0\CE \BD\C2\C0ν\C3
+						case REQUEST_LOGIN:
 							updateLogin(reads.fd_array[i], buffer);
 							break;
 						case USER_MOVE_UPDATE:
@@ -131,25 +131,21 @@ void GameServer::accept_win()
 						case OTHER_USER_MAP_MOVE:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
-						case REQUEST_JOIN:			//\C0\AF\C0\FA ȸ\BF\F8\B0\A1\C0Խ\C3
+						case REQUEST_JOIN:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
 						case UPDATE_LOGIN_TIME:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
-							//\BF\EC\C0\FA\B0\A1 Ÿ\C0ϸ\CA \C0ڷ\E1 \BF\E4û\BD\C3
 						case REQUEST_TILED_MAP:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
-							//\C0\AF\C0\FA\B0\A1 \C0̹\CC\C1\F6 \C0ڷ\E1 \BF\E4û\BD\C3
 						case REQUEST_IMAGE:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
-							//\C0\AF\C0\FA\B0\A1 \B6\A5\BF\A1 \B6\B3\BE\EE\C1\F8 \BE\C6\C0\CC\C5\DB\C0\BB \B8\D4\C0\BB\BD\C3
 						case DELETE_FIELD_ITEM:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
-							//\B8\CA\C1\A4\BA\B8\B8\A6 \BAҷ\AF\BFö\A7
 						case REQUEST_FIELD_ITEM_INFO:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
@@ -244,7 +240,7 @@ void GameServer::getUserInfo(SOCKET sock, const char* name)
 	}
 	catch (const runtime_error& error)
 	{
-		sendRequest(sock, REQUEST_ERROR, error.what(), strlen(error.what()));
+		sendRequest(sock, REQUEST_ERROR, error.what(), strlen(error.what()) + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -260,6 +256,7 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 	{
 		loginUser = userService->getUserInfo(name);
 		userService->updateLogin(sock, name);
+		sendRequest(sock, REQUEST_LOGIN, "login okey", strlen("login okey") + 1);
 
 		loginUserList = userService->getFieldLoginUserAll(loginUser.getField());
 
@@ -273,6 +270,7 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 	}
 	catch (const runtime_error& error)
 	{
+		sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -518,6 +516,7 @@ void GameServer::updateLogin(int sock, const char* name)
 	{
 		loginUser = userService->getUserInfo(name);
 		userService->updateLogin(sock, name);
+		sendRequest(sock, REQUEST_LOGIN, "login okey", strlen("login okey") + 1);
 
 		loginUserList = userService->getFieldLoginUserAll(loginUser.getField());
 
@@ -534,6 +533,7 @@ void GameServer::updateLogin(int sock, const char* name)
 	}
 	catch (const runtime_error& error)
 	{
+		sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail"));
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }

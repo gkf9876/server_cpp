@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 #ifdef _WIN32
 #include <Winsock2.h>
@@ -13,6 +14,9 @@
 #include <sys/socket.h>
 #endif
 #include "domain/User.h"
+#include "domain/InventoryInfo.h"
+#include "domain/Monster.h"
+#include "domain/MapInfo.h"
 
 #define BUF_SIZE 1024
 #define EPOLL_SIZE 50
@@ -46,9 +50,28 @@ private:
 	int hSocket;
 	struct sockaddr_in servAddr;
 #endif
+	User mainUser;
+	vector<User*> * usersInfo = NULL;								//현재 맵의 다른 유저들
+	vector<MapInfo*> * objectInfo = NULL;							//현재 맵의 오브젝트
+	vector<MapInfo*> * monsterInfo = NULL;							//현재 맵의 몬스터
+	InventoryInfo * inventory_items_Info[3][5] = { NULL, };				//아이템창에 있는 아이템 목록
+
+	bool isLogin = false;
+	bool isGetUserInfo = false;
+	bool popupLoginFail = false;
 public:
 	GameClient();
 	~GameClient();
+	void setMainUser(User user);
+	User getMainUser();
+	void addUsersInfo(User* user);
+
+	void setIsLogin(bool value);
+	bool getIsLogin();
+	void setGetUserInfo(bool value);
+	bool getGetUserInfo();
+	void setPopupLoginFail(bool value);
+	bool getPopupLoginFail();
 
 	void ErrorHandling(const char* message);
 
@@ -60,6 +83,9 @@ public:
 
 	void sendRequest(int code, const char* data, int size);
 	int recvRequest(int* code, char* data);
+
+	void requestLogin(const char * userName);
+	void getUserInfo(const char* userName);
 };
 
 #endif

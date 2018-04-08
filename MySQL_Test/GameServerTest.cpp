@@ -1,6 +1,6 @@
 #include "GameServerTest.h"
 
-int flag;
+int flag = 1;
 
 GameServerTest::GameServerTest()
 {
@@ -35,6 +35,13 @@ GameServerTest::GameServerTest()
 		sprintf(imsi, "2018-01-01 00:00:%02d", i);
 		this->user[i].setJoinDate(imsi);
 	}
+
+#ifdef _WIN32
+	InitializeCriticalSection(&cs);
+#elif __linux__
+	pthread_mutex_init(&mutex, NULL);
+#endif
+
 }
 
 GameServerTest::~GameServerTest()
@@ -51,18 +58,67 @@ GameServerTest::~GameServerTest()
 
 void GameServerTest::assertThat(int value, int compValue)
 {
+#ifdef _WIN32
+	EnterCriticalSection(&cs);
+#elif __linux__
+	pthread_mutex_lock(&mutex);
+#endif
+
 	if (value != compValue)
-		std::cout << "\tExpected is: <" << compValue << "> but: was <" << value << ">" << std::endl;
+		printf("\tExpected is: <%d> but: was <%d>\n", compValue, value);
+
+#ifdef _WIN32
+	LeaveCriticalSection(&cs);
+#elif __linux__
+	pthread_mutex_unlock(&mutex);
+#endif
+}
+
+void GameServerTest::assertThat(char* value, char* compValue)
+{
+#ifdef _WIN32
+	EnterCriticalSection(&cs);
+#elif __linux__
+	pthread_mutex_lock(&mutex);
+#endif
+
+	if (strcmp(value, compValue))
+		printf("\tExpected is: <%s> but: was <%s>\n", compValue, value);
+
+#ifdef _WIN32
+	LeaveCriticalSection(&cs);
+#elif __linux__
+	pthread_mutex_unlock(&mutex);
+#endif
 }
 
 void GameServerTest::assertThat(string value, string compValue)
 {
+#ifdef _WIN32
+	EnterCriticalSection(&cs);
+#elif __linux__
+	pthread_mutex_lock(&mutex);
+#endif
+
 	if (value.compare(compValue) != 0)
-		std::cout << "\tExpected is: <" << compValue.c_str() << "> but: was <" << value.c_str() << ">" << std::endl;
+		printf("\tExpected is: <%s> but: was <%s>\n", compValue.c_str(), value.c_str());
+
+#ifdef _WIN32
+	LeaveCriticalSection(&cs);
+#elif __linux__
+	pthread_mutex_unlock(&mutex);
+#endif
 }
 
 void GameServerTest::checkSameUser(User user1, User user2)
 {
+
+#ifdef _WIN32
+	EnterCriticalSection(&cs);
+#elif __linux__
+	pthread_mutex_lock(&mutex);
+#endif
+
 	assertThat(user1.getSock(), user2.getSock());
 	assertThat(user1.getName(), user2.getName());
 	assertThat(user1.getPassword(), user2.getPassword());
@@ -75,6 +131,13 @@ void GameServerTest::checkSameUser(User user1, User user2)
 	assertThat(user1.getLastLogin(), user2.getLastLogin());
 	assertThat(user1.getLastLogout(), user2.getLastLogout());
 	assertThat(user1.getJoinDate(), user2.getJoinDate());
+
+#ifdef _WIN32
+	LeaveCriticalSection(&cs);
+#elif __linux__
+	pthread_mutex_unlock(&mutex);
+#endif
+
 }
 
 void GameServerTest::run()
@@ -89,7 +152,6 @@ void GameServerTest::run()
 		userDao->add(user[i]);
 	}
 #ifdef _WIN32
-	flag = 1;
 	hServerThread = (HANDLE)_beginthreadex(NULL, 0, ServerThreadFunc, this, 0, NULL);
 	WaitForSingleObject(hServerThread, 5);
 
@@ -120,12 +182,9 @@ void GameServerTest::run()
 	WaitForSingleObject(hClientThread[7], INFINITE);
 	WaitForSingleObject(hClientThread[8], INFINITE);
 	WaitForSingleObject(hClientThread[9], INFINITE);
-	printf("Hello World\n");
-	flag = 0;
 
 	WaitForSingleObject(hServerThread, INFINITE);
 #elif __linux__
-	flag = 1;
 	pthread_create(&hServerThread, NULL, ServerThreadFunc, this);
 	sleep(0.005);
 
@@ -150,7 +209,6 @@ void GameServerTest::run()
 	pthread_join(hClientThread[7], &thr_ret);
 	pthread_join(hClientThread[8], &thr_ret);
 	pthread_join(hClientThread[9], &thr_ret);
-	//flag = 0;
 
 	pthread_join(hServerThread, &thr_ret);
 #endif
@@ -212,6 +270,7 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -220,11 +279,18 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc0, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc0, arg);
 #endif
 
-	gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(0).getName(), strlen(gameServerTest->getUser(0).getName()) + 1);
+	printf("GameServerTest: REQUEST_LOGIN -> client0\n");
+	gameClient->requestLogin("unknown_id");
+	gameClient->requestLogin(gameServerTest->getUser(0).getName());
+
+	printf("GameServerTest : REQUEST_USER_INFO -> client0\n");
+	gameClient->getUserInfo("unknown_id");
+	gameClient->getUserInfo(gameServerTest->getUser(0).getName());
 #ifdef _WIN32
 	Sleep(5);
 #elif __linux__
@@ -259,11 +325,36 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch(code)
 		{
-		case OTHER_USER_MAP_MOVE:
+		case REQUEST_USER_INFO:
 			{
 				User user;
 				memcpy(&user, message, sizeof(User));
-				printf("code : %d, name : %s\n", code, user.getName());
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(0);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
+		case OTHER_USER_MAP_MOVE:
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
 			}
 			break;
 		default:
@@ -287,6 +378,7 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -295,11 +387,18 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc1, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc1, arg);
 #endif
 
-	gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(1).getName(), strlen(gameServerTest->getUser(1).getName()) + 1);
+	printf("GameServerTest: REQUEST_LOGIN -> client1\n");
+	gameClient->requestLogin("unknown_id");
+	gameClient->requestLogin(gameServerTest->getUser(1).getName());
+
+	printf("GameServerTest : REQUEST_USER_INFO -> client1\n");
+	gameClient->getUserInfo("unknown_id");
+	gameClient->getUserInfo(gameServerTest->getUser(1).getName());
 #ifdef _WIN32
 	Sleep(5);
 #elif __linux__
@@ -334,11 +433,36 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch (code)
 		{
-		case OTHER_USER_MAP_MOVE:
+		case REQUEST_USER_INFO:
 			{
 				User user;
 				memcpy(&user, message, sizeof(User));
-				printf("code : %d, name : %s\n", code, user.getName());
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(1);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
+		case OTHER_USER_MAP_MOVE:
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
 			}
 			break;
 		default:
@@ -362,6 +486,7 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -370,11 +495,18 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc2, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc2, arg);
 #endif
 
-	gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(2).getName(), strlen(gameServerTest->getUser(2).getName()) + 1);
+	printf("GameServerTest: REQUEST_LOGIN -> client2\n");
+	gameClient->requestLogin("unknown_id");
+	gameClient->requestLogin(gameServerTest->getUser(2).getName());
+
+	printf("GameServerTest : REQUEST_USER_INFO -> client2\n");
+	gameClient->getUserInfo("unknown_id");
+	gameClient->getUserInfo(gameServerTest->getUser(2).getName());
 #ifdef _WIN32
 	Sleep(5);
 #elif __linux__
@@ -409,11 +541,36 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch (code)
 		{
-		case OTHER_USER_MAP_MOVE:
+		case REQUEST_USER_INFO:
 			{
 				User user;
 				memcpy(&user, message, sizeof(User));
-				printf("code : %d, name : %s\n", code, user.getName());
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(2);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
+		case OTHER_USER_MAP_MOVE:
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
 			}
 			break;
 		default:
@@ -437,6 +594,7 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -445,12 +603,19 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc3, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc3, arg);
 #endif
 
 	{
-		gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(3).getName(), strlen(gameServerTest->getUser(3).getName()) + 1);
+		printf("GameServerTest: REQUEST_LOGIN -> client3\n");
+		gameClient->requestLogin("unknown_id");
+		gameClient->requestLogin(gameServerTest->getUser(3).getName());
+
+		printf("GameServerTest : REQUEST_USER_INFO -> client3\n");
+		gameClient->getUserInfo("unknown_id");
+		gameClient->getUserInfo(gameServerTest->getUser(3).getName());
 #ifdef _WIN32
 		Sleep(5);
 #elif __linux__
@@ -486,13 +651,38 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch (code)
 		{
+		case REQUEST_USER_INFO:
+			{
+				User user;
+				memcpy(&user, message, sizeof(User));
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(3);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
 		case OTHER_USER_MAP_MOVE:
-		{
-			User user;
-			memcpy(&user, message, sizeof(User));
-			printf("code : %d, name : %s\n", code, user.getName());
-		}
-		break;
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
+			}
+			break;
 		default:
 			printf("code : %d, message : %s\n", code, message);
 			break;
@@ -514,6 +704,7 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -522,12 +713,19 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc4, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc4, arg);
 #endif
 
 	{
-		gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(4).getName(), strlen(gameServerTest->getUser(4).getName()) + 1);
+		printf("GameServerTest: REQUEST_LOGIN -> client4\n");
+		gameClient->requestLogin("unknown_id");
+		gameClient->requestLogin(gameServerTest->getUser(4).getName());
+
+		printf("GameServerTest : REQUEST_USER_INFO -> client4\n");
+		gameClient->getUserInfo("unknown_id");
+		gameClient->getUserInfo(gameServerTest->getUser(4).getName());
 #ifdef _WIN32
 		Sleep(5);
 #elif __linux__
@@ -563,13 +761,38 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch (code)
 		{
+		case REQUEST_USER_INFO:
+			{
+				User user;
+				memcpy(&user, message, sizeof(User));
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(4);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
 		case OTHER_USER_MAP_MOVE:
-		{
-			User user;
-			memcpy(&user, message, sizeof(User));
-			printf("code : %d, name : %s\n", code, user.getName());
-		}
-		break;
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
+			}
+			break;
 		default:
 			printf("code : %d, message : %s\n", code, message);
 			break;
@@ -591,6 +814,7 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -599,12 +823,19 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc5, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc5, arg);
 #endif
 
 	{
-		gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(5).getName(), strlen(gameServerTest->getUser(5).getName()) + 1);
+		printf("GameServerTest: REQUEST_LOGIN -> client5\n");
+		gameClient->requestLogin("unknown_id");
+		gameClient->requestLogin(gameServerTest->getUser(5).getName());
+
+		printf("GameServerTest : REQUEST_USER_INFO -> client5\n");
+		gameClient->getUserInfo("unknown_id");
+		gameClient->getUserInfo(gameServerTest->getUser(5).getName());
 #ifdef _WIN32
 		Sleep(5);
 #elif __linux__
@@ -640,13 +871,38 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch (code)
 		{
+		case REQUEST_USER_INFO:
+			{
+				User user;
+				memcpy(&user, message, sizeof(User));
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(5);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
 		case OTHER_USER_MAP_MOVE:
-		{
-			User user;
-			memcpy(&user, message, sizeof(User));
-			printf("code : %d, name : %s\n", code, user.getName());
-		}
-		break;
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
+			}
+			break;
 		default:
 			printf("code : %d, message : %s\n", code, message);
 			break;
@@ -668,6 +924,7 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -676,12 +933,19 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc6, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc6, arg);
 #endif
 
 	{
-		gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(6).getName(), strlen(gameServerTest->getUser(6).getName()) + 1);
+		printf("GameServerTest: REQUEST_LOGIN -> client6\n");
+		gameClient->requestLogin("unknown_id");
+		gameClient->requestLogin(gameServerTest->getUser(6).getName());
+
+		printf("GameServerTest : REQUEST_USER_INFO -> client6\n");
+		gameClient->getUserInfo("unknown_id");
+		gameClient->getUserInfo(gameServerTest->getUser(6).getName());
 #ifdef _WIN32
 		Sleep(5);
 #elif __linux__
@@ -717,13 +981,38 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch (code)
 		{
+		case REQUEST_USER_INFO:
+			{
+				User user;
+				memcpy(&user, message, sizeof(User));
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(6);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
 		case OTHER_USER_MAP_MOVE:
-		{
-			User user;
-			memcpy(&user, message, sizeof(User));
-			printf("code : %d, name : %s\n", code, user.getName());
-		}
-		break;
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
+			}
+			break;
 		default:
 			printf("code : %d, message : %s\n", code, message);
 			break;
@@ -745,6 +1034,7 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -753,12 +1043,19 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc7, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc7, arg);
 #endif
 
 	{
-		gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(7).getName(), strlen(gameServerTest->getUser(7).getName()) + 1);
+		printf("GameServerTest: REQUEST_LOGIN -> client7\n");
+		gameClient->requestLogin("unknown_id");
+		gameClient->requestLogin(gameServerTest->getUser(7).getName());
+
+		printf("GameServerTest : REQUEST_USER_INFO -> client7\n");
+		gameClient->getUserInfo("unknown_id");
+		gameClient->getUserInfo(gameServerTest->getUser(7).getName());
 #ifdef _WIN32
 		Sleep(5);
 #elif __linux__
@@ -794,13 +1091,38 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch (code)
 		{
+		case REQUEST_USER_INFO:
+			{
+				User user;
+				memcpy(&user, message, sizeof(User));
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(7);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
 		case OTHER_USER_MAP_MOVE:
-		{
-			User user;
-			memcpy(&user, message, sizeof(User));
-			printf("code : %d, name : %s\n", code, user.getName());
-		}
-		break;
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
+			}
+			break;
 		default:
 			printf("code : %d, message : %s\n", code, message);
 			break;
@@ -822,6 +1144,7 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -830,12 +1153,19 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc8, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc8, arg);
 #endif
 
 	{
-		gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(8).getName(), strlen(gameServerTest->getUser(8).getName()) + 1);
+		printf("GameServerTest: REQUEST_LOGIN -> client8\n");
+		gameClient->requestLogin("unknown_id");
+		gameClient->requestLogin(gameServerTest->getUser(8).getName());
+
+		printf("GameServerTest : REQUEST_USER_INFO -> client8\n");
+		gameClient->getUserInfo("unknown_id");
+		gameClient->getUserInfo(gameServerTest->getUser(8).getName());
 #ifdef _WIN32
 		Sleep(5);
 #elif __linux__
@@ -871,13 +1201,38 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch (code)
 		{
+		case REQUEST_USER_INFO:
+			{
+				User user;
+				memcpy(&user, message, sizeof(User));
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(8);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
 		case OTHER_USER_MAP_MOVE:
-		{
-			User user;
-			memcpy(&user, message, sizeof(User));
-			printf("code : %d, name : %s\n", code, user.getName());
-		}
-		break;
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
+			}
+			break;
 		default:
 			printf("code : %d, message : %s\n", code, message);
 			break;
@@ -899,6 +1254,7 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 	int code;
 	int count = 0;
 #ifdef _WIN32
+	HANDLE recvThread;
 #elif __linux__
 	pthread_t recvThread;
 #endif
@@ -907,18 +1263,23 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 	gameClient->openClient("127.0.0.1", 9190);
 
 #ifdef _WIN32
+	recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc9, arg, 0, NULL);
 #elif __linux__
 	pthread_create(&recvThread, NULL, ClientRecvThreadFunc9, arg);
 #endif
 
-	{
-		gameClient->sendRequest(REQUEST_LOGIN, gameServerTest->getUser(9).getName(), strlen(gameServerTest->getUser(9).getName()) + 1);
+	printf("GameServerTest: REQUEST_LOGIN -> client9\n");
+	gameClient->requestLogin("unknown_id");
+	gameClient->requestLogin(gameServerTest->getUser(9).getName());
+
+	printf("GameServerTest : REQUEST_USER_INFO -> client9\n");
+	gameClient->getUserInfo("unknown_id");
+	gameClient->getUserInfo(gameServerTest->getUser(9).getName());
 #ifdef _WIN32
-		Sleep(5);
+	Sleep(5);
 #elif __linux__
-		sleep(0.005);
+	sleep(0.005);
 #endif
-	}
 
 	while (flag != 0);
 #ifdef _WIN32
@@ -948,13 +1309,38 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 		gameClient->recvRequest(&code, message);
 		switch (code)
 		{
+		case REQUEST_USER_INFO:
+			{
+				User user;
+				memcpy(&user, message, sizeof(User));
+				gameClient->setMainUser(user);
+				gameClient->setGetUserInfo(true);
+
+				User getUser = gameServerTest->getUser(9);
+				gameServerTest->checkSameUser(user, getUser);
+			}
+			break;
+		case REQUEST_LOGIN:
+			if (!strcmp(message, "login okey"))
+				gameClient->setIsLogin(true);
+			else
+			{
+				gameClient->setIsLogin(false);
+				gameClient->setPopupLoginFail(true);
+			}
+			gameServerTest->assertThat(message, "login okey");
+			break;
 		case OTHER_USER_MAP_MOVE:
-		{
-			User user;
-			memcpy(&user, message, sizeof(User));
-			printf("code : %d, name : %s\n", code, user.getName());
-		}
-		break;
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+				{
+					gameClient->addUsersInfo(user);
+				}
+			}
+			break;
 		default:
 			printf("code : %d, message : %s\n", code, message);
 			break;

@@ -1,13 +1,62 @@
-#include "GameClient.h"
+﻿#include "GameClient.h"
 
 GameClient::GameClient()
 {
-
+	usersInfo = new vector<User*>();								//현재 맵의 다른 유저들
+	objectInfo = new vector<MapInfo*>();							//현재 맵의 오브젝트
+	monsterInfo = new vector<MapInfo*>();							//현재 맵의 몬스터
 }
 
 GameClient::~GameClient()
 {
+	delete usersInfo;
+	delete objectInfo;
+	delete monsterInfo;
+}
 
+void GameClient::setMainUser(User user)
+{
+	this->mainUser = user;
+}
+
+User GameClient::getMainUser()
+{
+	return this->mainUser;
+}
+
+void GameClient::addUsersInfo(User* user)
+{
+	this->usersInfo->push_back(user);
+}
+
+void GameClient::setIsLogin(bool value)
+{
+	this->isLogin = value;
+}
+
+bool GameClient::getIsLogin()
+{
+	return this->isLogin;
+}
+
+void GameClient::setGetUserInfo(bool value)
+{
+	this->isGetUserInfo = value;
+}
+
+bool GameClient::getGetUserInfo()
+{
+	return this->isGetUserInfo;
+}
+
+void GameClient::setPopupLoginFail(bool value)
+{
+	this->popupLoginFail = value;
+}
+
+bool GameClient::getPopupLoginFail()
+{
+	return this->popupLoginFail;
 }
 
 void GameClient::ErrorHandling(const char* message)
@@ -105,4 +154,14 @@ int GameClient::recvRequest(int* code, char* data)
 	readLen += recvc(data, size);
 
 	return readLen;
+}
+
+void GameClient::requestLogin(const char * userName)
+{
+	sendRequest(REQUEST_LOGIN, userName, strlen(userName) + 1);
+}
+
+void GameClient::getUserInfo(const char* userName)
+{
+	sendRequest(REQUEST_USER_INFO, userName, strlen(userName) + 1);
 }

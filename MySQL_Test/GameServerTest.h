@@ -29,18 +29,21 @@ private:
 #ifdef _WIN32
 	HANDLE hServerThread;
 	HANDLE hClientThread[10];
+	CRITICAL_SECTION cs;
 #elif __linux__
 	pthread_t hServerThread;
 	pthread_t hClientThread[10];
 	void* thr_ret;
+	pthread_mutex_t mutex;
 #endif
 
 public:
 	GameServerTest();
 	~GameServerTest();
-	static void assertThat(int value, int compValue);
-	static void assertThat(string value, string compValue);
-	static void checkSameUser(User user1, User user2);
+	void assertThat(int value, int compValue);
+	void assertThat(string value, string compValue);
+	void assertThat(char* value, char* compValue);
+	void checkSameUser(User user1, User user2);
 
 	void run();
 
