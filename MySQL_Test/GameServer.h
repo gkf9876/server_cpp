@@ -30,13 +30,14 @@
 #define REQUEST_TILED_MAP				8
 #define REQUEST_IMAGE					9
 #define DELETE_FIELD_ITEM				10
-#define REQUEST_FIELD_ITEM_INFO				11
-#define REQUEST_FIELD_MONSTER_INFO			12
-#define REQUEST_INVENTORY_ITEM_INFO			13
+#define REQUEST_FIELD_ITEM_INFO			11
+#define REQUEST_FIELD_MONSTER_INFO		12
+#define REQUEST_INVENTORY_ITEM_INFO		13
 #define MOVE_INVENTORY_ITEM				14
-#define THROW_ITEM					15
+#define THROW_ITEM						15
 #define REGEN_MONSTER					16
 #define ATTACK_FILED_OBJECT				17
+#define REQUEST_LOGOUT					18
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define CUR_PATH						"/home/gkf9876/server/Resources/"
@@ -92,7 +93,6 @@ public:
 
 	void getUserInfo(SOCKET sock, const char* name);
 	void updateLogin(SOCKET sock, const char* name);
-	void updateLogout(const char* name);
 	void updateLogout(SOCKET sock);
 #elif __linux__
 	void accept_linux();
@@ -106,7 +106,6 @@ public:
 
 	void getUserInfo(int sock, const char* name);
 	void updateLogin(int sock, const char* name);
-	void updateLogout(const char* name);
 	void updateLogout(int sock);
 #endif
 };

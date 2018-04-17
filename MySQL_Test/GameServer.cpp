@@ -106,8 +106,10 @@ void GameServer::accept_win()
 				size = strLen - 8;
 				if (strLen == 0)
 				{
+					updateLogout(cpyReads.fd_array[i]);
+					printf("closed client : %d\n", cpyReads.fd_array[i]);
+
 					FD_CLR(reads.fd_array[i], &reads);
-					//updateLogout(cpyReads.fd_array[i]);
 					closesocket(cpyReads.fd_array[i]);
 				}
 				else
@@ -163,6 +165,16 @@ void GameServer::accept_win()
 							break;
 						case ATTACK_FILED_OBJECT:
 							sendRequest(reads.fd_array[i], code, buffer, size);
+							break;
+						case REQUEST_LOGOUT:
+							{
+								updateLogout(cpyReads.fd_array[i]);
+								printf("closed client : %d\n", cpyReads.fd_array[i]);
+
+								FD_CLR(reads.fd_array[i], &reads);
+								closesocket(cpyReads.fd_array[i]);
+								printf("recv requestLogout : %s\n", buffer);
+							}
 							break;
 						default:
 							sendRequest(reads.fd_array[i], code, buffer, size);
@@ -262,43 +274,21 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			loginUser.setAction(ACTION_MAP_IN);
+			if (iter->getSock() == sock)
+				continue;
 
+			loginUser.setAction(ACTION_MAP_IN);
 			memcpy(message, &loginUser, sizeof(User));
 			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+
+			iter->setAction(ACTION_MAP_IN);
+			memcpy(message, &(*iter), sizeof(User));
+			sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 		}
 	}
 	catch (const runtime_error& error)
 	{
 		sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail") + 1);
-		std::cout << '\t' << error.what() << std::endl;
-	}
-}
-
-void GameServer::updateLogout(const char* name)
-{
-	char message[BUF_SIZE];
-	list<User> loginUserList;
-	list<User>::iterator iter;
-	User logoutUser;
-
-	try
-	{
-		logoutUser = userService->getUserInfo(name);
-		userService->updateLogout(name);
-
-		loginUserList = userService->getFieldLoginUserAll(logoutUser.getField());
-
-		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
-		{
-			logoutUser.setAction(ACTION_MAP_OUT);
-
-			memcpy(message, &logoutUser, sizeof(User));
-			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
-		}
-	}
-	catch (const runtime_error& error)
-	{
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -314,13 +304,16 @@ void GameServer::updateLogout(SOCKET sock)
 	{
 		logoutUser = userService->getUserInfo(sock);
 		userService->updateLogout(logoutUser.getName());
+		sendRequest(sock, REQUEST_LOGOUT, "logout okey", strlen("logout okey") + 1);
 
 		loginUserList = userService->getFieldLoginUserAll(logoutUser.getField());
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			logoutUser.setAction(ACTION_MAP_OUT);
+			if (iter->getSock() == sock)
+				continue;
 
+			logoutUser.setAction(ACTION_MAP_OUT);
 			memcpy(message, &logoutUser, sizeof(User));
 			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
 		}
@@ -328,6 +321,7 @@ void GameServer::updateLogout(SOCKET sock)
 	catch (const runtime_error& error)
 	{
 		std::cout << '\t' << error.what() << std::endl;
+		sendRequest(sock, REQUEST_LOGOUT, "logout fail", strlen("logout fail") + 1);
 	}
 }
 
@@ -353,7 +347,6 @@ void GameServer::accept_linux()
 			event.events = EPOLLIN;
 			event.data.fd = hClntSock;
 			epoll_ctl(epfd, EPOLL_CTL_ADD, hClntSock, &event);
-			printf("connected client : %d\n", hClntSock);
 			clientCount++;
 		}
 		else
@@ -362,10 +355,11 @@ void GameServer::accept_linux()
 			size = strLen - 8;
 			if(strLen == 0)
 			{
+				updateLogout(ep_events[i].data.fd);
+				clientCount--;
+
 				epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
 				close(ep_events[i].data.fd);
-				printf("closed client : %d\n", ep_events[i].data.fd);
-				clientCount--;
 			}
 			else
 			{
@@ -373,13 +367,13 @@ void GameServer::accept_linux()
 				{
 					switch (code)
 					{
-					case REQUEST_USER_INFO:			//\C0\AF\C0\FA \C1\A4\BA\B8 \BF\E4û\BD\C3
+					case REQUEST_USER_INFO:
 						getUserInfo(ep_events[i].data.fd, buffer);
 						break;
-					case CHATTING_PROCESS:			//ä\C6ý\C3
+					case CHATTING_PROCESS:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
-					case REQUEST_LOGIN:				//\B7α\D7\C0\CE \BD\C2\C0ν\C3
+					case REQUEST_LOGIN:
 						updateLogin(ep_events[i].data.fd, buffer);
 						break;
 					case USER_MOVE_UPDATE:
@@ -388,25 +382,21 @@ void GameServer::accept_linux()
 					case OTHER_USER_MAP_MOVE:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
-					case REQUEST_JOIN:			//\C0\AF\C0\FA ȸ\BF\F8\B0\A1\C0Խ\C3
+					case REQUEST_JOIN:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
 					case UPDATE_LOGIN_TIME:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
-						//\BF\EC\C0\FA\B0\A1 Ÿ\C0ϸ\CA \C0ڷ\E1 \BF\E4û\BD\C3
 					case REQUEST_TILED_MAP:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
-						//\C0\AF\C0\FA\B0\A1 \C0̹\CC\C1\F6 \C0ڷ\E1 \BF\E4û\BD\C3
 					case REQUEST_IMAGE:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
-						//\C0\AF\C0\FA\B0\A1 \B6\A5\BF\A1 \B6\B3\BE\EE\C1\F8 \BE\C6\C0\CC\C5\DB\C0\BB \B8\D4\C0\BB\BD\C3
 					case DELETE_FIELD_ITEM:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
-						//\B8\CA\C1\A4\BA\B8\B8\A6 \BAҷ\AF\BFö\A7
 					case REQUEST_FIELD_ITEM_INFO:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
@@ -424,6 +414,15 @@ void GameServer::accept_linux()
 						break;
 					case ATTACK_FILED_OBJECT:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
+						break;
+					case REQUEST_LOGOUT:
+						{
+							updateLogout(ep_events[i].data.fd);
+							clientCount--;
+
+							epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
+							close(ep_events[i].data.fd);
+						}
 						break;
 					default:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
@@ -526,42 +525,17 @@ void GameServer::updateLogin(int sock, const char* name)
 				continue;
 
 			loginUser.setAction(ACTION_MAP_IN);
-
 			memcpy(message, &loginUser, sizeof(User));
 			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+
+			iter->setAction(ACTION_MAP_IN);
+			memcpy(message, &(*iter), sizeof(User));
+			sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 		}
 	}
 	catch (const runtime_error& error)
 	{
 		sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail"));
-		std::cout << '\t' << error.what() << std::endl;
-	}
-}
-
-void GameServer::updateLogout(const char* name)
-{
-	char message[BUF_SIZE];
-	list<User> loginUserList;
-	list<User>::iterator iter;
-	User logoutUser;
-
-	try
-	{
-		logoutUser = userService->getUserInfo(name);
-		userService->updateLogout(name);
-
-		loginUserList = userService->getFieldLoginUserAll(logoutUser.getField());
-
-		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
-		{
-			logoutUser.setAction(ACTION_MAP_OUT);
-
-			memcpy(message, &logoutUser, sizeof(User));
-			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
-		}
-	}
-	catch (const runtime_error& error)
-	{
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -577,13 +551,16 @@ void GameServer::updateLogout(int sock)
 	{
 		logoutUser = userService->getUserInfo(sock);
 		userService->updateLogout(logoutUser.getName());
+		sendRequest(sock, REQUEST_LOGOUT, "logout okey", strlen("logout okey") + 1);
 
 		loginUserList = userService->getFieldLoginUserAll(logoutUser.getField());
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			logoutUser.setAction(ACTION_MAP_OUT);
+			if (iter->getSock() == sock)
+				continue;
 
+			logoutUser.setAction(ACTION_MAP_OUT);
 			memcpy(message, &logoutUser, sizeof(User));
 			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
 		}

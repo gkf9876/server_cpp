@@ -2,6 +2,7 @@
 #define __GAME_SERVER_TEST_H__
 
 #include <iostream>
+#include <vector>
 
 #ifdef _WIN32
 #include <process.h>
@@ -40,10 +41,10 @@ private:
 public:
 	GameServerTest();
 	~GameServerTest();
-	void assertThat(int value, int compValue);
-	void assertThat(string value, string compValue);
-	void assertThat(char* value, char* compValue);
-	void checkSameUser(User user1, User user2);
+	void assertThat(int clientNum, int value, int compValue);
+	void assertThat(int clientNum, string value, string compValue);
+	void assertThat(int clientNum, char* value, char* compValue);
+	void checkSameUser(int clientNum, User user1, User user2);
 
 	void run();
 

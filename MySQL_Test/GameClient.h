@@ -38,6 +38,9 @@
 #define THROW_ITEM						15
 #define REGEN_MONSTER					16
 #define ATTACK_FILED_OBJECT				17
+#define REQUEST_LOGOUT					18
+#define OTHER_REQUEST					100
+#define REQUEST_ERROR					255
 
 class GameClient
 {
@@ -54,17 +57,21 @@ private:
 	vector<User*> * usersInfo = NULL;								//현재 맵의 다른 유저들
 	vector<MapInfo*> * objectInfo = NULL;							//현재 맵의 오브젝트
 	vector<MapInfo*> * monsterInfo = NULL;							//현재 맵의 몬스터
-	InventoryInfo * inventory_items_Info[3][5] = { NULL, };				//아이템창에 있는 아이템 목록
+	InventoryInfo * inventory_items_Info[3][5];				//아이템창에 있는 아이템 목록
 
 	bool isLogin = false;
 	bool isGetUserInfo = false;
 	bool popupLoginFail = false;
+
+	vector<string> * log = NULL;
 public:
 	GameClient();
 	~GameClient();
 	void setMainUser(User user);
 	User getMainUser();
 	void addUsersInfo(User* user);
+	void removeUsersInfo(const char* userName);
+	int sizeUserInfo();
 
 	void setIsLogin(bool value);
 	bool getIsLogin();
@@ -72,6 +79,9 @@ public:
 	bool getGetUserInfo();
 	void setPopupLoginFail(bool value);
 	bool getPopupLoginFail();
+
+	void addLog(string message);
+	void printAllLog();
 
 	void ErrorHandling(const char* message);
 
@@ -86,6 +96,8 @@ public:
 
 	void requestLogin(const char * userName);
 	void getUserInfo(const char* userName);
+
+	void requestLogout();
 };
 
 #endif
