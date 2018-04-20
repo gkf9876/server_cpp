@@ -37,10 +37,12 @@ public:
 	~MapManageServiceTest();
 	void assertThat(int value, int compValue);
 	void assertThat(string value, string compValue);
+	void checkSameMapInfo(MapInfo mapInfo1, MapInfo mapInfo2);
 	void run();
 
 	void regenMonster();
 	void regenMonsterTransaction();
+	void getFieldMonster();
 };
 
 #endif

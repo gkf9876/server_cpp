@@ -38,10 +38,17 @@ MonsterDaoTest::~MonsterDaoTest()
 
 void MonsterDaoTest::run()
 {
-	addAndGet();
-	getMonsterFailure();
-	duplciateKey();
-	update();
+	try
+	{
+		addAndGet();
+		getMonsterFailure();
+		duplciateKey();
+		update();
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }
 
 void MonsterDaoTest::assertThat(int value, int compValue)

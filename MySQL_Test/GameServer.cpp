@@ -546,8 +546,8 @@ void GameServer::updateLogin(int sock, const char* name)
 
 	try
 	{
-		loginUser = userService->getUserInfo(name);
 		userService->updateLogin(sock, name);
+		loginUser = userService->getUserInfo(name);
 		sendRequest(sock, REQUEST_LOGIN, "login okey", strlen("login okey") + 1);
 
 		loginUserList = userService->getFieldLoginUserAll(loginUser.getField());
@@ -557,7 +557,6 @@ void GameServer::updateLogin(int sock, const char* name)
 			if(iter->getSock() == sock)
 				continue;
 
-			loginUser.setAction(ACTION_MAP_IN);
 			memcpy(message, &loginUser, sizeof(User));
 			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
 
@@ -622,7 +621,7 @@ void GameServer::chatting(int sock, const char* chatting)
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			memcpy(message, &chatting, sizeof(Chatting));
+			memcpy(message, chatting, sizeof(Chatting));
 			sendRequest(iter->getSock(), CHATTING_PROCESS, message, sizeof(Chatting));
 		}
 	}

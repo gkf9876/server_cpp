@@ -151,3 +151,44 @@ MapInfo MapInfoDao::getMonster(int xpos, int ypos)
 
 	return mapInfo;
 }
+
+list<MapInfo> MapInfoDao::getFieldMonster(const char* field)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+	MYSQL_RES* sql_result;
+	MYSQL_ROW sql_row;
+
+	sprintf(query, "select * from map_info where field='%s' and type='MONSTER'", field);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
+
+	sql_result = mysql_store_result(&connection);
+
+	MapInfo monster;
+	list<MapInfo> monsterList;
+
+	while ((sql_row = mysql_fetch_row(sql_result)) != NULL)
+	{
+		monster.setIdx(atoi(sql_row[0]));
+		monster.setField(sql_row[1]);
+		monster.setObjectCode(atoi(sql_row[2]));
+		monster.setName(sql_row[3]);
+		monster.setType(sql_row[4]);
+		monster.setXpos(atoi(sql_row[5]));
+		monster.setYpos(atoi(sql_row[6]));
+		monster.setZOrder(atoi(sql_row[7]));
+		monster.setFileDir(sql_row[8]);
+		monster.setCount(atoi(sql_row[9]));
+		monster.setHp(atoi(sql_row[10]));
+		monsterList.push_back(monster);
+	}
+
+	mysql_free_result(sql_result);
+
+	return monsterList;
+}

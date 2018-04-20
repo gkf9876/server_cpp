@@ -24,7 +24,6 @@ ChattingDaoTest::ChattingDaoTest()
 	chat3->setInputdate("2018-03-17 20:42:57");
 	chat3->setName("GKF9012");
 	chat3->setContent("안녕하세요. 여러분");
-	chat3->setContent("bye~");
 	chat3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3");
 }
 
@@ -39,7 +38,16 @@ ChattingDaoTest::~ChattingDaoTest()
 
 void ChattingDaoTest::run()
 {
-	addAndGet();
+	try
+	{
+		addAndGet();
+		getFieldChatting();
+		getUserFieldChatting();
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }
 
 void ChattingDaoTest::assertThat(int value, int compValue)
@@ -77,4 +85,80 @@ void ChattingDaoTest::addAndGet()
 
 	Chatting chatget2 = chattingDao->get(chat2->getIdx());
 	checkSameChat(chatget2, *chat2);
+}
+
+void ChattingDaoTest::getFieldChatting()
+{
+	std::cout << "ChattingDaoTest : getFieldChatting()" << std::endl;
+
+	chattingDao->deleteAll();
+	assertThat(chattingDao->getCount(), 0);
+
+	chattingDao->add(*chat1);
+	assertThat(chattingDao->getCount(), 1);
+
+	chat2->setField(chat1->getField());
+	chattingDao->add(*chat2);
+	assertThat(chattingDao->getCount(), 2);
+
+	chat3->setField(chat1->getField());
+	chattingDao->add(*chat3);
+	assertThat(chattingDao->getCount(), 3);
+
+	chattingDao->add(*chat2);
+	assertThat(chattingDao->getCount(), 4);
+
+	list<Chatting> fieldLoginUserList = chattingDao->getFieldChatting(chat1->getField());
+	list<Chatting>::iterator iter;
+	iter = fieldLoginUserList.begin();
+	checkSameChat(*iter, *chat1);
+
+	iter++;
+	checkSameChat(*iter, *chat2);
+
+	iter++;
+	checkSameChat(*iter, *chat3);
+}
+
+void ChattingDaoTest::getUserFieldChatting()
+{
+	std::cout << "ChattingDaoTest : getUserFieldChatting()" << std::endl;
+
+	chattingDao->deleteAll();
+	assertThat(chattingDao->getCount(), 0);
+
+	chat1->setContent("안녕하십니까.");
+	chattingDao->add(*chat1);
+	assertThat(chattingDao->getCount(), 1);
+
+	chat1->setContent("Hello World1");
+	chattingDao->add(*chat1);
+	assertThat(chattingDao->getCount(), 2);
+
+	chat1->setContent("안녕하세요.");
+	chattingDao->add(*chat1);
+	assertThat(chattingDao->getCount(), 3);
+
+	chat2->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2");
+	chattingDao->add(*chat2);
+	assertThat(chattingDao->getCount(), 4);
+
+	chat3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3");
+	chattingDao->add(*chat3);
+	assertThat(chattingDao->getCount(), 5);
+
+	list<Chatting> fieldLoginUserList = chattingDao->getFieldChatting(chat1->getField());
+	list<Chatting>::iterator iter;
+	iter = fieldLoginUserList.begin();
+
+	chat1->setContent("안녕하십니까.");
+	checkSameChat(*iter, *chat1);
+
+	iter++;
+	chat1->setContent("Hello World1");
+	checkSameChat(*iter, *chat1);
+
+	iter++;
+	chat1->setContent("안녕하세요.");
+	checkSameChat(*iter, *chat1);
 }

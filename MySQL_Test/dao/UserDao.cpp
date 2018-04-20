@@ -242,7 +242,7 @@ void UserDao::updateLogin(int sock, const char* name)
 	int query_stat;
 	MYSQL connection = this->dataSource->getConnection();
 
-	sprintf(query, "update user_list set login = '1', sock = '%d', lastLogin = sysdate() where name = '%s'", sock, name);
+	sprintf(query, "update user_list set action = '%d', login = '1', sock = '%d', lastLogin = sysdate() where name = '%s'", ACTION_MAP_IN, sock, name);
 
 	query_stat = mysql_query(&connection, query);
 

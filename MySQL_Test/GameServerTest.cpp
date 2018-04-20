@@ -218,6 +218,13 @@ void GameServerTest::checkSameUserLog(int clientNum, User user1, User user2)
 	assertThatLog(clientNum, user1.getJoinDate(), user2.getJoinDate());
 }
 
+void GameServerTest::checkSameChatLog(int clientNum, Chatting chat1, Chatting chat2)
+{
+	assertThatLog(clientNum, chat1.getName(), chat2.getName());
+	assertThatLog(clientNum, chat1.getContent(), chat2.getContent());
+	assertThatLog(clientNum, chat1.getField(), chat2.getField());
+}
+
 void GameServerTest::assertThat(int value, int compValue)
 {
 	if (value != compValue)
@@ -232,8 +239,6 @@ void GameServerTest::assertThat(string value, string compValue)
 
 void GameServerTest::checkSameChat(Chatting chat1, Chatting chat2)
 {
-	assertThat(chat1.getIdx(), chat2.getIdx());
-	assertThat(chat1.getInputdate(), chat2.getInputdate());
 	assertThat(chat1.getName(), chat2.getName());
 	assertThat(chat1.getContent(), chat2.getContent());
 	assertThat(chat1.getField(), chat2.getField());
@@ -452,6 +457,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(0);
 
 	while(logout != true)
@@ -477,7 +483,19 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 9)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(0, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -499,7 +517,16 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 2)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 2; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(0, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -512,12 +539,35 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				logout = true;
 			}
 			break;
+		case REGEN_MONSTER:
+			{
+				MapInfo* monster = new MapInfo();
+				memcpy(monster, message, sizeof(MapInfo));
+				gameClient->addMonsterInfo(monster);
+
+				if (gameClient->sizeMonsterInfo() >= 9)
+				{
+					gameClient->addLog("GameServerTest: MonsterRegen");
+
+					//int count = 0;
+					//list<Chatting>::iterator iter;
+					//list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					//for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					//{
+					//	Chatting imsi = (Chatting)*iter;
+					//	gameServerTest->checkSameChatLog(0, gameClient->getChattingInfo(count++), imsi);
+					//}
+				}
+			}
+			break;
 		default:
 			break;
 		}
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -598,6 +648,7 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(1);
 
 	while (logout != true)
@@ -623,7 +674,19 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 9)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(1, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -645,7 +708,16 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 2)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 2; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(1, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -664,6 +736,7 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -744,6 +817,7 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(2);
 
 	while (logout != true)
@@ -769,7 +843,19 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 9)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(2, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -791,7 +877,16 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 2)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 2; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(2, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -810,6 +905,7 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -890,6 +986,7 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(3);
 
 	while (logout != true)
@@ -915,7 +1012,19 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 12)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(3, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -937,7 +1046,16 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 3)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 3; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(3, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -956,6 +1074,7 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1036,6 +1155,7 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(4);
 
 	while (logout != true)
@@ -1061,7 +1181,19 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 12)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(4, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -1083,7 +1215,16 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 3)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 3; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(4, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -1102,6 +1243,7 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1182,6 +1324,7 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(5);
 
 	while (logout != true)
@@ -1207,7 +1350,19 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 12)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(5, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -1229,7 +1384,16 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 3)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 3; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(5, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -1248,6 +1412,7 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1328,6 +1493,7 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(6);
 
 	while (logout != true)
@@ -1353,7 +1519,19 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 12)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(6, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -1375,7 +1553,16 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 3)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 3; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(6, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -1394,6 +1581,7 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1474,6 +1662,7 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(7);
 
 	while (logout != true)
@@ -1499,7 +1688,19 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 9)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(7, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -1521,7 +1722,16 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 2)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 2; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(7, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -1540,6 +1750,7 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1620,6 +1831,7 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(8);
 
 	while (logout != true)
@@ -1645,7 +1857,19 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 9)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(8, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -1667,7 +1891,16 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 2)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 2; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(8, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -1686,6 +1919,7 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1766,6 +2000,7 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
+	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(9);
 
 	while (logout != true)
@@ -1791,7 +2026,19 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 				gameClient->addChattingInfo(chatting);
 
 				if (gameClient->sizeChattingInfo() >= 9)
+				{
 					gameClient->addLog("GameServerTest: Chatting");
+
+					int count = 0;
+					list<Chatting>::iterator iter;
+					list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
+
+					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
+					{
+						Chatting imsi = (Chatting)*iter;
+						gameServerTest->checkSameChatLog(9, gameClient->getChattingInfo(count++), imsi);
+					}
+				}
 			}
 			break;
 		case REQUEST_LOGIN:
@@ -1813,7 +2060,16 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 				{
 					gameClient->addUsersInfo(user);
 					if (gameClient->sizeUserInfo() >= 2)
+					{
 						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
+
+						for (int i = 0; i < 2; i++)
+						{
+							User otherUser = gameClient->getUsersInfo(i);
+							User dbUserInfo = userDao->get(otherUser.getName());
+							gameServerTest->checkSameUserLog(9, otherUser, dbUserInfo);
+						}
+					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 					gameClient->removeUsersInfo(user->getName());
@@ -1832,6 +2088,7 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 	}
 
 	delete userDao;
+	delete chattingDao;
 	delete dataSource;
 
 #ifdef _WIN32

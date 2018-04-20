@@ -58,7 +58,7 @@ private:
 	vector<User*> * usersInfo = NULL;								//현재 맵의 다른 유저들
 	vector<MapInfo*> * objectInfo = NULL;							//현재 맵의 오브젝트
 	vector<MapInfo*> * monsterInfo = NULL;							//현재 맵의 몬스터
-	vector<Chatting*> * chattingInfo = NULL;							//현재 맵의 채팅
+	vector<Chatting*> * chattingInfo = NULL;						//현재 맵의 채팅
 	InventoryInfo * inventory_items_Info[3][5];						//아이템창에 있는 아이템 목록
 
 	bool isLogin = false;
@@ -71,11 +71,19 @@ public:
 	~GameClient();
 	void setMainUser(User user);
 	User getMainUser();
+
 	void addUsersInfo(User* user);
 	void removeUsersInfo(const char* userName);
 	int sizeUserInfo();
+	User getUsersInfo(int idx);
+
+	void addMonsterInfo(MapInfo* monster);
+	int sizeMonsterInfo();
+	MapInfo getMonsterInfo(int idx);
+
 	void addChattingInfo(Chatting* chatting);
 	int sizeChattingInfo();
+	Chatting getChattingInfo(int idx);
 
 	void setIsLogin(bool value);
 	bool getIsLogin();

@@ -26,6 +26,8 @@ public:
 	void checkSameChat(Chatting chat1, Chatting chat2);
 
 	void addAndGet();
+	void getFieldChatting();
+	void getUserFieldChatting();
 };
 
 #endif

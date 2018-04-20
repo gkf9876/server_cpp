@@ -60,7 +60,14 @@ void ChattingServiceTest::checkSameChatting(Chatting chatting1, Chatting chattin
 
 void ChattingServiceTest::run()
 {
-	addAndGet();
+	try
+	{
+		addAndGet();
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }
 
 void ChattingServiceTest::addAndGet()

@@ -47,8 +47,15 @@ MapDaoTest::~MapDaoTest()
 
 void MapDaoTest::run()
 {
-	update();
-	select();
+	try
+	{
+		update();
+		select();
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }
 
 void MapDaoTest::assertThat(int value, int compValue)

@@ -56,8 +56,16 @@ MapInfoDaoTest::~MapInfoDaoTest()
 
 void MapInfoDaoTest::run()
 {
-	addAndGet();
-	getCountMonster();
+	try
+	{
+		addAndGet();
+		getCountMonster();
+		getFieldMonster();
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }
 
 void MapInfoDaoTest::assertThat(int value, int compValue)
@@ -146,4 +154,30 @@ void MapInfoDaoTest::getCountMonster()
 	{
 		std::cout << '\t' << error.what() << std::endl;
 	}
+}
+
+void MapInfoDaoTest::getFieldMonster()
+{
+	std::cout << "MapInfoDaoTest : getFieldMonster()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCount(), 0);
+
+	mapInfoDao->add(*mapInfo1);
+	assertThat(mapInfoDao->getCount(), 1);
+
+	mapInfoDao->add(*mapInfo2);
+	assertThat(mapInfoDao->getCount(), 2);
+
+	mapInfoDao->add(*mapInfo3);
+	assertThat(mapInfoDao->getCount(), 3);
+
+	list<MapInfo> fieldLoginUserList = mapInfoDao->getFieldMonster(mapInfo1->getField());
+	list<MapInfo>::iterator iter;
+	iter = fieldLoginUserList.begin();
+
+	checkSameMapInfo(*iter, *mapInfo1);
+
+	iter++;
+	checkSameMapInfo(*iter, *mapInfo2);
 }

@@ -61,6 +61,26 @@ int GameClient::sizeUserInfo()
 	return this->usersInfo->size();
 }
 
+User GameClient::getUsersInfo(int idx)
+{
+	return *(this->usersInfo->at(idx));
+}
+
+void GameClient::addMonsterInfo(MapInfo* monster)
+{
+	this->monsterInfo->push_back(monster);
+}
+
+int GameClient::sizeMonsterInfo()
+{
+	return this->monsterInfo->size();
+}
+
+MapInfo GameClient::getMonsterInfo(int idx)
+{
+	return *(this->monsterInfo->at(idx));
+}
+
 void GameClient::addChattingInfo(Chatting* chatting)
 {
 	this->chattingInfo->push_back(chatting);
@@ -69,6 +89,11 @@ void GameClient::addChattingInfo(Chatting* chatting)
 int GameClient::sizeChattingInfo()
 {
 	return this->chattingInfo->size();
+}
+
+Chatting GameClient::getChattingInfo(int idx)
+{
+	return *(this->chattingInfo->at(idx));
 }
 
 void GameClient::setIsLogin(bool value)
@@ -233,7 +258,6 @@ void GameClient::chatting(const char* chattingInfo)
 {
 	char message[BUF_SIZE];
 	Chatting chatting;
-	chatting.setInputdate("sysdate()");
 	chatting.setName(mainUser.getName());
 	chatting.setContent(chattingInfo);
 	chatting.setField(mainUser.getField());

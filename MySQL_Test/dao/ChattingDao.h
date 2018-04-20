@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
+#include <list>
 #include "../datasource/DataSource.h"
 #include "../domain/Chatting.h"
 
@@ -22,6 +23,8 @@ public:
 	void initAutoIncrement();
 	int getCount();
 	Chatting get(int idx);
+	list<Chatting> getFieldChatting(const char* field);
+	list<Chatting> getUserFieldChatting(const char* userName, const char* field);
 };
 
 #endif

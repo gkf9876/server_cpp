@@ -14,7 +14,7 @@ UserServiceTest::UserServiceTest()
 	user1->setYpos(12);
 	user1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1");
 	user1->setSeeDirection(29);
-	user1->setAction(50);
+	user1->setAction(ACTION_MAP_IN);
 	user1->setLogin(1);
 	user1->setLastLogin("2018-03-17 00:42:57");
 	user1->setLastLogout("2018-03-17 00:43:00");
@@ -28,7 +28,7 @@ UserServiceTest::UserServiceTest()
 	user2->setYpos(4);
 	user2->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2");
 	user2->setSeeDirection(29);
-	user2->setAction(40);
+	user2->setAction(ACTION_MAP_IN);
 	user2->setLogin(1);
 	user2->setLastLogin("2018-03-17 10:42:57");
 	user2->setLastLogout("2018-03-17 10:43:00");
@@ -42,7 +42,7 @@ UserServiceTest::UserServiceTest()
 	user3->setYpos(3);
 	user3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3");
 	user3->setSeeDirection(29);
-	user3->setAction(1);
+	user3->setAction(ACTION_MAP_IN);
 	user3->setLogin(1);
 	user3->setLastLogin("2018-03-17 00:42:57");
 	user3->setLastLogout("2018-03-17 00:43:00");
@@ -90,12 +90,19 @@ void UserServiceTest::checkSameUser(User user1, User user2)
 
 void UserServiceTest::run()
 {
-	getUserInfo1();
-	getUserInfo2();
-	updateLogout();
-	updateLogin();
-	getLoginUserAll();
-	getFieldLoginUserAll();
+	try
+	{
+		getUserInfo1();
+		getUserInfo2();
+		updateLogout();
+		updateLogin();
+		getLoginUserAll();
+		getFieldLoginUserAll();
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }
 
 void UserServiceTest::getUserInfo1()

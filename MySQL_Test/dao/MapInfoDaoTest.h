@@ -27,6 +27,7 @@ public:
 
 	void addAndGet();
 	void getCountMonster();
+	void getFieldMonster();
 };
 
 #endif

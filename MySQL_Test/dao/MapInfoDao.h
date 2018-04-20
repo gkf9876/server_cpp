@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <list>
 #include "../datasource/DataSource.h"
 #include "../domain/MapInfo.h"
 
@@ -22,6 +23,7 @@ public:
 	int getCount();
 	int getCountFieldMonster(const char* field, const char* name);
 	MapInfo getMonster(int xpos, int ypos);
+	list<MapInfo> getFieldMonster(const char* field);
 };
 
 #endif

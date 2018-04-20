@@ -47,9 +47,16 @@ InventoryInfoDaoTest::~InventoryInfoDaoTest()
 
 void InventoryInfoDaoTest::run()
 {
-	addAndGet();
-	getUserFailure();
-	update();
+	try
+	{
+		addAndGet();
+		getUserFailure();
+		update();
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }
 
 void InventoryInfoDaoTest::assertThat(int value, int compValue)

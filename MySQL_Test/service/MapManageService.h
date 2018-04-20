@@ -19,6 +19,7 @@ public:
 	~MapManageService();
 
 	void regenMonster();
+	list<MapInfo> getFieldMonster(const char* field);
 };
 
 #endif

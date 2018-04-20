@@ -138,10 +138,32 @@ void MapManageServiceTest::assertThat(string value, string compValue)
 		std::cout << "\tExpected is: <" << compValue.c_str() << "> but: was <" << value.c_str() << ">" << std::endl;
 }
 
+void MapManageServiceTest::checkSameMapInfo(MapInfo mapInfo1, MapInfo mapInfo2)
+{
+	assertThat(mapInfo1.getField(), mapInfo2.getField());
+	assertThat(mapInfo1.getObjectCode(), mapInfo2.getObjectCode());
+	assertThat(mapInfo1.getName(), mapInfo2.getName());
+	assertThat(mapInfo1.getType(), mapInfo2.getType());
+	assertThat(mapInfo1.getXpos(), mapInfo2.getXpos());
+	assertThat(mapInfo1.getYpos(), mapInfo2.getYpos());
+	assertThat(mapInfo1.getZOrder(), mapInfo2.getZOrder());
+	assertThat(mapInfo1.getFileDir(), mapInfo2.getFileDir());
+	assertThat(mapInfo1.getCount(), mapInfo2.getCount());
+	assertThat(mapInfo1.getHp(), mapInfo2.getHp());
+}
+
 void MapManageServiceTest::run()
 {
-	regenMonster();
-	regenMonsterTransaction();
+	try
+	{
+		regenMonster();
+		regenMonsterTransaction();
+		getFieldMonster();
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }
 
 void MapManageServiceTest::regenMonster()
@@ -236,4 +258,30 @@ void MapManageServiceTest::regenMonsterTransaction()
 		assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster2()), 0);
 		assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster3()), 0);
 	}
+}
+
+void MapManageServiceTest::getFieldMonster()
+{
+	std::cout << "MapManageServiceTest : getFieldMonster()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCount(), 0);
+
+	mapInfoDao->add(mapInfo1);
+	assertThat(mapInfoDao->getCount(), 1);
+
+	mapInfoDao->add(mapInfo2);
+	assertThat(mapInfoDao->getCount(), 2);
+
+	mapInfoDao->add(mapInfo3);
+	assertThat(mapInfoDao->getCount(), 3);
+
+	list<MapInfo> fieldLoginMonsterList = mapInfoDao->getFieldMonster(mapInfo1.getField());
+	list<MapInfo>::iterator iter;
+	iter = fieldLoginMonsterList.begin();
+
+	checkSameMapInfo(*iter, mapInfo1);
+
+	iter++;
+	checkSameMapInfo(*iter, mapInfo2);
 }

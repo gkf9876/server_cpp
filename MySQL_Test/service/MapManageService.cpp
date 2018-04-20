@@ -109,3 +109,8 @@ void MapManageService::regenMonster()
 		mysql_query(&connection, "ROLLBACK");
 	}
 }
+
+list<MapInfo> MapManageService::getFieldMonster(const char* field)
+{
+	return this->mapInfoDao->getFieldMonster(field);
+}
