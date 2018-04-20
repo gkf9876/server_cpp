@@ -18,7 +18,7 @@ void ChattingDao::add(Chatting chatting)
 	sprintf(query, "insert into ");
 	sprintf(&query[strlen(query)], "chatting(");
 	sprintf(&query[strlen(query)], "inputdate, name, content, field) values(");
-	sprintf(&query[strlen(query)], "'%s', ", chatting.getInputdate());
+	sprintf(&query[strlen(query)], "sysdate(), ");
 	sprintf(&query[strlen(query)], "'%s', ", chatting.getName());
 	sprintf(&query[strlen(query)], "'%s', ", chatting.getContent());
 	sprintf(&query[strlen(query)], "'%s') ", chatting.getField());
@@ -26,11 +26,7 @@ void ChattingDao::add(Chatting chatting)
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
-	{
-		std::cout << query << std::endl;
-		std::cout << mysql_error(&connection) << std::endl;
-		//throw runtime_error(mysql_error(&connection));
-	}
+		throw runtime_error(mysql_error(&connection));
 }
 
 void ChattingDao::deleteAll()

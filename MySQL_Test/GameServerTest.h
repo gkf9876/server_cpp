@@ -12,7 +12,6 @@
 
 #include "GameServer.h"
 #include "GameClient.h"
-#include "domain/User.h"
 
 using namespace std;
 
@@ -24,8 +23,30 @@ private:
 
 	DataSource* dataSource;
 	UserDao* userDao;
+	MapDao* mapDao;
+	MapInfoDao* mapInfoDao;
+	MonsterDao* monsterDao;
+	ChattingDao* chattingDao;
 
 	User user[10];
+
+	Map* map1;
+	Map* map2;
+	Map* map3;
+
+	Monster monster1;
+	Monster monster2;
+	Monster monster3;
+	Monster monster4;
+	Monster monster5;
+	Monster monster6;
+	Monster monster7;
+	Monster monster8;
+	Monster monster9;
+
+	MapInfo mapInfo1;
+	MapInfo mapInfo2;
+	MapInfo mapInfo3;
 
 #ifdef _WIN32
 	HANDLE hServerThread;
@@ -41,10 +62,14 @@ private:
 public:
 	GameServerTest();
 	~GameServerTest();
-	void assertThat(int clientNum, int value, int compValue);
-	void assertThat(int clientNum, string value, string compValue);
-	void assertThat(int clientNum, char* value, char* compValue);
-	void checkSameUser(int clientNum, User user1, User user2);
+	void assertThatLog(int clientNum, int value, int compValue);
+	void assertThatLog(int clientNum, string value, string compValue);
+	void assertThatLog(int clientNum, char* value, char* compValue);
+	void checkSameUserLog(int clientNum, User user1, User user2);
+
+	void assertThat(int value, int compValue);
+	void assertThat(string value, string compValue);
+	void checkSameChat(Chatting chat1, Chatting chat2);
 
 	void run();
 
@@ -101,6 +126,7 @@ public:
 	static void* ClientRecvThreadFunc9(void* arg);
 #endif
 
+	void regenMonster();
 };
 
 #endif

@@ -5,6 +5,7 @@ GameClient::GameClient()
 	usersInfo = new vector<User*>();								//현재 맵의 다른 유저들
 	objectInfo = new vector<MapInfo*>();							//현재 맵의 오브젝트
 	monsterInfo = new vector<MapInfo*>();							//현재 맵의 몬스터
+	chattingInfo = new vector<Chatting*>();							//현재 맵의 채팅
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -22,6 +23,7 @@ GameClient::~GameClient()
 	delete usersInfo;
 	delete objectInfo;
 	delete monsterInfo;
+	delete chattingInfo;
 	delete log;
 }
 
@@ -57,6 +59,16 @@ void GameClient::removeUsersInfo(const char* userName)
 int GameClient::sizeUserInfo()
 {
 	return this->usersInfo->size();
+}
+
+void GameClient::addChattingInfo(Chatting* chatting)
+{
+	this->chattingInfo->push_back(chatting);
+}
+
+int GameClient::sizeChattingInfo()
+{
+	return this->chattingInfo->size();
 }
 
 void GameClient::setIsLogin(bool value)
@@ -215,4 +227,17 @@ void GameClient::getUserInfo(const char* userName)
 void GameClient::requestLogout()
 {
 	sendRequest(REQUEST_LOGOUT, mainUser.getName(), strlen(mainUser.getName()) + 1);
+}
+
+void GameClient::chatting(const char* chattingInfo)
+{
+	char message[BUF_SIZE];
+	Chatting chatting;
+	chatting.setInputdate("sysdate()");
+	chatting.setName(mainUser.getName());
+	chatting.setContent(chattingInfo);
+	chatting.setField(mainUser.getField());
+
+	memcpy(message, &chatting, sizeof(Chatting));
+	sendRequest(CHATTING_PROCESS, message, sizeof(Chatting));
 }

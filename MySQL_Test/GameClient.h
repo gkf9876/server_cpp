@@ -17,6 +17,7 @@
 #include "domain/InventoryInfo.h"
 #include "domain/Monster.h"
 #include "domain/MapInfo.h"
+#include "domain/Chatting.h"
 
 #define BUF_SIZE 1024
 #define EPOLL_SIZE 50
@@ -57,7 +58,8 @@ private:
 	vector<User*> * usersInfo = NULL;								//현재 맵의 다른 유저들
 	vector<MapInfo*> * objectInfo = NULL;							//현재 맵의 오브젝트
 	vector<MapInfo*> * monsterInfo = NULL;							//현재 맵의 몬스터
-	InventoryInfo * inventory_items_Info[3][5];				//아이템창에 있는 아이템 목록
+	vector<Chatting*> * chattingInfo = NULL;							//현재 맵의 채팅
+	InventoryInfo * inventory_items_Info[3][5];						//아이템창에 있는 아이템 목록
 
 	bool isLogin = false;
 	bool isGetUserInfo = false;
@@ -72,6 +74,8 @@ public:
 	void addUsersInfo(User* user);
 	void removeUsersInfo(const char* userName);
 	int sizeUserInfo();
+	void addChattingInfo(Chatting* chatting);
+	int sizeChattingInfo();
 
 	void setIsLogin(bool value);
 	bool getIsLogin();
@@ -98,6 +102,8 @@ public:
 	void getUserInfo(const char* userName);
 
 	void requestLogout();
+
+	void chatting(const char* chattingInfo);
 };
 
 #endif

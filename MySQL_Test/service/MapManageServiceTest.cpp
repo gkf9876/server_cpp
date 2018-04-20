@@ -35,61 +35,51 @@ MapManageServiceTest::MapManageServiceTest()
 	map3->setMonster2Count(20);
 	map3->setMonster3Count(6);
 
-	this->monster1;
 	monster1.setName("´Ù¶÷Áã");
 	monster1.setType("MONSTER");
 	monster1.setFileDir("Resources/monster/´Ù¶÷Áã.jpg");
 	monster1.setHp(10);
 
-	this->monster2;
 	monster2.setName("»ç½¿");
 	monster2.setType("MONSTER");
 	monster2.setFileDir("Resources/monster/»ç½¿.jpg");
 	monster2.setHp(12);
 
-	this->monster3;
 	monster3.setName("È£¶ûÀÌ");
 	monster3.setType("MONSTER");
 	monster3.setFileDir("Resources/monster/È£¶ûÀÌ.jpg");
 	monster3.setHp(20);
 
-	this->monster4;
 	monster4.setName("Åä³¢");
 	monster4.setType("MONSTER");
 	monster4.setFileDir("Resources/monster/Åä³¢.jpg");
 	monster4.setHp(25);
 
-	this->monster5;
 	monster5.setName("³Ê±¸¸®");
 	monster5.setType("MONSTER");
 	monster5.setFileDir("Resources/monster/³Ê±¸¸®.jpg");
 	monster5.setHp(28);
 
-	this->monster6;
 	monster6.setName("Áã");
 	monster6.setType("MONSTER");
 	monster6.setFileDir("Resources/monster/Áã.jpg");
 	monster6.setHp(15);
 
-	this->monster7;
 	monster7.setName("µé°³");
 	monster7.setType("MONSTER");
 	monster7.setFileDir("Resources/monster/µé°³.jpg");
 	monster7.setHp(30);
 
-	this->monster8;
 	monster8.setName("»ç³É²Û");
 	monster8.setType("MONSTER");
 	monster8.setFileDir("Resources/monster/»ç³É²Û.jpg");
 	monster8.setHp(50);
 
-	this->monster9;
 	monster9.setName("°í¶ó´Ï");
 	monster9.setType("MONSTER");
 	monster9.setFileDir("Resources/monster/°í¶ó´Ï.jpg");
 	monster9.setHp(27);
 
-	this->mapInfo1;
 	mapInfo1.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	mapInfo1.setObjectCode(1);
 	mapInfo1.setName("´Ù¶÷Áã");
@@ -101,7 +91,6 @@ MapManageServiceTest::MapManageServiceTest()
 	mapInfo1.setCount(1);
 	mapInfo1.setHp(10);
 
-	this->mapInfo2;
 	mapInfo2.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	mapInfo2.setObjectCode(2);
 	mapInfo2.setName("»ç½¿");
@@ -113,7 +102,6 @@ MapManageServiceTest::MapManageServiceTest()
 	mapInfo2.setCount(1);
 	mapInfo2.setHp(10);
 
-	this->mapInfo3;
 	mapInfo3.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	mapInfo3.setObjectCode(3);
 	mapInfo3.setName("È£¶ûÀÌ");

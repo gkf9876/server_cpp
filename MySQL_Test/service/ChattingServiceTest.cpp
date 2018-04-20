@@ -53,8 +53,6 @@ void ChattingServiceTest::assertThat(string value, string compValue)
 
 void ChattingServiceTest::checkSameChatting(Chatting chatting1, Chatting chatting2)
 {
-	assertThat(chatting1.getIdx(), chatting2.getIdx());
-	assertThat(chatting1.getInputdate(), chatting2.getInputdate());
 	assertThat(chatting1.getName(), chatting2.getName());
 	assertThat(chatting1.getContent(), chatting2.getContent());
 	assertThat(chatting1.getField(), chatting2.getField());

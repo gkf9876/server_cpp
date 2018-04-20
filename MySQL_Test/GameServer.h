@@ -16,6 +16,8 @@
 #include <list>
 #include "datasource/DataSource.h"
 #include "service/UserService.h"
+#include "service/ChattingService.h"
+#include "service/MapManageService.h"
 
 #define BUF_SIZE 1024
 #define EPOLL_SIZE 50
@@ -72,6 +74,8 @@ private:
 #endif
 	DataSource* dataSource;
 	UserService* userService;
+	ChattingService* chattingService;
+	MapManageService* mapManageService;
 public:
 	GameServer(DataSource* dataSource);
 	~GameServer();
@@ -94,6 +98,8 @@ public:
 	void getUserInfo(SOCKET sock, const char* name);
 	void updateLogin(SOCKET sock, const char* name);
 	void updateLogout(SOCKET sock);
+
+	void chatting(SOCKET sock, const char* chatting);
 #elif __linux__
 	void accept_linux();
 
@@ -107,7 +113,11 @@ public:
 	void getUserInfo(int sock, const char* name);
 	void updateLogin(int sock, const char* name);
 	void updateLogout(int sock);
+
+	void chatting(int sock, const char* chatting);
 #endif
+
+	void regenMonster();
 };
 
 #endif

@@ -24,7 +24,6 @@ ChattingDaoTest::ChattingDaoTest()
 	chat3->setInputdate("2018-03-17 20:42:57");
 	chat3->setName("GKF9012");
 	chat3->setContent("안녕하세요. 여러분");
-
 	chat3->setContent("bye~");
 	chat3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3");
 }
@@ -57,8 +56,6 @@ void ChattingDaoTest::assertThat(const char* value, const char* compValue)
 
 void ChattingDaoTest::checkSameChat(Chatting chat1, Chatting chat2)
 {
-	assertThat(chat1.getIdx(), chat2.getIdx());
-	assertThat(chat1.getInputdate(), chat2.getInputdate());
 	assertThat(chat1.getName(), chat2.getName());
 	assertThat(chat1.getContent(), chat2.getContent());
 	assertThat(chat1.getField(), chat2.getField());

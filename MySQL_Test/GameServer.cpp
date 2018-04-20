@@ -4,11 +4,15 @@ GameServer::GameServer(DataSource* dataSource)
 {
 	this->dataSource = dataSource;
 	this->userService = new UserService(dataSource);
+	this->chattingService = new ChattingService(dataSource);
+	this->mapManageService = new MapManageService(dataSource);
 }
 
 GameServer::~GameServer()
 {
 	delete this->userService;
+	delete this->chattingService;
+	delete this->mapManageService;
 }
 
 void GameServer::ErrorHandling(const char* message)
@@ -122,7 +126,7 @@ void GameServer::accept_win()
 							getUserInfo(reads.fd_array[i], buffer);
 							break;
 						case CHATTING_PROCESS:
-							sendRequest(reads.fd_array[i], code, buffer, size);
+							chatting(reads.fd_array[i], buffer);
 							break;
 						case REQUEST_LOGIN:
 							updateLogin(reads.fd_array[i], buffer);
@@ -325,6 +329,35 @@ void GameServer::updateLogout(SOCKET sock)
 	}
 }
 
+
+void GameServer::chatting(SOCKET sock, const char* chatting)
+{
+	char message[BUF_SIZE];
+	list<User> loginUserList;
+	list<User>::iterator iter;
+	User chattingUser;
+	Chatting chattingInfo;
+
+	try
+	{
+		chattingUser = userService->getUserInfo(sock);
+		loginUserList = userService->getFieldLoginUserAll(chattingUser.getField());
+
+		memcpy(&chattingInfo, chatting, sizeof(Chatting));
+		chattingService->add(chattingInfo);
+
+		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
+		{
+			memcpy(message, &chatting, sizeof(Chatting));
+			sendRequest(iter->getSock(), CHATTING_PROCESS, message, sizeof(Chatting));
+		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
 #elif __linux__
 void GameServer::accept_linux()
 {
@@ -371,7 +404,7 @@ void GameServer::accept_linux()
 						getUserInfo(ep_events[i].data.fd, buffer);
 						break;
 					case CHATTING_PROCESS:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
+						chatting(ep_events[i].data.fd, buffer);
 						break;
 					case REQUEST_LOGIN:
 						updateLogin(ep_events[i].data.fd, buffer);
@@ -571,4 +604,37 @@ void GameServer::updateLogout(int sock)
 	}
 }
 
+void GameServer::chatting(int sock, const char* chatting)
+{
+	char message[BUF_SIZE];
+	list<User> loginUserList;
+	list<User>::iterator iter;
+	User chattingUser;
+	Chatting chattingInfo;
+
+	try
+	{
+		chattingUser = userService->getUserInfo(sock);
+		loginUserList = userService->getFieldLoginUserAll(chattingUser.getField());
+
+		memcpy(&chattingInfo, chatting, sizeof(Chatting));
+		chattingService->add(chattingInfo);
+
+		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
+		{
+			memcpy(message, &chatting, sizeof(Chatting));
+			sendRequest(iter->getSock(), CHATTING_PROCESS, message, sizeof(Chatting));
+		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
 #endif
+
+void GameServer::regenMonster()
+{
+	this->mapManageService->regenMonster();
+}
