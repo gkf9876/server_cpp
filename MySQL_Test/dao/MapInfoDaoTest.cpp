@@ -1,4 +1,4 @@
-#include "MapInfoDaoTest.h"
+ï»¿#include "MapInfoDaoTest.h"
 
 MapInfoDaoTest::MapInfoDaoTest()
 {
@@ -9,12 +9,12 @@ MapInfoDaoTest::MapInfoDaoTest()
 	mapInfo1->setIdx(1);
 	mapInfo1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	mapInfo1->setObjectCode(12);
-	mapInfo1->setName("´Ù¶÷Áã");
+	mapInfo1->setName("ë‹¤ëžŒì¥");
 	mapInfo1->setType("MONSTER");
 	mapInfo1->setXpos(4);
 	mapInfo1->setYpos(6);
 	mapInfo1->setZOrder(1);
-	mapInfo1->setFileDir("Images/´Ù¶÷Áã.jpg");
+	mapInfo1->setFileDir("Images/ë‹¤ëžŒì¥.jpg");
 	mapInfo1->setCount(1);
 	mapInfo1->setHp(5);
 
@@ -22,12 +22,12 @@ MapInfoDaoTest::MapInfoDaoTest()
 	mapInfo2->setIdx(2);
 	mapInfo2->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	mapInfo2->setObjectCode(13);
-	mapInfo2->setName("È£¶ûÀÌ");
+	mapInfo2->setName("í˜¸ëž‘ì´");
 	mapInfo2->setType("MONSTER");
 	mapInfo2->setXpos(5);
 	mapInfo2->setYpos(8);
 	mapInfo2->setZOrder(2);
-	mapInfo2->setFileDir("Images/È£¶ûÀÌ.jpg");
+	mapInfo2->setFileDir("Images/í˜¸ëž‘ì´.jpg");
 	mapInfo2->setCount(2);
 	mapInfo2->setHp(15);
 
@@ -35,12 +35,12 @@ MapInfoDaoTest::MapInfoDaoTest()
 	mapInfo3->setIdx(3);
 	mapInfo3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	mapInfo3->setObjectCode(14);
-	mapInfo3->setName("°¡·Îµî");
+	mapInfo3->setName("ê°€ë¡œë“±");
 	mapInfo3->setType("OBJECT");
 	mapInfo3->setXpos(51);
 	mapInfo3->setYpos(81);
 	mapInfo3->setZOrder(3);
-	mapInfo3->setFileDir("Images/°¡·Îµî.jpg");
+	mapInfo3->setFileDir("Images/ê°€ë¡œë“±.jpg");
 	mapInfo3->setCount(3);
 	mapInfo3->setHp(150);
 }

@@ -1,4 +1,4 @@
-#include "MonsterDaoTest.h"
+ï»¿#include "MonsterDaoTest.h"
 
 MonsterDaoTest::MonsterDaoTest()
 {
@@ -7,21 +7,21 @@ MonsterDaoTest::MonsterDaoTest()
 
 	this->monster1 = new Monster();
 	monster1->setIdx(1);
-	monster1->setName("´Ù¶÷Áã");
+	monster1->setName("ë‹¤ëžŒì¥");
 	monster1->setType("MONSTER");
 	monster1->setFileDir("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1");
 	monster1->setHp(12);
 
 	this->monster2 = new Monster();
 	monster2->setIdx(2);
-	monster2->setName("Åä³¢");
+	monster2->setName("í† ë¼");
 	monster2->setType("MONSTER");
 	monster2->setFileDir("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2");
 	monster2->setHp(20);
 
 	this->monster3 = new Monster();
 	monster3->setIdx(3);
-	monster3->setName("È£¶ûÀÌ");
+	monster3->setName("í˜¸ëž‘ì´");
 	monster3->setType("MONSTER");
 	monster3->setFileDir("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3");
 	monster3->setHp(50);
@@ -126,7 +126,7 @@ void MonsterDaoTest::update()
 	monsterDao->add(*monster2);
 
 	monster1->setIdx(1);
-	monster1->setName("´Ù¶÷Áã");
+	monster1->setName("ë‹¤ëžŒì¥");
 	monster1->setType("MONSTER");
 	monster1->setFileDir("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1");
 	monster1->setHp(6);

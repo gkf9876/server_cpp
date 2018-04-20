@@ -1,4 +1,4 @@
-#ifndef __CHATTING_H_
+﻿#ifndef __CHATTING_H_
 #define __CHATTING_H_
 
 #include <iostream>

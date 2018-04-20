@@ -1,4 +1,4 @@
-#ifndef __SERVER_INFO_H_
+﻿#ifndef __SERVER_INFO_H_
 #define __SERVER_INFO_H_
 
 #include <iostream>

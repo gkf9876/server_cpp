@@ -1,4 +1,4 @@
-#ifndef __USER_H_
+﻿#ifndef __USER_H_
 #define __USER_H_
 
 #include <iostream>

@@ -1,4 +1,4 @@
-#include "MapInfo.h"
+﻿#include "MapInfo.h"
 
 MapInfo::MapInfo()
 {

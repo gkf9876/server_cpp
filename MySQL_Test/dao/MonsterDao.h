@@ -1,4 +1,4 @@
-#ifndef __MONSTER_DAO_H_
+﻿#ifndef __MONSTER_DAO_H_
 #define __MONSTER_DAO_H_
 
 #include <iostream>

@@ -1,4 +1,4 @@
-#include "ChattingServiceTest.h"
+ï»¿#include "ChattingServiceTest.h"
 
 ChattingServiceTest::ChattingServiceTest()
 {
@@ -10,21 +10,21 @@ ChattingServiceTest::ChattingServiceTest()
 	chatting1->setIdx(1);
 	chatting1->setInputdate("2018-03-17 00:42:57");
 	chatting1->setName("GKF1234");
-	chatting1->setContent("¾È³çÇÏ¼¼¿ä ~ !");
+	chatting1->setContent("ì•ˆë…•í•˜ì„¸ìš” ~ !");
 	chatting1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1");
 
 	this->chatting2 = new Chatting();
 	chatting2->setIdx(2);
 	chatting2->setInputdate("2018-03-17 10:42:57");
 	chatting2->setName("GKF9876");
-	chatting2->setContent("¾È³çÇÏ¼¼¿ä ~ ! 123");
+	chatting2->setContent("ì•ˆë…•í•˜ì„¸ìš” ~ ! 123");
 	chatting2->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2");
 
 	this->chatting3 = new Chatting();
 	chatting3->setIdx(3);
 	chatting3->setInputdate("2018-03-17 20:42:57");
 	chatting3->setName("GKF9797");
-	chatting3->setContent("¾È³çÇÏ¼¼¿ä ~ ! 456");
+	chatting3->setContent("ì•ˆë…•í•˜ì„¸ìš” ~ ! 456");
 	chatting3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3");
 }
 

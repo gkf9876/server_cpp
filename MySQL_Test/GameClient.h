@@ -1,4 +1,4 @@
-#ifndef __GAME_CLIENT_H__
+ï»¿#ifndef __GAME_CLIENT_H__
 #define __GAME_CLIENT_H__
 
 #include <iostream>
@@ -55,11 +55,11 @@ private:
 	struct sockaddr_in servAddr;
 #endif
 	User mainUser;
-	vector<User*> * usersInfo = NULL;								//ÇöÀç ¸ÊÀÇ ´Ù¸¥ À¯Àúµé
-	vector<MapInfo*> * objectInfo = NULL;							//ÇöÀç ¸ÊÀÇ ¿ÀºêÁ§Æ®
-	vector<MapInfo*> * monsterInfo = NULL;							//ÇöÀç ¸ÊÀÇ ¸ó½ºÅÍ
-	vector<Chatting*> * chattingInfo = NULL;							//ÇöÀç ¸ÊÀÇ Ã¤ÆÃ
-	InventoryInfo * inventory_items_Info[3][5];						//¾ÆÀÌÅÛÃ¢¿¡ ÀÖ´Â ¾ÆÀÌÅÛ ¸ñ·Ï
+	vector<User*> * usersInfo = NULL;								//í˜„ì¬ ë§µì˜ ë‹¤ë¥¸ ìœ ì €ë“¤
+	vector<MapInfo*> * objectInfo = NULL;							//í˜„ì¬ ë§µì˜ ì˜¤ë¸Œì íŠ¸
+	vector<MapInfo*> * monsterInfo = NULL;							//í˜„ì¬ ë§µì˜ ëª¬ìŠ¤í„°
+	vector<Chatting*> * chattingInfo = NULL;							//í˜„ì¬ ë§µì˜ ì±„íŒ…
+	InventoryInfo * inventory_items_Info[3][5];						//ì•„ì´í…œì°½ì— ìˆëŠ” ì•„ì´í…œ ëª©ë¡
 
 	bool isLogin = false;
 	bool isGetUserInfo = false;

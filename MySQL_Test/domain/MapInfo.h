@@ -1,4 +1,4 @@
-#ifndef __MAP_INFO_H_
+﻿#ifndef __MAP_INFO_H_
 #define __MAP_INFO_H_
 
 #include <iostream>

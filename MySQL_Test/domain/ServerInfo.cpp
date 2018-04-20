@@ -1,4 +1,4 @@
-#include "ServerInfo.h"
+﻿#include "ServerInfo.h"
 
 ServerInfo::ServerInfo()
 {

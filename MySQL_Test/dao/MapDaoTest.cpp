@@ -1,4 +1,4 @@
-#include "MapDaoTest.h"
+ï»¿#include "MapDaoTest.h"
 
 MapDaoTest::MapDaoTest()
 {
@@ -8,9 +8,9 @@ MapDaoTest::MapDaoTest()
 	this->map1 = new Map();
 	map1->setIdx(1);
 	map1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
-	map1->setMonster1("´Ù¶÷Áã");
+	map1->setMonster1("ë‹¤ëŒì¥");
 	map1->setMonster2("deer");
-	map1->setMonster3("È£¶ûÀÌ");
+	map1->setMonster3("í˜¸ë‘ì´");
 	map1->setMonster1Count(4);
 	map1->setMonster2Count(6);
 	map1->setMonster3Count(5);
@@ -18,9 +18,9 @@ MapDaoTest::MapDaoTest()
 	this->map2 = new Map();
 	map2->setIdx(2);
 	map2->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx");
-	map2->setMonster1("´Ù¶÷Áã2");
+	map2->setMonster1("ë‹¤ëŒì¥2");
 	map2->setMonster2("deer2");
-	map2->setMonster3("È£¶ûÀÌ2");
+	map2->setMonster3("í˜¸ë‘ì´2");
 	map2->setMonster1Count(42);
 	map2->setMonster2Count(62);
 	map2->setMonster3Count(52);
@@ -28,9 +28,9 @@ MapDaoTest::MapDaoTest()
 	this->map3 = new Map();
 	map3->setIdx(3);
 	map3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx");
-	map3->setMonster1("´Ù¶÷Áã3");
+	map3->setMonster1("ë‹¤ëŒì¥3");
 	map3->setMonster2("deer3");
-	map3->setMonster3("È£¶ûÀÌ3");
+	map3->setMonster3("í˜¸ë‘ì´3");
 	map3->setMonster1Count(43);
 	map3->setMonster2Count(63);
 	map3->setMonster3Count(53);
@@ -82,9 +82,9 @@ void MapDaoTest::update()
 	mapDao->add(*map1);
 	mapDao->add(*map2);
 
-	map1->setMonster1("´Ù¶÷Áã5");
+	map1->setMonster1("ë‹¤ëŒì¥5");
 	map1->setMonster2("deer5");
-	map1->setMonster3("È£¶ûÀÌ5");
+	map1->setMonster3("í˜¸ë‘ì´5");
 	map1->setMonster1Count(45);
 	map1->setMonster2Count(65);
 	map1->setMonster3Count(55);

@@ -1,4 +1,4 @@
-#ifndef __INVENTORY_INFO_H_
+﻿#ifndef __INVENTORY_INFO_H_
 #define __INVENTORY_INFO_H_
 
 #include <iostream>

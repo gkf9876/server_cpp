@@ -1,4 +1,4 @@
-#include "ChattingDaoTest.h"
+ï»¿#include "ChattingDaoTest.h"
 
 ChattingDaoTest::ChattingDaoTest()
 {
@@ -8,8 +8,8 @@ ChattingDaoTest::ChattingDaoTest()
 	this->chat1 = new Chatting();
 	chat1->setIdx(1);
 	chat1->setInputdate("2018-03-17 00:42:57");
-	chat1->setName("È«±æµ¿");
-	chat1->setContent("¾È³çÇÏ¼¼¿ä.");
+	chat1->setName("í™ê¸¸ë™");
+	chat1->setContent("ì•ˆë…•í•˜ì„¸ìš”.");
 	chat1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1");
 
 	this->chat2 = new Chatting();
@@ -23,7 +23,7 @@ ChattingDaoTest::ChattingDaoTest()
 	chat3->setIdx(3);
 	chat3->setInputdate("2018-03-17 20:42:57");
 	chat3->setName("GKF9012");
-	chat3->setContent("¾È³çÇÏ¼¼¿ä. ¿©·¯ºÐ");
+	chat3->setContent("ì•ˆë…•í•˜ì„¸ìš”. ì—¬ëŸ¬ë¶„");
 	chat3->setContent("bye~");
 	chat3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3");
 }

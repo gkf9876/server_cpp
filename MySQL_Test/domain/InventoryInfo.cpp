@@ -1,4 +1,4 @@
-#include "InventoryInfo.h"
+﻿#include "InventoryInfo.h"
 
 InventoryInfo::InventoryInfo()
 {

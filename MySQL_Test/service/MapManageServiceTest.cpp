@@ -1,4 +1,4 @@
-#include "MapManageServiceTest.h"
+ï»¿#include "MapManageServiceTest.h"
 
 MapManageServiceTest::MapManageServiceTest()
 {
@@ -10,106 +10,106 @@ MapManageServiceTest::MapManageServiceTest()
 
 	this->map1 = new Map();
 	map1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
-	map1->setMonster1("´Ù¶÷Áã");
-	map1->setMonster2("»ç½¿");
-	map1->setMonster3("È£¶ûÀÌ");
+	map1->setMonster1("ë‹¤ëžŒì¥");
+	map1->setMonster2("ì‚¬ìŠ´");
+	map1->setMonster3("í˜¸ëž‘ì´");
 	map1->setMonster1Count(10);
 	map1->setMonster2Count(5);
 	map1->setMonster3Count(3);
 
 	this->map2 = new Map();
 	map2->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx");
-	map2->setMonster1("Åä³¢");
-	map2->setMonster2("³Ê±¸¸®");
-	map2->setMonster3("Áã");
+	map2->setMonster1("í† ë¼");
+	map2->setMonster2("ë„ˆêµ¬ë¦¬");
+	map2->setMonster3("ì¥");
 	map2->setMonster1Count(11);
 	map2->setMonster2Count(15);
 	map2->setMonster3Count(17);
 
 	this->map3 = new Map();
 	map3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx");
-	map3->setMonster1("µé°³");
-	map3->setMonster2("»ç³É²Û");
-	map3->setMonster3("°í¶ó´Ï");
+	map3->setMonster1("ë“¤ê°œ");
+	map3->setMonster2("ì‚¬ëƒ¥ê¾¼");
+	map3->setMonster3("ê³ ë¼ë‹ˆ");
 	map3->setMonster1Count(2);
 	map3->setMonster2Count(20);
 	map3->setMonster3Count(6);
 
-	monster1.setName("´Ù¶÷Áã");
+	monster1.setName("ë‹¤ëžŒì¥");
 	monster1.setType("MONSTER");
-	monster1.setFileDir("Resources/monster/´Ù¶÷Áã.jpg");
+	monster1.setFileDir("Resources/monster/ë‹¤ëžŒì¥.jpg");
 	monster1.setHp(10);
 
-	monster2.setName("»ç½¿");
+	monster2.setName("ì‚¬ìŠ´");
 	monster2.setType("MONSTER");
-	monster2.setFileDir("Resources/monster/»ç½¿.jpg");
+	monster2.setFileDir("Resources/monster/ì‚¬ìŠ´.jpg");
 	monster2.setHp(12);
 
-	monster3.setName("È£¶ûÀÌ");
+	monster3.setName("í˜¸ëž‘ì´");
 	monster3.setType("MONSTER");
-	monster3.setFileDir("Resources/monster/È£¶ûÀÌ.jpg");
+	monster3.setFileDir("Resources/monster/í˜¸ëž‘ì´.jpg");
 	monster3.setHp(20);
 
-	monster4.setName("Åä³¢");
+	monster4.setName("í† ë¼");
 	monster4.setType("MONSTER");
-	monster4.setFileDir("Resources/monster/Åä³¢.jpg");
+	monster4.setFileDir("Resources/monster/í† ë¼.jpg");
 	monster4.setHp(25);
 
-	monster5.setName("³Ê±¸¸®");
+	monster5.setName("ë„ˆêµ¬ë¦¬");
 	monster5.setType("MONSTER");
-	monster5.setFileDir("Resources/monster/³Ê±¸¸®.jpg");
+	monster5.setFileDir("Resources/monster/ë„ˆêµ¬ë¦¬.jpg");
 	monster5.setHp(28);
 
-	monster6.setName("Áã");
+	monster6.setName("ì¥");
 	monster6.setType("MONSTER");
-	monster6.setFileDir("Resources/monster/Áã.jpg");
+	monster6.setFileDir("Resources/monster/ì¥.jpg");
 	monster6.setHp(15);
 
-	monster7.setName("µé°³");
+	monster7.setName("ë“¤ê°œ");
 	monster7.setType("MONSTER");
-	monster7.setFileDir("Resources/monster/µé°³.jpg");
+	monster7.setFileDir("Resources/monster/ë“¤ê°œ.jpg");
 	monster7.setHp(30);
 
-	monster8.setName("»ç³É²Û");
+	monster8.setName("ì‚¬ëƒ¥ê¾¼");
 	monster8.setType("MONSTER");
-	monster8.setFileDir("Resources/monster/»ç³É²Û.jpg");
+	monster8.setFileDir("Resources/monster/ì‚¬ëƒ¥ê¾¼.jpg");
 	monster8.setHp(50);
 
-	monster9.setName("°í¶ó´Ï");
+	monster9.setName("ê³ ë¼ë‹ˆ");
 	monster9.setType("MONSTER");
-	monster9.setFileDir("Resources/monster/°í¶ó´Ï.jpg");
+	monster9.setFileDir("Resources/monster/ê³ ë¼ë‹ˆ.jpg");
 	monster9.setHp(27);
 
 	mapInfo1.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	mapInfo1.setObjectCode(1);
-	mapInfo1.setName("´Ù¶÷Áã");
+	mapInfo1.setName("ë‹¤ëžŒì¥");
 	mapInfo1.setType("MONSTER");
 	mapInfo1.setXpos(4);
 	mapInfo1.setYpos(6);
 	mapInfo1.setZOrder(1);
-	mapInfo1.setFileDir("Resources/monster/´Ù¶÷Áã.jpg");
+	mapInfo1.setFileDir("Resources/monster/ë‹¤ëžŒì¥.jpg");
 	mapInfo1.setCount(1);
 	mapInfo1.setHp(10);
 
 	mapInfo2.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	mapInfo2.setObjectCode(2);
-	mapInfo2.setName("»ç½¿");
+	mapInfo2.setName("ì‚¬ìŠ´");
 	mapInfo2.setType("MONSTER");
 	mapInfo2.setXpos(4);
 	mapInfo2.setYpos(6);
 	mapInfo2.setZOrder(1);
-	mapInfo2.setFileDir("Resources/monster/»ç½¿.jpg");
+	mapInfo2.setFileDir("Resources/monster/ì‚¬ìŠ´.jpg");
 	mapInfo2.setCount(1);
 	mapInfo2.setHp(10);
 
 	mapInfo3.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	mapInfo3.setObjectCode(3);
-	mapInfo3.setName("È£¶ûÀÌ");
+	mapInfo3.setName("í˜¸ëž‘ì´");
 	mapInfo3.setType("MONSTER");
 	mapInfo3.setXpos(4);
 	mapInfo3.setYpos(6);
 	mapInfo3.setZOrder(1);
-	mapInfo3.setFileDir("Resources/monster/È£¶ûÀÌ.jpg");
+	mapInfo3.setFileDir("Resources/monster/í˜¸ëž‘ì´.jpg");
 	mapInfo3.setCount(1);
 	mapInfo3.setHp(10);
 }
@@ -210,7 +210,7 @@ void MapManageServiceTest::regenMonsterTransaction()
 	mapDao->add(*map1);
 	mapDao->add(*map2);
 
-	map3->setMonster1("È«±æµ¿");
+	map3->setMonster1("í™ê¸¸ë™");
 	mapDao->add(*map3);
 
 	monsterDao->deleteAll();

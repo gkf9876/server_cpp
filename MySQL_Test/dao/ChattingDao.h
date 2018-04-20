@@ -1,4 +1,4 @@
-#ifndef __CHATTING_DAO_H_
+﻿#ifndef __CHATTING_DAO_H_
 #define __CHATTING_DAO_H_
 
 #include <iostream>

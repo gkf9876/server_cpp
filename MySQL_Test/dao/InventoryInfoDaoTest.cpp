@@ -1,4 +1,4 @@
-#include "InventoryInfoDaoTest.h"
+ï»¿#include "InventoryInfoDaoTest.h"
 
 InventoryInfoDaoTest::InventoryInfoDaoTest()
 {
@@ -7,9 +7,9 @@ InventoryInfoDaoTest::InventoryInfoDaoTest()
 
 	this->inventoryInfo1 = new InventoryInfo();
 	inventoryInfo1->setIdx(1);
-	inventoryInfo1->setItemName("»ç°ú");
-	inventoryInfo1->setUserName("È«±æµ¿");
-	inventoryInfo1->setType("¾ÆÀÌÅÛ");
+	inventoryInfo1->setItemName("ì‚¬ê³¼");
+	inventoryInfo1->setUserName("í™ê¸¸ë™");
+	inventoryInfo1->setType("ì•„ì´í…œ");
 	inventoryInfo1->setXpos(5);
 	inventoryInfo1->setYpos(4);
 	inventoryInfo1->setFileDir("TileMaps / KonyangUniv.Daejeon / JukhunDigitalFacilitie / floor_08 / floor.tmx1");
@@ -17,9 +17,9 @@ InventoryInfoDaoTest::InventoryInfoDaoTest()
 
 	this->inventoryInfo2 = new InventoryInfo();
 	inventoryInfo2->setIdx(2);
-	inventoryInfo2->setItemName("¿À·»Áö");
-	inventoryInfo2->setUserName("±èµ¿¿ì");
-	inventoryInfo2->setType("¾ÆÀÌÅÛ");
+	inventoryInfo2->setItemName("ì˜¤ë Œì§€");
+	inventoryInfo2->setUserName("ê¹€ë™ìš°");
+	inventoryInfo2->setType("ì•„ì´í…œ");
 	inventoryInfo2->setXpos(7);
 	inventoryInfo2->setYpos(8);
 	inventoryInfo2->setFileDir("TileMaps / KonyangUniv.Daejeon / JukhunDigitalFacilitie / floor_08 / floor.tmx2");
@@ -27,9 +27,9 @@ InventoryInfoDaoTest::InventoryInfoDaoTest()
 
 	this->inventoryInfo3 = new InventoryInfo();
 	inventoryInfo3->setIdx(3);
-	inventoryInfo3->setItemName("Åä¸¶Åä");
+	inventoryInfo3->setItemName("í† ë§ˆí† ");
 	inventoryInfo3->setUserName("gkf1234");
-	inventoryInfo3->setType("¾ÆÀÌÅÛ");
+	inventoryInfo3->setType("ì•„ì´í…œ");
 	inventoryInfo3->setXpos(11);
 	inventoryInfo3->setYpos(1);
 	inventoryInfo3->setFileDir("TileMaps / KonyangUniv.Daejeon / JukhunDigitalFacilitie / floor_08 / floor.tmx3");
@@ -120,8 +120,8 @@ void InventoryInfoDaoTest::update()
 	inventoryInfoDao->add(*inventoryInfo2);
 
 	inventoryInfo1->setIdx(5);
-	inventoryInfo1->setUserName("ÀÓ²©Á¤");
-	inventoryInfo1->setType("¸ó½ºÅÍ");
+	inventoryInfo1->setUserName("ìž„êº½ì •");
+	inventoryInfo1->setType("ëª¬ìŠ¤í„°");
 	inventoryInfo1->setXpos(15);
 	inventoryInfo1->setYpos(14);
 	inventoryInfo1->setFileDir("TileMaps / KonyangUniv.Daejeon / JukhunDigitalFacilitie / floor_08 / floor.tmx15");

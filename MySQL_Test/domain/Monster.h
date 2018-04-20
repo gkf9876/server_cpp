@@ -1,4 +1,4 @@
-#ifndef __MONSTER_H_
+﻿#ifndef __MONSTER_H_
 #define __MONSTER_H_
 
 #include <iostream>
