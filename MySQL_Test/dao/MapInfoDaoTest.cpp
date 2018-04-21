@@ -43,6 +43,19 @@ MapInfoDaoTest::MapInfoDaoTest()
 	mapInfo3->setFileDir("Images/가로등.jpg");
 	mapInfo3->setCount(3);
 	mapInfo3->setHp(150);
+
+	this->mapInfo4 = new MapInfo();
+	mapInfo4->setIdx(4);
+	mapInfo4->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+	mapInfo4->setObjectCode(14);
+	mapInfo4->setName("신호등");
+	mapInfo4->setType("OBJECT");
+	mapInfo4->setXpos(11);
+	mapInfo4->setYpos(31);
+	mapInfo4->setZOrder(2);
+	mapInfo4->setFileDir("Images/신호등.jpg");
+	mapInfo4->setCount(2);
+	mapInfo4->setHp(200);
 }
 
 MapInfoDaoTest::~MapInfoDaoTest()
@@ -52,6 +65,7 @@ MapInfoDaoTest::~MapInfoDaoTest()
 	delete mapInfo1;
 	delete mapInfo2;
 	delete mapInfo3;
+	delete mapInfo4;
 }
 
 void MapInfoDaoTest::run()
@@ -61,6 +75,7 @@ void MapInfoDaoTest::run()
 		addAndGet();
 		getCountMonster();
 		getFieldMonster();
+		getFieldObject();
 	}
 	catch (const runtime_error& error)
 	{
@@ -172,6 +187,9 @@ void MapInfoDaoTest::getFieldMonster()
 	mapInfoDao->add(*mapInfo3);
 	assertThat(mapInfoDao->getCount(), 3);
 
+	mapInfoDao->add(*mapInfo4);
+	assertThat(mapInfoDao->getCount(), 4);
+
 	list<MapInfo> fieldLoginUserList = mapInfoDao->getFieldMonster(mapInfo1->getField());
 	list<MapInfo>::iterator iter;
 	iter = fieldLoginUserList.begin();
@@ -180,4 +198,33 @@ void MapInfoDaoTest::getFieldMonster()
 
 	iter++;
 	checkSameMapInfo(*iter, *mapInfo2);
+}
+
+void MapInfoDaoTest::getFieldObject()
+{
+	std::cout << "MapInfoDaoTest : getFieldObject()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCount(), 0);
+
+	mapInfoDao->add(*mapInfo1);
+	assertThat(mapInfoDao->getCount(), 1);
+
+	mapInfoDao->add(*mapInfo2);
+	assertThat(mapInfoDao->getCount(), 2);
+
+	mapInfoDao->add(*mapInfo3);
+	assertThat(mapInfoDao->getCount(), 3);
+
+	mapInfoDao->add(*mapInfo4);
+	assertThat(mapInfoDao->getCount(), 4);
+
+	list<MapInfo> fieldObjectList = mapInfoDao->getFieldObject(mapInfo1->getField());
+	list<MapInfo>::iterator iter;
+	iter = fieldObjectList.begin();
+
+	checkSameMapInfo(*iter, *mapInfo3);
+
+	iter++;
+	checkSameMapInfo(*iter, *mapInfo4);
 }

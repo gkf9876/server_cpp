@@ -16,6 +16,7 @@ private:
 	MapInfo * mapInfo1;
 	MapInfo * mapInfo2;
 	MapInfo * mapInfo3;
+	MapInfo * mapInfo4;
 public:
 	MapInfoDaoTest();
 	~MapInfoDaoTest();
@@ -28,6 +29,7 @@ public:
 	void addAndGet();
 	void getCountMonster();
 	void getFieldMonster();
+	void getFieldObject();
 };
 
 #endif

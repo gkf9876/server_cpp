@@ -24,6 +24,7 @@ public:
 	int getCountFieldMonster(const char* field, const char* name);
 	MapInfo getMonster(int xpos, int ypos);
 	list<MapInfo> getFieldMonster(const char* field);
+	list<MapInfo> getFieldObject(const char* field);
 };
 
 #endif

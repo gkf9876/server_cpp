@@ -152,7 +152,7 @@ void GameServer::accept_win()
 						case DELETE_FIELD_ITEM:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
-						case REQUEST_FIELD_ITEM_INFO:
+						case REQUEST_FIELD_OBJECT_INFO:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
 						case REQUEST_FIELD_MONSTER_INFO:
@@ -268,10 +268,13 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 	list<User>::iterator iter;
 	User loginUser;
 
+	list<MapInfo> mapMonsterList;
+	list<MapInfo>::iterator monsterIter;
+
 	try
 	{
-		loginUser = userService->getUserInfo(name);
 		userService->updateLogin(sock, name);
+		loginUser = userService->getUserInfo(name);
 		sendRequest(sock, REQUEST_LOGIN, "login okey", strlen("login okey") + 1);
 
 		loginUserList = userService->getFieldLoginUserAll(loginUser.getField());
@@ -281,7 +284,6 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 			if (iter->getSock() == sock)
 				continue;
 
-			loginUser.setAction(ACTION_MAP_IN);
 			memcpy(message, &loginUser, sizeof(User));
 			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
 
@@ -289,10 +291,32 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 			memcpy(message, &(*iter), sizeof(User));
 			sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 		}
+
+		mapMonsterList = mapManageService->getFieldMonster(loginUser.getField());
+
+		for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
+		{
+			MapInfo mapInfo;
+
+			mapInfo.setIdx(monsterIter->getIdx());
+			mapInfo.setField(monsterIter->getField());
+			mapInfo.setObjectCode(monsterIter->getObjectCode());
+			mapInfo.setName(monsterIter->getName());
+			mapInfo.setType(monsterIter->getType());
+			mapInfo.setXpos(monsterIter->getXpos());
+			mapInfo.setYpos(monsterIter->getYpos());
+			mapInfo.setZOrder(monsterIter->getZOrder());
+			mapInfo.setFileDir(monsterIter->getFileDir());
+			mapInfo.setCount(monsterIter->getCount());
+			mapInfo.setHp(monsterIter->getHp());
+
+			memcpy(message, &mapInfo, sizeof(MapInfo));
+			sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
+		}
 	}
 	catch (const runtime_error& error)
 	{
-		sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail") + 1);
+		sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail"));
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -430,7 +454,7 @@ void GameServer::accept_linux()
 					case DELETE_FIELD_ITEM:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
-					case REQUEST_FIELD_ITEM_INFO:
+					case REQUEST_FIELD_OBJECT_INFO:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
 					case REQUEST_FIELD_MONSTER_INFO:
@@ -544,6 +568,12 @@ void GameServer::updateLogin(int sock, const char* name)
 	list<User>::iterator iter;
 	User loginUser;
 
+	list<MapInfo> mapMonsterList;
+	list<MapInfo>::iterator monsterIter;
+
+	list<MapInfo> mapObjectList;
+	list<MapInfo>::iterator objectIter;
+
 	try
 	{
 		userService->updateLogin(sock, name);
@@ -554,7 +584,7 @@ void GameServer::updateLogin(int sock, const char* name)
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			if(iter->getSock() == sock)
+			if (iter->getSock() == sock)
 				continue;
 
 			memcpy(message, &loginUser, sizeof(User));
@@ -563,6 +593,22 @@ void GameServer::updateLogin(int sock, const char* name)
 			iter->setAction(ACTION_MAP_IN);
 			memcpy(message, &(*iter), sizeof(User));
 			sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
+		}
+
+		mapMonsterList = mapManageService->getFieldMonster(loginUser.getField());
+
+		for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
+		{
+			memcpy(message, &(*monsterIter), sizeof(MapInfo));
+			sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
+		}
+
+		mapObjectList = mapManageService->getFieldObject(loginUser.getField());
+
+		for (objectIter = mapObjectList.begin(); objectIter != mapObjectList.end(); objectIter++)
+		{
+			memcpy(message, &(*objectIter), sizeof(MapInfo));
+			sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
 		}
 	}
 	catch (const runtime_error& error)

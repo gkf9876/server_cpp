@@ -20,6 +20,7 @@ public:
 
 	void regenMonster();
 	list<MapInfo> getFieldMonster(const char* field);
+	list<MapInfo> getFieldObject(const char* field);
 };
 
 #endif

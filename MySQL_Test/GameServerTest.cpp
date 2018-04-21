@@ -11,6 +11,7 @@ GameServerTest::GameServerTest()
 	this->mapInfoDao = new MapInfoDao(this->dataSource);
 	this->monsterDao = new MonsterDao(this->dataSource);
 	this->chattingDao = new ChattingDao(this->dataSource);
+	this->mapManageService = new MapManageService(this->dataSource);
 	
 	for (int i = 0; i < 10; i++)
 	{
@@ -27,7 +28,7 @@ GameServerTest::GameServerTest()
 		this->user[i].setPassword(imsi);
 		this->user[i].setXpos(10 + i);
 		this->user[i].setYpos(12 + i);
-		sprintf(imsi, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx%d", i);
+		sprintf(imsi, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor%d.tmx", i);
 		this->user[i].setField(imsi);
 		this->user[i].setSeeDirection(29 + i);
 		this->user[i].setAction(50 + i);
@@ -47,7 +48,7 @@ GameServerTest::GameServerTest()
 #endif
 
 	this->map1 = new Map();
-	map1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+	map1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
 	map1->setMonster1("다람쥐");
 	map1->setMonster2("사슴");
 	map1->setMonster3("호랑이");
@@ -56,7 +57,7 @@ GameServerTest::GameServerTest()
 	map1->setMonster3Count(3);
 
 	this->map2 = new Map();
-	map2->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx");
+	map2->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
 	map2->setMonster1("토끼");
 	map2->setMonster2("너구리");
 	map2->setMonster3("쥐");
@@ -65,7 +66,7 @@ GameServerTest::GameServerTest()
 	map2->setMonster3Count(17);
 
 	this->map3 = new Map();
-	map3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx");
+	map3->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
 	map3->setMonster1("들개");
 	map3->setMonster2("사냥꾼");
 	map3->setMonster3("고라니");
@@ -118,7 +119,7 @@ GameServerTest::GameServerTest()
 	monster9.setFileDir("Resources/monster/고라니.jpg");
 	monster9.setHp(27);
 
-	mapInfo1.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+	mapInfo1.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
 	mapInfo1.setObjectCode(1);
 	mapInfo1.setName("다람쥐");
 	mapInfo1.setType("MONSTER");
@@ -129,7 +130,7 @@ GameServerTest::GameServerTest()
 	mapInfo1.setCount(1);
 	mapInfo1.setHp(10);
 
-	mapInfo2.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+	mapInfo2.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
 	mapInfo2.setObjectCode(2);
 	mapInfo2.setName("사슴");
 	mapInfo2.setType("MONSTER");
@@ -140,7 +141,7 @@ GameServerTest::GameServerTest()
 	mapInfo2.setCount(1);
 	mapInfo2.setHp(10);
 
-	mapInfo3.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+	mapInfo3.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
 	mapInfo3.setObjectCode(3);
 	mapInfo3.setName("호랑이");
 	mapInfo3.setType("MONSTER");
@@ -150,6 +151,48 @@ GameServerTest::GameServerTest()
 	mapInfo3.setFileDir("Resources/monster/호랑이.jpg");
 	mapInfo3.setCount(1);
 	mapInfo3.setHp(10);
+
+	for (int i = 0; i < 8; i++)
+	{
+		objectInfo[i].setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		objectInfo[i].setObjectCode(14);
+		objectInfo[i].setName("가로등");
+		objectInfo[i].setType("OBJECT");
+		objectInfo[i].setXpos(51 + i);
+		objectInfo[i].setYpos(81 + i);
+		objectInfo[i].setZOrder(3 + i);
+		objectInfo[i].setFileDir("Images/가로등.jpg");
+		objectInfo[i].setCount(3 + i);
+		objectInfo[i].setHp(150);
+	}
+
+	for (int i = 8; i < 15; i++)
+	{
+		objectInfo[i].setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		objectInfo[i].setObjectCode(15);
+		objectInfo[i].setName("신호등");
+		objectInfo[i].setType("OBJECT");
+		objectInfo[i].setXpos(51 + i);
+		objectInfo[i].setYpos(81 + i);
+		objectInfo[i].setZOrder(3 + i);
+		objectInfo[i].setFileDir("Images/신호등.jpg");
+		objectInfo[i].setCount(3 + i);
+		objectInfo[i].setHp(150);
+	}
+
+	for (int i = 15; i < 20; i++)
+	{
+		objectInfo[i].setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		objectInfo[i].setObjectCode(16);
+		objectInfo[i].setName("자동차");
+		objectInfo[i].setType("OBJECT");
+		objectInfo[i].setXpos(51 + i);
+		objectInfo[i].setYpos(81 + i);
+		objectInfo[i].setZOrder(3 + i);
+		objectInfo[i].setFileDir("Images/자동차.jpg");
+		objectInfo[i].setCount(3 + i);
+		objectInfo[i].setHp(150);
+	}
 }
 
 GameServerTest::~GameServerTest()
@@ -161,6 +204,7 @@ GameServerTest::~GameServerTest()
 	delete this->mapInfoDao;
 	delete this->monsterDao;
 	delete this->chattingDao;
+	delete this->mapManageService;
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -225,6 +269,20 @@ void GameServerTest::checkSameChatLog(int clientNum, Chatting chat1, Chatting ch
 	assertThatLog(clientNum, chat1.getField(), chat2.getField());
 }
 
+void GameServerTest::checkSameMapInfoLog(int clientNum, MapInfo mapInfo1, MapInfo mapInfo2)
+{
+	assertThatLog(clientNum, mapInfo1.getField(), mapInfo2.getField());
+	assertThatLog(clientNum, mapInfo1.getObjectCode(), mapInfo2.getObjectCode());
+	assertThatLog(clientNum, mapInfo1.getName(), mapInfo2.getName());
+	assertThatLog(clientNum, mapInfo1.getType(), mapInfo2.getType());
+	assertThatLog(clientNum, mapInfo1.getXpos(), mapInfo2.getXpos());
+	assertThatLog(clientNum, mapInfo1.getYpos(), mapInfo2.getYpos());
+	assertThatLog(clientNum, mapInfo1.getZOrder(), mapInfo2.getZOrder());
+	assertThatLog(clientNum, mapInfo1.getFileDir(), mapInfo2.getFileDir());
+	assertThatLog(clientNum, mapInfo1.getCount(), mapInfo2.getCount());
+	assertThatLog(clientNum, mapInfo1.getHp(), mapInfo2.getHp());
+}
+
 void GameServerTest::assertThat(int value, int compValue)
 {
 	if (value != compValue)
@@ -262,6 +320,30 @@ void GameServerTest::run()
 	for(int i=0; i<10; i++)
 	{
 		userDao->add(user[i]);
+	}
+
+	mapDao->deleteAll();
+	mapDao->add(*map1);
+	mapDao->add(*map2);
+	mapDao->add(*map3);
+
+	monsterDao->deleteAll();
+	monsterDao->add(monster1);
+	monsterDao->add(monster2);
+	monsterDao->add(monster3);
+	monsterDao->add(monster4);
+	monsterDao->add(monster5);
+	monsterDao->add(monster6);
+	monsterDao->add(monster7);
+	monsterDao->add(monster8);
+	monsterDao->add(monster9);
+
+	mapInfoDao->deleteAll();
+	mapManageService->regenMonster();
+
+	for (int i = 0; i < 20; i++)
+	{
+		mapInfoDao->add(objectInfo[i]);
 	}
 
 #ifdef _WIN32
@@ -458,6 +540,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(0);
 
 	while(logout != true)
@@ -529,36 +612,64 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 					}
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+					delete user;
+				}
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo objectinfo = gameClient->getObjectInfo(0);
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(0, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+		{
+			MapInfo* monsterInfo = new MapInfo();
+			memcpy(monsterInfo, message, sizeof(MapInfo));
+
+			gameClient->addMonsterInfo(monsterInfo);
+			if (gameClient->sizeMonsterInfo() >= 18)
+			{
+				gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+				int count = 0;
+				list<MapInfo>::iterator iter;
+				MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+				list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+				for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+				{
+					MapInfo imsi = (MapInfo)*iter;
+					gameServerTest->checkSameMapInfoLog(0, gameClient->getMonsterInfo(count++), imsi);
+				}
+			}
+		}
+		break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
 				gameClient->closeClient();
 				logout = true;
-			}
-			break;
-		case REGEN_MONSTER:
-			{
-				MapInfo* monster = new MapInfo();
-				memcpy(monster, message, sizeof(MapInfo));
-				gameClient->addMonsterInfo(monster);
-
-				if (gameClient->sizeMonsterInfo() >= 9)
-				{
-					gameClient->addLog("GameServerTest: MonsterRegen");
-
-					//int count = 0;
-					//list<Chatting>::iterator iter;
-					//list<Chatting> chattingList = chattingDao->getFieldChatting(gameClient->getMainUser().getField());
-
-					//for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
-					//{
-					//	Chatting imsi = (Chatting)*iter;
-					//	gameServerTest->checkSameChatLog(0, gameClient->getChattingInfo(count++), imsi);
-					//}
-				}
 			}
 			break;
 		default:
@@ -568,6 +679,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -649,6 +761,7 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(1);
 
 	while (logout != true)
@@ -723,6 +836,53 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 					gameClient->removeUsersInfo(user->getName());
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo objectinfo = gameClient->getObjectInfo(0);
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(1, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 18)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(1, gameClient->getMonsterInfo(count++), imsi);
+					}
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -737,6 +897,7 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -818,6 +979,7 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(2);
 
 	while (logout != true)
@@ -892,6 +1054,53 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 					gameClient->removeUsersInfo(user->getName());
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo objectinfo = gameClient->getObjectInfo(0);
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(2, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 18)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(2, gameClient->getMonsterInfo(count++), imsi);
+					}
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -906,6 +1115,7 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -987,6 +1197,7 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(3);
 
 	while (logout != true)
@@ -1061,6 +1272,53 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 					gameClient->removeUsersInfo(user->getName());
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 7)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo objectinfo = gameClient->getObjectInfo(0);
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(3, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 43)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(3, gameClient->getMonsterInfo(count++), imsi);
+					}
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1075,6 +1333,7 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1156,6 +1415,7 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(4);
 
 	while (logout != true)
@@ -1230,6 +1490,53 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 					gameClient->removeUsersInfo(user->getName());
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 7)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo objectinfo = gameClient->getObjectInfo(0);
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(4, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 43)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(4, gameClient->getMonsterInfo(count++), imsi);
+					}
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1244,6 +1551,7 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1325,6 +1633,7 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(5);
 
 	while (logout != true)
@@ -1399,6 +1708,53 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 					gameClient->removeUsersInfo(user->getName());
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 7)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo objectinfo = gameClient->getObjectInfo(0);
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(5, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 43)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(5, gameClient->getMonsterInfo(count++), imsi);
+					}
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1413,6 +1769,7 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1494,6 +1851,7 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(6);
 
 	while (logout != true)
@@ -1568,6 +1926,53 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 					gameClient->removeUsersInfo(user->getName());
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 7)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo objectinfo = gameClient->getObjectInfo(0);
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(6, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 43)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(6, gameClient->getMonsterInfo(count++), imsi);
+					}
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1582,6 +1987,7 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1663,6 +2069,7 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(7);
 
 	while (logout != true)
@@ -1737,6 +2144,52 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 					gameClient->removeUsersInfo(user->getName());
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 5)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(gameClient->getMainUser().getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(7, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 28)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(7, gameClient->getMonsterInfo(count++), imsi);
+					}
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1751,6 +2204,7 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1832,6 +2286,7 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(8);
 
 	while (logout != true)
@@ -1906,6 +2361,53 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 					gameClient->removeUsersInfo(user->getName());
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 5)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo objectinfo = gameClient->getObjectInfo(0);
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(8, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 28)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(8, gameClient->getMonsterInfo(count++), imsi);
+					}
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1920,6 +2422,7 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -2001,6 +2504,7 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
+	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(9);
 
 	while (logout != true)
@@ -2075,6 +2579,53 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 					gameClient->removeUsersInfo(user->getName());
 			}
 			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				gameClient->addObjectInfo(objectInfo);
+
+				if (gameClient->sizeObjectInfo() >= 5)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo objectinfo = gameClient->getObjectInfo(0);
+					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
+
+					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(9, gameClient->getObjectInfo(count++), imsi);
+					}
+				}
+			}
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 28)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(9, gameClient->getMonsterInfo(count++), imsi);
+					}
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -2089,6 +2640,7 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 
 	delete userDao;
 	delete chattingDao;
+	delete mapInfoDao;
 	delete dataSource;
 
 #ifdef _WIN32

@@ -112,6 +112,28 @@ MapManageServiceTest::MapManageServiceTest()
 	mapInfo3.setFileDir("Resources/monster/호랑이.jpg");
 	mapInfo3.setCount(1);
 	mapInfo3.setHp(10);
+
+	mapInfo4.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+	mapInfo4.setObjectCode(14);
+	mapInfo4.setName("가로등");
+	mapInfo4.setType("OBJECT");
+	mapInfo4.setXpos(51);
+	mapInfo4.setYpos(81);
+	mapInfo4.setZOrder(3);
+	mapInfo4.setFileDir("Images/가로등.jpg");
+	mapInfo4.setCount(3);
+	mapInfo4.setHp(150);
+
+	mapInfo5.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+	mapInfo5.setObjectCode(14);
+	mapInfo5.setName("신호등");
+	mapInfo5.setType("OBJECT");
+	mapInfo5.setXpos(11);
+	mapInfo5.setYpos(31);
+	mapInfo5.setZOrder(2);
+	mapInfo5.setFileDir("Images/신호등.jpg");
+	mapInfo5.setCount(2);
+	mapInfo5.setHp(200);
 }
 
 MapManageServiceTest::~MapManageServiceTest()
@@ -159,6 +181,7 @@ void MapManageServiceTest::run()
 		regenMonster();
 		regenMonsterTransaction();
 		getFieldMonster();
+		getFieldObject();
 	}
 	catch (const runtime_error& error)
 	{
@@ -276,6 +299,12 @@ void MapManageServiceTest::getFieldMonster()
 	mapInfoDao->add(mapInfo3);
 	assertThat(mapInfoDao->getCount(), 3);
 
+	mapInfoDao->add(mapInfo4);
+	assertThat(mapInfoDao->getCount(), 4);
+
+	mapInfoDao->add(mapInfo5);
+	assertThat(mapInfoDao->getCount(), 5);
+
 	list<MapInfo> fieldLoginMonsterList = mapInfoDao->getFieldMonster(mapInfo1.getField());
 	list<MapInfo>::iterator iter;
 	iter = fieldLoginMonsterList.begin();
@@ -284,4 +313,36 @@ void MapManageServiceTest::getFieldMonster()
 
 	iter++;
 	checkSameMapInfo(*iter, mapInfo2);
+}
+
+void MapManageServiceTest::getFieldObject()
+{
+	std::cout << "MapManageServiceTest : getFieldObject()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCount(), 0);
+
+	mapInfoDao->add(mapInfo1);
+	assertThat(mapInfoDao->getCount(), 1);
+
+	mapInfoDao->add(mapInfo2);
+	assertThat(mapInfoDao->getCount(), 2);
+
+	mapInfoDao->add(mapInfo3);
+	assertThat(mapInfoDao->getCount(), 3);
+
+	mapInfoDao->add(mapInfo4);
+	assertThat(mapInfoDao->getCount(), 4);
+
+	mapInfoDao->add(mapInfo5);
+	assertThat(mapInfoDao->getCount(), 5);
+
+	list<MapInfo> fieldLoginObjectList = mapInfoDao->getFieldObject(mapInfo1.getField());
+	list<MapInfo>::iterator iter;
+	iter = fieldLoginObjectList.begin();
+
+	checkSameMapInfo(*iter, mapInfo4);
+
+	iter++;
+	checkSameMapInfo(*iter, mapInfo5);
 }

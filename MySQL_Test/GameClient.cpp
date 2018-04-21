@@ -66,6 +66,21 @@ User GameClient::getUsersInfo(int idx)
 	return *(this->usersInfo->at(idx));
 }
 
+void GameClient::addObjectInfo(MapInfo* object)
+{
+	this->objectInfo->push_back(object);
+}
+
+int GameClient::sizeObjectInfo()
+{
+	return this->objectInfo->size();
+}
+
+MapInfo GameClient::getObjectInfo(int idx)
+{
+	return *(this->objectInfo->at(idx));
+}
+
 void GameClient::addMonsterInfo(MapInfo* monster)
 {
 	this->monsterInfo->push_back(monster);

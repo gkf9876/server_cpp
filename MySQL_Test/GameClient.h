@@ -32,7 +32,7 @@
 #define REQUEST_TILED_MAP				8
 #define REQUEST_IMAGE					9
 #define DELETE_FIELD_ITEM				10
-#define REQUEST_FIELD_ITEM_INFO			11
+#define REQUEST_FIELD_OBJECT_INFO		11
 #define REQUEST_FIELD_MONSTER_INFO		12
 #define REQUEST_INVENTORY_ITEM_INFO		13
 #define MOVE_INVENTORY_ITEM				14
@@ -76,6 +76,10 @@ public:
 	void removeUsersInfo(const char* userName);
 	int sizeUserInfo();
 	User getUsersInfo(int idx);
+
+	void addObjectInfo(MapInfo* object);
+	int sizeObjectInfo();
+	MapInfo getObjectInfo(int idx);
 
 	void addMonsterInfo(MapInfo* monster);
 	int sizeMonsterInfo();

@@ -114,3 +114,8 @@ list<MapInfo> MapManageService::getFieldMonster(const char* field)
 {
 	return this->mapInfoDao->getFieldMonster(field);
 }
+
+list<MapInfo> MapManageService::getFieldObject(const char* field)
+{
+	return this->mapInfoDao->getFieldObject(field);
+}

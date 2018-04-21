@@ -32,6 +32,8 @@ private:
 	MapInfo mapInfo1;
 	MapInfo mapInfo2;
 	MapInfo mapInfo3;
+	MapInfo mapInfo4;
+	MapInfo mapInfo5;
 public:
 	MapManageServiceTest();
 	~MapManageServiceTest();
@@ -43,6 +45,7 @@ public:
 	void regenMonster();
 	void regenMonsterTransaction();
 	void getFieldMonster();
+	void getFieldObject();
 };
 
 #endif

@@ -28,6 +28,8 @@ private:
 	MonsterDao* monsterDao;
 	ChattingDao* chattingDao;
 
+	MapManageService* mapManageService;
+
 	User user[10];
 
 	Map* map1;
@@ -48,6 +50,8 @@ private:
 	MapInfo mapInfo2;
 	MapInfo mapInfo3;
 
+	MapInfo objectInfo[20];
+
 #ifdef _WIN32
 	HANDLE hServerThread;
 	HANDLE hClientThread[10];
@@ -67,6 +71,7 @@ public:
 	void assertThatLog(int clientNum, char* value, char* compValue);
 	void checkSameUserLog(int clientNum, User user1, User user2);
 	void checkSameChatLog(int clientNum, Chatting chat1, Chatting chat2);
+	void checkSameMapInfoLog(int clientNum, MapInfo mapInfo1, MapInfo mapInfo2);
 
 	void assertThat(int value, int compValue);
 	void assertThat(string value, string compValue);
