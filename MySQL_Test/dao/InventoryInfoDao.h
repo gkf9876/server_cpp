@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <list>
 #include "../datasource/DataSource.h"
 #include "../domain/InventoryInfo.h"
 
@@ -22,6 +23,7 @@ public:
 	int getCount();
 	InventoryInfo get(const char* itemName);
 	void update(InventoryInfo inventoryInfo);
+	list<InventoryInfo> getUserInventoryList(const char* userName);
 };
 
 #endif

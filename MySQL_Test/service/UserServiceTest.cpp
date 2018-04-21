@@ -5,6 +5,7 @@ UserServiceTest::UserServiceTest()
 	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	this->userService = new UserService(this->dataSource);
 	this->userDao = new UserDao(this->dataSource);
+	this->inventoryInfoDao = new InventoryInfoDao(this->dataSource);
 
 	this->user1 = new User();
 	user1->setSock(1);
@@ -47,6 +48,35 @@ UserServiceTest::UserServiceTest()
 	user3->setLastLogin("2018-03-17 00:42:57");
 	user3->setLastLogout("2018-03-17 00:43:00");
 	user3->setJoinDate("2018-01-01 00:00:00");
+
+	for (int i = 0; i < 10; i++)
+	{
+		char message[100];
+		sprintf(message, "토마토_%d", i);
+		item[i].setItemName(message);
+		item[i].setUserName("gkf1234");
+		item[i].setType("ITEM");
+		item[i].setXpos(1 + i);
+		item[i].setYpos(10 + i);
+		sprintf(message, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx_%d", i);
+		item[i].setFileDir(message);
+		item[i].setCount(1 + i);
+	}
+
+	for (int i = 10; i < 20; i++)
+	{
+		char message[100];
+		sprintf(message, "토마토_%d", i);
+		item[i].setItemName(message);
+		sprintf(message, "gkf1234_%d", i);
+		item[i].setUserName(message);
+		item[i].setType("ITEM");
+		item[i].setXpos(1 + i);
+		item[i].setYpos(10 + i);
+		sprintf(message, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx_%d", i);
+		item[i].setFileDir(message);
+		item[i].setCount(1 + i);
+	}
 }
 
 UserServiceTest::~UserServiceTest()
@@ -54,6 +84,7 @@ UserServiceTest::~UserServiceTest()
 	delete this->dataSource;
 	delete this->userService;
 	delete this->userDao;
+	delete this->inventoryInfoDao;
 
 	delete this->user1;
 	delete this->user2;
@@ -88,6 +119,17 @@ void UserServiceTest::checkSameUser(User user1, User user2)
 	assertThat(user1.getJoinDate(), user2.getJoinDate());
 }
 
+void UserServiceTest::checkSameInventoryInfo(InventoryInfo inventoryInfo1, InventoryInfo inventoryInfo2)
+{
+	assertThat(inventoryInfo1.getItemName(), inventoryInfo2.getItemName());
+	assertThat(inventoryInfo1.getUserName(), inventoryInfo2.getUserName());
+	assertThat(inventoryInfo1.getType(), inventoryInfo2.getType());
+	assertThat(inventoryInfo1.getXpos(), inventoryInfo2.getXpos());
+	assertThat(inventoryInfo1.getYpos(), inventoryInfo2.getYpos());
+	assertThat(inventoryInfo1.getFileDir(), inventoryInfo2.getFileDir());
+	assertThat(inventoryInfo1.getCount(), inventoryInfo2.getCount());
+}
+
 void UserServiceTest::run()
 {
 	try
@@ -98,6 +140,7 @@ void UserServiceTest::run()
 		updateLogin();
 		getLoginUserAll();
 		getFieldLoginUserAll();
+		getUserInventoryInfo();
 	}
 	catch (const runtime_error& error)
 	{
@@ -269,4 +312,28 @@ void UserServiceTest::getFieldLoginUserAll()
 
 	iter++;
 	checkSameUser(*iter, *user3);
+}
+
+void UserServiceTest::getUserInventoryInfo()
+{
+	std::cout << "UserServiceTest : getUserInventoryInfo()" << std::endl;
+
+	inventoryInfoDao->deleteAll();
+	assertThat(inventoryInfoDao->getCount(), 0);
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventoryInfoDao->add(item[i]);
+		assertThat(inventoryInfoDao->getCount(), i + 1);
+	}
+
+	list<InventoryInfo> inventoryList = inventoryInfoDao->getUserInventoryList("gkf1234");
+	list<InventoryInfo>::iterator iter;
+	iter = inventoryList.begin();
+
+	for (int i = 0; i < 10; i++)
+	{
+		checkSameInventoryInfo(*iter, item[i]);
+		iter++;
+	}
 }

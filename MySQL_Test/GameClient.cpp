@@ -24,6 +24,16 @@ GameClient::~GameClient()
 	delete objectInfo;
 	delete monsterInfo;
 	delete chattingInfo;
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (inventory_items_Info[i][j] != NULL)
+				delete inventory_items_Info[i][j];
+		}
+	}
+
 	delete log;
 }
 
@@ -109,6 +119,70 @@ int GameClient::sizeChattingInfo()
 Chatting GameClient::getChattingInfo(int idx)
 {
 	return *(this->chattingInfo->at(idx));
+}
+
+void GameClient::addInventoryInfo(InventoryInfo* inventoryInfo)
+{
+	this->inventory_items_Info[inventoryInfo->getXpos()][inventoryInfo->getYpos()] = inventoryInfo;
+}
+
+int GameClient::sizeInventoryInfo()
+{
+	int size = 0;
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (inventory_items_Info[i][j] != NULL)
+				size++;
+		}
+	}
+
+	return size;
+}
+
+InventoryInfo GameClient::getInventoryInfo(int xpos, int ypos)
+{
+	return *this->inventory_items_Info[xpos][ypos];
+}
+
+void GameClient::getItem(MapInfo mapInfo)
+{
+	if (strcmp(mapInfo.getType(), "ITEM"))
+		return;
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (this->inventory_items_Info[i][j] != NULL && !strcmp(mapInfo.getName(), this->inventory_items_Info[i][j]->getItemName()))
+			{
+				this->inventory_items_Info[i][j]->setCount(this->inventory_items_Info[i][j]->getCount() + mapInfo.getCount());
+				return;
+			}
+		}
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (this->inventory_items_Info[i][j] != NULL)
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				inventoryInfo->setItemName(mapInfo.getName());
+				inventoryInfo->setUserName(mainUser.getName());
+				inventoryInfo->setType(mapInfo.getType());
+				inventoryInfo->setXpos(i);
+				inventoryInfo->setYpos(j);
+				inventoryInfo->setFileDir(mapInfo.getFileDir());
+				inventoryInfo->setCount(mapInfo.getCount());
+				this->inventory_items_Info[i][j] = inventoryInfo;
+				return;
+			}
+		}
+	}
 }
 
 void GameClient::setIsLogin(bool value)

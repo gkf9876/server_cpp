@@ -4,11 +4,13 @@ UserService::UserService(DataSource* dataSource)
 {
 	this->dataSource = dataSource;
 	this->userDao = new UserDao(dataSource);
+	this->inventoryInfoDao = new InventoryInfoDao(dataSource);
 }
 
 UserService::~UserService()
 {
 	delete this->userDao;
+	delete this->inventoryInfoDao;
 }
 
 User UserService::getUserInfo(const char* name)
@@ -44,4 +46,9 @@ list<User> UserService::getFieldLoginUserAll(const char* field)
 int UserService::getUserCount(const char* field)
 {
 	return userDao->getCount(field);
+}
+
+list<InventoryInfo> UserService::getUserInventoryInfo(const char* name)
+{
+	return inventoryInfoDao->getUserInventoryList(name);
 }

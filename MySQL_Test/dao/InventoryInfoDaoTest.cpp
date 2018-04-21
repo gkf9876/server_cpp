@@ -34,6 +34,35 @@ InventoryInfoDaoTest::InventoryInfoDaoTest()
 	inventoryInfo3->setYpos(1);
 	inventoryInfo3->setFileDir("TileMaps / KonyangUniv.Daejeon / JukhunDigitalFacilitie / floor_08 / floor.tmx3");
 	inventoryInfo3->setCount(2);
+
+	for (int i = 0; i < 10; i++)
+	{
+		char message[100];
+		sprintf(message, "토마토_%d", i);
+		item[i].setItemName(message);
+		item[i].setUserName("gkf1234");
+		item[i].setType("ITEM");
+		item[i].setXpos(1 + i);
+		item[i].setYpos(10 + i);
+		sprintf(message, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx_%d", i);
+		item[i].setFileDir(message);
+		item[i].setCount(1 + i);
+	}
+
+	for (int i = 10; i < 20; i++)
+	{
+		char message[100];
+		sprintf(message, "토마토_%d", i);
+		item[i].setItemName(message);
+		sprintf(message, "gkf1234_%d", i);
+		item[i].setUserName(message);
+		item[i].setType("ITEM");
+		item[i].setXpos(1 + i);
+		item[i].setYpos(10 + i);
+		sprintf(message, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx_%d", i);
+		item[i].setFileDir(message);
+		item[i].setCount(1 + i);
+	}
 }
 
 InventoryInfoDaoTest::~InventoryInfoDaoTest()
@@ -52,6 +81,7 @@ void InventoryInfoDaoTest::run()
 		addAndGet();
 		getUserFailure();
 		update();
+		getUserInventoryInfo();
 	}
 	catch (const runtime_error& error)
 	{
@@ -73,7 +103,6 @@ void InventoryInfoDaoTest::assertThat(const char* value, const char* compValue)
 
 void InventoryInfoDaoTest::checkSameInventoryInfo(InventoryInfo inventoryInfo1, InventoryInfo inventoryInfo2)
 {
-	assertThat(inventoryInfo1.getIdx(), inventoryInfo2.getIdx());
 	assertThat(inventoryInfo1.getItemName(), inventoryInfo2.getItemName());
 	assertThat(inventoryInfo1.getUserName(), inventoryInfo2.getUserName());
 	assertThat(inventoryInfo1.getType(), inventoryInfo2.getType());
@@ -140,4 +169,28 @@ void InventoryInfoDaoTest::update()
 	checkSameInventoryInfo(inventoryInfo1Update, *inventoryInfo1);
 	InventoryInfo user2Update = inventoryInfoDao->get(inventoryInfo2->getItemName());
 	checkSameInventoryInfo(user2Update, *inventoryInfo2);
+}
+
+void InventoryInfoDaoTest::getUserInventoryInfo()
+{
+	std::cout << "InventoryInfoDaoTest : getUserInventoryInfo()" << std::endl;
+
+	inventoryInfoDao->deleteAll();
+	assertThat(inventoryInfoDao->getCount(), 0);
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventoryInfoDao->add(item[i]);
+		assertThat(inventoryInfoDao->getCount(), i + 1);
+	}
+
+	list<InventoryInfo> inventoryList = inventoryInfoDao->getUserInventoryList("gkf1234");
+	list<InventoryInfo>::iterator iter;
+	iter = inventoryList.begin();
+
+	for (int i = 0; i < 10; i++)
+	{
+		checkSameInventoryInfo(*iter, item[i]);
+		iter++;
+	}
 }

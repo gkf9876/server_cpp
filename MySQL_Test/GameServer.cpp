@@ -574,6 +574,9 @@ void GameServer::updateLogin(int sock, const char* name)
 	list<MapInfo> mapObjectList;
 	list<MapInfo>::iterator objectIter;
 
+	list<InventoryInfo> inventoryList;
+	list<InventoryInfo>::iterator inventoryIter;
+
 	try
 	{
 		userService->updateLogin(sock, name);
@@ -609,6 +612,14 @@ void GameServer::updateLogin(int sock, const char* name)
 		{
 			memcpy(message, &(*objectIter), sizeof(MapInfo));
 			sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
+		}
+
+		inventoryList = userService->getUserInventoryInfo(loginUser.getName());
+
+		for (inventoryIter = inventoryList.begin(); inventoryIter != inventoryList.end(); inventoryIter++)
+		{
+			memcpy(message, &(*inventoryIter), sizeof(InventoryInfo));
+			sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
 		}
 	}
 	catch (const runtime_error& error)

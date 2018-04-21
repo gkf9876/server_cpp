@@ -4,6 +4,7 @@
 #include <iostream>
 #include <list>
 #include "../dao/UserDao.h"
+#include "../dao/InventoryInfoDao.h"
 
 using namespace std;
 
@@ -11,6 +12,7 @@ class UserService
 {
 private:
 	UserDao* userDao;
+	InventoryInfoDao* inventoryInfoDao;
 	DataSource* dataSource;
 public:
 	UserService(DataSource* dataSource);
@@ -23,6 +25,7 @@ public:
 	list<User> getLoginUserAll();
 	list<User> getFieldLoginUserAll(const char* field);
 	int getUserCount(const char* field);
+	list<InventoryInfo> getUserInventoryInfo(const char* name);
 };
 
 #endif

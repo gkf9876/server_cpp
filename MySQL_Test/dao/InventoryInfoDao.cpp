@@ -151,3 +151,42 @@ void InventoryInfoDao::update(InventoryInfo inventoryInfo)
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
 }
+
+list<InventoryInfo> InventoryInfoDao::getUserInventoryList(const char* userName)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+	MYSQL_RES* sql_result;
+	MYSQL_ROW sql_row;
+
+	sprintf(query, "select idx, itemName, userName, type, xpos, ypos, file_dir, count from inventory_info where userName='%s'", userName);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
+
+	sql_result = mysql_store_result(&connection);
+
+	InventoryInfo inventoryInfo;
+	list<InventoryInfo> inventoryInfoList;
+
+	while ((sql_row = mysql_fetch_row(sql_result)) != NULL)
+	{
+		inventoryInfo.setIdx(atoi(sql_row[0]));
+		inventoryInfo.setItemName(sql_row[1]);
+		inventoryInfo.setUserName(sql_row[2]);
+		inventoryInfo.setType(sql_row[3]);
+		inventoryInfo.setXpos(atoi(sql_row[4]));
+		inventoryInfo.setYpos(atoi(sql_row[5]));
+		inventoryInfo.setFileDir(sql_row[6]);
+		inventoryInfo.setCount(atoi(sql_row[7]));
+
+		inventoryInfoList.push_back(inventoryInfo);
+	}
+
+	mysql_free_result(sql_result);
+
+	return inventoryInfoList;
+}

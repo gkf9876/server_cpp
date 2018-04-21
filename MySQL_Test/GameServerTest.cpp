@@ -11,6 +11,7 @@ GameServerTest::GameServerTest()
 	this->mapInfoDao = new MapInfoDao(this->dataSource);
 	this->monsterDao = new MonsterDao(this->dataSource);
 	this->chattingDao = new ChattingDao(this->dataSource);
+	this->inventoryInfoDao = new InventoryInfoDao(this->dataSource);
 	this->mapManageService = new MapManageService(this->dataSource);
 	
 	for (int i = 0; i < 10; i++)
@@ -193,6 +194,34 @@ GameServerTest::GameServerTest()
 		objectInfo[i].setCount(3 + i);
 		objectInfo[i].setHp(150);
 	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			char message[100];
+			sprintf(message, "토마토_%d", j);
+			item[i][j].setItemName(message);
+			sprintf(message, "abcd%d", i);
+			item[i][j].setUserName(message);
+			item[i][j].setType("ITEM");
+
+			if (j < 5)
+			{
+				item[i][j].setXpos(0);
+				item[i][j].setYpos(j);
+			}
+			else
+			{
+				item[i][j].setXpos(1);
+				item[i][j].setYpos(j - 5);
+			}
+
+			sprintf(message, "Resources/items/토마토_%d.jpg", j);
+			item[i][j].setFileDir(message);
+			item[i][j].setCount(1 + j);
+		}
+	}
 }
 
 GameServerTest::~GameServerTest()
@@ -204,6 +233,7 @@ GameServerTest::~GameServerTest()
 	delete this->mapInfoDao;
 	delete this->monsterDao;
 	delete this->chattingDao;
+	delete this->inventoryInfoDao;
 	delete this->mapManageService;
 
 	for (int i = 0; i < 10; i++)
@@ -283,6 +313,17 @@ void GameServerTest::checkSameMapInfoLog(int clientNum, MapInfo mapInfo1, MapInf
 	assertThatLog(clientNum, mapInfo1.getHp(), mapInfo2.getHp());
 }
 
+void GameServerTest::checkSameInventoryInfo(int clientNum, InventoryInfo inventoryInfo1, InventoryInfo inventoryInfo2)
+{
+	assertThatLog(clientNum, inventoryInfo1.getItemName(), inventoryInfo2.getItemName());
+	assertThatLog(clientNum, inventoryInfo1.getUserName(), inventoryInfo2.getUserName());
+	assertThatLog(clientNum, inventoryInfo1.getType(), inventoryInfo2.getType());
+	assertThatLog(clientNum, inventoryInfo1.getXpos(), inventoryInfo2.getXpos());
+	assertThatLog(clientNum, inventoryInfo1.getYpos(), inventoryInfo2.getYpos());
+	assertThatLog(clientNum, inventoryInfo1.getFileDir(), inventoryInfo2.getFileDir());
+	assertThatLog(clientNum, inventoryInfo1.getCount(), inventoryInfo2.getCount());
+}
+
 void GameServerTest::assertThat(int value, int compValue)
 {
 	if (value != compValue)
@@ -344,6 +385,16 @@ void GameServerTest::run()
 	for (int i = 0; i < 20; i++)
 	{
 		mapInfoDao->add(objectInfo[i]);
+	}
+
+	inventoryInfoDao->deleteAll();
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			inventoryInfoDao->add(item[i][j]);
+		}
 	}
 
 #ifdef _WIN32
@@ -533,15 +584,18 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc0(void* arg)
 void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 #endif
 {
+	int clientNumber = 0;
 	char message[1024];
 	int code;
 	bool logout = false;
+
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	DataSource * dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
-	GameClient* gameClient = gameServerTest->getGameClient(0);
+	UserService* userService = new UserService(dataSource);
+	GameClient* gameClient = gameServerTest->getGameClient(clientNumber);
 
 	while(logout != true)
 	{
@@ -556,7 +610,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				gameClient->setGetUserInfo(true);
 
 				User getUser = userDao->get(user.getName());
-				gameServerTest->checkSameUserLog(0, user, getUser);
+				gameServerTest->checkSameUserLog(clientNumber, user, getUser);
 			}
 			break;
 		case CHATTING_PROCESS:
@@ -576,7 +630,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
 					{
 						Chatting imsi = (Chatting)*iter;
-						gameServerTest->checkSameChatLog(0, gameClient->getChattingInfo(count++), imsi);
+						gameServerTest->checkSameChatLog(clientNumber, gameClient->getChattingInfo(count++), imsi);
 					}
 				}
 			}
@@ -589,7 +643,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				gameClient->setIsLogin(false);
 				gameClient->setPopupLoginFail(true);
 			}
-			gameServerTest->assertThatLog(0, message, "login okey");
+			gameServerTest->assertThatLog(clientNumber, message, "login okey");
 			break;
 		case OTHER_USER_MAP_MOVE:
 			{
@@ -607,7 +661,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 						{
 							User otherUser = gameClient->getUsersInfo(i);
 							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(0, otherUser, dbUserInfo);
+							gameServerTest->checkSameUserLog(clientNumber, otherUser, dbUserInfo);
 						}
 					}
 				}
@@ -637,34 +691,54 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
 					{
 						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(0, gameClient->getObjectInfo(count++), imsi);
+						gameServerTest->checkSameMapInfoLog(clientNumber, gameClient->getObjectInfo(count++), imsi);
 					}
 				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
-		{
-			MapInfo* monsterInfo = new MapInfo();
-			memcpy(monsterInfo, message, sizeof(MapInfo));
-
-			gameClient->addMonsterInfo(monsterInfo);
-			if (gameClient->sizeMonsterInfo() >= 18)
 			{
-				gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
 
-				int count = 0;
-				list<MapInfo>::iterator iter;
-				MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-				list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-				for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+				gameClient->addMonsterInfo(monsterInfo);
+				if (gameClient->sizeMonsterInfo() >= 18)
 				{
-					MapInfo imsi = (MapInfo)*iter;
-					gameServerTest->checkSameMapInfoLog(0, gameClient->getMonsterInfo(count++), imsi);
+					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
+
+					int count = 0;
+					list<MapInfo>::iterator iter;
+					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
+					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
+
+					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
+					{
+						MapInfo imsi = (MapInfo)*iter;
+						gameServerTest->checkSameMapInfoLog(clientNumber, gameClient->getMonsterInfo(count++), imsi);
+					}
 				}
 			}
-		}
-		break;
+			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(clientNumber, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -680,6 +754,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -762,6 +837,7 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
+	UserService* userService = new UserService(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(1);
 
 	while (logout != true)
@@ -883,6 +959,26 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 				}
 			}
 			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(1, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -898,6 +994,7 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -980,6 +1077,7 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
+	UserService* userService = new UserService(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(2);
 
 	while (logout != true)
@@ -1101,6 +1199,26 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 				}
 			}
 			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(2, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1116,6 +1234,7 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1198,6 +1317,7 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
+	UserService* userService = new UserService(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(3);
 
 	while (logout != true)
@@ -1319,6 +1439,26 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 				}
 			}
 			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(3, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1334,6 +1474,7 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1416,6 +1557,7 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
+	UserService* userService = new UserService(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(4);
 
 	while (logout != true)
@@ -1537,6 +1679,26 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 				}
 			}
 			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(4, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1552,6 +1714,7 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1634,6 +1797,7 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
+	UserService* userService = new UserService(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(5);
 
 	while (logout != true)
@@ -1755,6 +1919,26 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 				}
 			}
 			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(5, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1770,6 +1954,7 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -1852,6 +2037,7 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
+	UserService* userService = new UserService(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(6);
 
 	while (logout != true)
@@ -1973,6 +2159,26 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 				}
 			}
 			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(6, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -1988,6 +2194,7 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -2070,6 +2277,7 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
+	UserService* userService = new UserService(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(7);
 
 	while (logout != true)
@@ -2190,6 +2398,26 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 				}
 			}
 			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(7, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -2205,6 +2433,7 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -2287,6 +2516,7 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
+	UserService* userService = new UserService(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(8);
 
 	while (logout != true)
@@ -2408,6 +2638,26 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 				}
 			}
 			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(8, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -2423,6 +2673,7 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32
@@ -2505,6 +2756,7 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 	UserDao* userDao = new UserDao(dataSource);
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
+	UserService* userService = new UserService(dataSource);
 	GameClient* gameClient = gameServerTest->getGameClient(9);
 
 	while (logout != true)
@@ -2626,6 +2878,26 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 				}
 			}
 			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				gameClient->addInventoryInfo(inventoryInfo);
+
+				if (gameClient->sizeInventoryInfo() >= 8)
+				{
+					gameClient->addLog("GameServerTest : REQUEST_INVENTORY_ITEM_INFO -> client");
+
+					int count = 0;
+					list<InventoryInfo>::iterator iter;
+					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
+
+					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
+						gameServerTest->checkSameInventoryInfo(9, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+				}
+			}
+			break;
 		case REQUEST_LOGOUT:
 			if (!strcmp(message, "logout okey"))
 			{
@@ -2641,6 +2913,7 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 	delete userDao;
 	delete chattingDao;
 	delete mapInfoDao;
+	delete userService;
 	delete dataSource;
 
 #ifdef _WIN32

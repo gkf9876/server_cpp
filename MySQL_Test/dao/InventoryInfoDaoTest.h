@@ -1,7 +1,8 @@
 ﻿#ifndef __INVENTORY_INFO_DAO_TEST_H_
 #define __INVENTORY_INFO_DAO_TEST_H_
 
-#include<iostream>
+#include <iostream>
+#include <list>
 #include "../datasource/DataSource.h"
 #include "InventoryInfoDao.h"
 
@@ -16,6 +17,8 @@ private:
 	InventoryInfo * inventoryInfo1;
 	InventoryInfo * inventoryInfo2;
 	InventoryInfo * inventoryInfo3;
+
+	InventoryInfo item[20];
 public:
 	InventoryInfoDaoTest();
 	~InventoryInfoDaoTest();
@@ -28,6 +31,7 @@ public:
 	void addAndGet();
 	void getUserFailure();
 	void update();
+	void getUserInventoryInfo();
 };
 
 #endif

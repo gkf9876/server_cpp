@@ -89,6 +89,11 @@ public:
 	int sizeChattingInfo();
 	Chatting getChattingInfo(int idx);
 
+	void addInventoryInfo(InventoryInfo* inventoryInfo);
+	int sizeInventoryInfo();
+	InventoryInfo getInventoryInfo(int xpos, int ypos);
+	void getItem(MapInfo mapInfo);
+
 	void setIsLogin(bool value);
 	bool getIsLogin();
 	void setGetUserInfo(bool value);
