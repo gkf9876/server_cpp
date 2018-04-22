@@ -572,6 +572,9 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
 	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
 
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+
 #ifdef _WIN32
 	Sleep(2000);
 #elif __linux__
@@ -842,6 +845,12 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 	gameClient->requestMapMove(20, 12, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(21, 12, gameClient->getMainUser().getField());
 
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+
 #ifdef _WIN32
 	Sleep(2000);
 #elif __linux__
@@ -1110,6 +1119,12 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 	gameClient->requestMapMove(12, 11, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(12, 12, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(13, 12, gameClient->getMainUser().getField());
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
 
 #ifdef _WIN32
 	Sleep(2000);
@@ -1380,6 +1395,12 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 	gameClient->requestMapMove(1, 12, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(2, 12, gameClient->getMainUser().getField());
 
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+
 #ifdef _WIN32
 	Sleep(2000);
 #elif __linux__
@@ -1648,6 +1669,12 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 	gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(11, 1, gameClient->getMainUser().getField());
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
 
 #ifdef _WIN32
 	Sleep(2000);
@@ -1918,6 +1945,12 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 	gameClient->requestMapMove(10, 6, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(11, 6, gameClient->getMainUser().getField());
 
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+
 #ifdef _WIN32
 	Sleep(2000);
 #elif __linux__
@@ -2186,6 +2219,12 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 	gameClient->requestMapMove(10, 2, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(10, 3, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(11, 3, gameClient->getMainUser().getField());
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
 
 #ifdef _WIN32
 	Sleep(2000);
@@ -2456,6 +2495,12 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 	gameClient->requestMapMove(5, 6, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(6, 6, gameClient->getMainUser().getField());
 
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+
 #ifdef _WIN32
 	Sleep(2000);
 #elif __linux__
@@ -2723,6 +2768,12 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 	gameClient->requestMapMove(2, 8, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(2, 9, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(3, 9, gameClient->getMainUser().getField());
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
 
 #ifdef _WIN32
 	Sleep(2000);
@@ -2992,6 +3043,12 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 	gameClient->requestMapMove(101, 11, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(101, 12, gameClient->getMainUser().getField());
 	gameClient->requestMapMove(102, 12, gameClient->getMainUser().getField());
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
 
 #ifdef _WIN32
 	Sleep(2000);
