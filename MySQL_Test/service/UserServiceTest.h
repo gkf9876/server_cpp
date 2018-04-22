@@ -34,6 +34,7 @@ public:
 	void getLoginUserAll();
 	void getFieldLoginUserAll();
 	void getUserInventoryInfo();
+	void updateUserInfo();
 };
 
 #endif

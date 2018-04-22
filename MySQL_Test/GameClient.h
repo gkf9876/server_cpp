@@ -76,6 +76,8 @@ public:
 	void removeUsersInfo(const char* userName);
 	int sizeUserInfo();
 	User getUsersInfo(int idx);
+	void moveOtherUser(const char* userName, int xpos, int ypos);
+	User getUsersInfo(const char* name);
 
 	void addObjectInfo(MapInfo* object);
 	int sizeObjectInfo();
@@ -121,6 +123,7 @@ public:
 	void requestLogout();
 
 	void chatting(const char* chattingInfo);
+	void requestMapMove(int xpos, int ypos, const char* field);
 };
 
 #endif

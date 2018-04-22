@@ -61,7 +61,7 @@ void GameClient::removeUsersInfo(const char* userName)
 		if (!strcmp(userInfo->getName(), userName))
 		{
 			this->usersInfo->erase(this->usersInfo->begin() + i);
-			break;
+			return;
 		}
 	}
 }
@@ -74,6 +74,30 @@ int GameClient::sizeUserInfo()
 User GameClient::getUsersInfo(int idx)
 {
 	return *(this->usersInfo->at(idx));
+}
+
+void GameClient::moveOtherUser(const char* userName, int xpos, int ypos)
+{
+	for (int i = 0; i < this->usersInfo->size(); i++)
+	{
+		if (!strcmp(this->usersInfo->at(i)->getName(), userName))
+		{
+			User* otherUser = this->usersInfo->at(i);
+			otherUser->setXpos(xpos);
+			otherUser->setYpos(ypos);
+			otherUser->setAction(ACTION_MAP_MOVE);
+			return;
+		}
+	}
+}
+
+User GameClient::getUsersInfo(const char* name)
+{
+	for (int i = 0; i < this->usersInfo->size(); i++)
+	{
+		if (!strcmp(this->usersInfo->at(i)->getName(), name))
+			return *this->usersInfo->at(i);
+	}
 }
 
 void GameClient::addObjectInfo(MapInfo* object)
@@ -353,4 +377,23 @@ void GameClient::chatting(const char* chattingInfo)
 
 	memcpy(message, &chatting, sizeof(Chatting));
 	sendRequest(CHATTING_PROCESS, message, sizeof(Chatting));
+}
+
+void GameClient::requestMapMove(int xpos, int ypos, const char* field)
+{
+	char message[BUF_SIZE];
+
+	mainUser.setXpos(xpos);
+	mainUser.setYpos(ypos);
+
+	if (!strcmp(mainUser.getField(), field))
+		mainUser.setAction(ACTION_MAP_MOVE);
+	else
+	{
+		mainUser.setAction(ACTION_MAP_POTAL);
+		mainUser.setField(field);
+	}
+
+	memcpy(message, &mainUser, sizeof(User));
+	sendRequest(USER_MOVE_UPDATE, message, sizeof(User));
 }

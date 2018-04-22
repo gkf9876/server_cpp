@@ -26,6 +26,7 @@ public:
 	list<User> getFieldLoginUserAll(const char* field);
 	int getUserCount(const char* field);
 	list<InventoryInfo> getUserInventoryInfo(const char* name);
+	void updateUserInfo(User userInfo);
 };
 
 #endif

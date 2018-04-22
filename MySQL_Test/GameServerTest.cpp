@@ -565,6 +565,19 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 	sleep(2);
 #endif
 
+	gameClient->requestMapMove(10, 11, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(10, 12, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(11, 12, gameClient->getMainUser().getField());
+
+	gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+	gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
 	gameClient->requestLogout();
 
 #ifdef _WIN32
@@ -584,7 +597,6 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc0(void* arg)
 void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 #endif
 {
-	int clientNumber = 0;
 	char message[1024];
 	int code;
 	bool logout = false;
@@ -595,7 +607,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 	ChattingDao* chattingDao = new ChattingDao(dataSource);
 	MapInfoDao* mapInfoDao = new MapInfoDao(dataSource);
 	UserService* userService = new UserService(dataSource);
-	GameClient* gameClient = gameServerTest->getGameClient(clientNumber);
+	GameClient* gameClient = gameServerTest->getGameClient(0);
 
 	while(logout != true)
 	{
@@ -610,7 +622,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				gameClient->setGetUserInfo(true);
 
 				User getUser = userDao->get(user.getName());
-				gameServerTest->checkSameUserLog(clientNumber, user, getUser);
+				gameServerTest->checkSameUserLog(0, user, getUser);
 			}
 			break;
 		case CHATTING_PROCESS:
@@ -630,7 +642,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 					for (iter = chattingList.begin(); iter != chattingList.end(); iter++)
 					{
 						Chatting imsi = (Chatting)*iter;
-						gameServerTest->checkSameChatLog(clientNumber, gameClient->getChattingInfo(count++), imsi);
+						gameServerTest->checkSameChatLog(0, gameClient->getChattingInfo(count++), imsi);
 					}
 				}
 			}
@@ -643,7 +655,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				gameClient->setIsLogin(false);
 				gameClient->setPopupLoginFail(true);
 			}
-			gameServerTest->assertThatLog(clientNumber, message, "login okey");
+			gameServerTest->assertThatLog(0, message, "login okey");
 			break;
 		case OTHER_USER_MAP_MOVE:
 			{
@@ -653,21 +665,37 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 2)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 2; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(clientNumber, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
 				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
 					delete user;
 				}
 			}
@@ -691,7 +719,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
 					{
 						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(clientNumber, gameClient->getObjectInfo(count++), imsi);
+						gameServerTest->checkSameMapInfoLog(0, gameClient->getObjectInfo(count++), imsi);
 					}
 				}
 			}
@@ -714,7 +742,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
 					{
 						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(clientNumber, gameClient->getMonsterInfo(count++), imsi);
+						gameServerTest->checkSameMapInfoLog(0, gameClient->getMonsterInfo(count++), imsi);
 					}
 				}
 			}
@@ -735,7 +763,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 					list<InventoryInfo> dbInventoryinfo = userService->getUserInventoryInfo(gameClient->getMainUser().getName());
 
 					for (iter = dbInventoryinfo.begin(); iter != dbInventoryinfo.end(); iter++)
-						gameServerTest->checkSameInventoryInfo(clientNumber, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
+						gameServerTest->checkSameInventoryInfo(0, gameClient->getInventoryInfo(iter->getXpos(), iter->getYpos()), *iter);
 				}
 			}
 			break;
@@ -803,6 +831,16 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 	gameClient->chatting("Hello World1");
 	gameClient->chatting("Hello World2");
 	gameClient->chatting("Hello World3");
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
+	gameClient->requestMapMove(20, 11, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(20, 12, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(21, 12, gameClient->getMainUser().getField());
 
 #ifdef _WIN32
 	Sleep(2000);
@@ -896,20 +934,39 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 2)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 2; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(1, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
+					delete user;
+				}
 			}
 			break;
 		case REQUEST_FIELD_OBJECT_INFO:
@@ -1050,6 +1107,16 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 	sleep(2);
 #endif
 
+	gameClient->requestMapMove(12, 11, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(12, 12, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(13, 12, gameClient->getMainUser().getField());
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
 	gameClient->requestLogout();
 
 #ifdef _WIN32
@@ -1136,20 +1203,39 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 2)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 2; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(2, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
+					delete user;
+				}
 			}
 			break;
 		case REQUEST_FIELD_OBJECT_INFO:
@@ -1290,6 +1376,16 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 	sleep(2);
 #endif
 
+	gameClient->requestMapMove(1, 11, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(1, 12, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(2, 12, gameClient->getMainUser().getField());
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
 	gameClient->requestLogout();
 
 #ifdef _WIN32
@@ -1376,20 +1472,39 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 3)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 3; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(3, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
+					delete user;
+				}
 			}
 			break;
 		case REQUEST_FIELD_OBJECT_INFO:
@@ -1530,6 +1645,16 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 	sleep(2);
 #endif
 
+	gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(11, 1, gameClient->getMainUser().getField());
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
 	gameClient->requestLogout();
 
 #ifdef _WIN32
@@ -1616,20 +1741,39 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 3)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 3; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(4, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
+					delete user;
+				}
 			}
 			break;
 		case REQUEST_FIELD_OBJECT_INFO:
@@ -1770,6 +1914,16 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 	sleep(2);
 #endif
 
+	gameClient->requestMapMove(10, 5, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(10, 6, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(11, 6, gameClient->getMainUser().getField());
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
 	gameClient->requestLogout();
 
 #ifdef _WIN32
@@ -1856,20 +2010,39 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 3)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 3; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(5, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
+					delete user;
+				}
 			}
 			break;
 		case REQUEST_FIELD_OBJECT_INFO:
@@ -2010,6 +2183,16 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 	sleep(2);
 #endif
 
+	gameClient->requestMapMove(10, 2, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(10, 3, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(11, 3, gameClient->getMainUser().getField());
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
 	gameClient->requestLogout();
 
 #ifdef _WIN32
@@ -2096,20 +2279,39 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 3)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 3; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(6, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
+					delete user;
+				}
 			}
 			break;
 		case REQUEST_FIELD_OBJECT_INFO:
@@ -2250,6 +2452,16 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 	sleep(2);
 #endif
 
+	gameClient->requestMapMove(5, 5, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(5, 6, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(6, 6, gameClient->getMainUser().getField());
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
 	gameClient->requestLogout();
 
 #ifdef _WIN32
@@ -2336,20 +2548,39 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 2)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 2; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(7, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
+					delete user;
+				}
 			}
 			break;
 		case REQUEST_FIELD_OBJECT_INFO:
@@ -2489,6 +2720,16 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 	sleep(2);
 #endif
 
+	gameClient->requestMapMove(2, 8, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(2, 9, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(3, 9, gameClient->getMainUser().getField());
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
 	gameClient->requestLogout();
 
 #ifdef _WIN32
@@ -2575,20 +2816,39 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 2)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 2; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(8, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
+					delete user;
+				}
 			}
 			break;
 		case REQUEST_FIELD_OBJECT_INFO:
@@ -2729,6 +2989,16 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 	sleep(2);
 #endif
 
+	gameClient->requestMapMove(101, 11, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(101, 12, gameClient->getMainUser().getField());
+	gameClient->requestMapMove(102, 12, gameClient->getMainUser().getField());
+
+#ifdef _WIN32
+	Sleep(2000);
+#elif __linux__
+	sleep(2);
+#endif
+
 	gameClient->requestLogout();
 
 #ifdef _WIN32
@@ -2815,20 +3085,39 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 				if (user->getAction() == ACTION_MAP_IN)
 				{
 					gameClient->addUsersInfo(user);
-					if (gameClient->sizeUserInfo() >= 2)
-					{
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE -> client");
 
-						for (int i = 0; i < 2; i++)
-						{
-							User otherUser = gameClient->getUsersInfo(i);
-							User dbUserInfo = userDao->get(otherUser.getName());
-							gameServerTest->checkSameUserLog(9, otherUser, dbUserInfo);
-						}
-					}
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
 				}
 				else if (user->getAction() == ACTION_MAP_OUT)
+				{
 					gameClient->removeUsersInfo(user->getName());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
+
+					gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
+					User otherUser = gameClient->getUsersInfo(user->getName());
+
+					char message[1024];
+					sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
+					gameClient->addLog(message);
+
+					delete user;
+				}
 			}
 			break;
 		case REQUEST_FIELD_OBJECT_INFO:

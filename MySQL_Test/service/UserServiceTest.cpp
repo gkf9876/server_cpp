@@ -141,6 +141,7 @@ void UserServiceTest::run()
 		getLoginUserAll();
 		getFieldLoginUserAll();
 		getUserInventoryInfo();
+		updateUserInfo();
 	}
 	catch (const runtime_error& error)
 	{
@@ -336,4 +337,32 @@ void UserServiceTest::getUserInventoryInfo()
 		checkSameInventoryInfo(*iter, item[i]);
 		iter++;
 	}
+}
+
+void UserServiceTest::updateUserInfo()
+{
+	std::cout << "UserServiceTest : updateUserInfo()" << std::endl;
+
+	userDao->deleteAll();
+	userDao->add(*user1);
+	userDao->add(*user2);
+
+	user1->setSock(5);
+	user1->setPassword("12345");
+	user1->setXpos(105);
+	user1->setYpos(125);
+	user1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx15");
+	user1->setSeeDirection(295);
+	user1->setAction(ACTION_MAP_IN);
+	user1->setLogin(1);
+	user1->setLastLogin("2018-03-17 00:42:55");
+	user1->setLastLogout("2018-03-17 00:43:05");
+	user1->setJoinDate("2018-01-01 00:00:05");
+
+	userService->updateUserInfo(*user1);
+
+	User user1Update = userDao->get(user1->getName());
+	checkSameUser(user1Update, *user1);
+	User user2Update = userDao->get(user2->getName());
+	checkSameUser(user2Update, *user2);
 }

@@ -296,21 +296,7 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 
 		for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
 		{
-			MapInfo mapInfo;
-
-			mapInfo.setIdx(monsterIter->getIdx());
-			mapInfo.setField(monsterIter->getField());
-			mapInfo.setObjectCode(monsterIter->getObjectCode());
-			mapInfo.setName(monsterIter->getName());
-			mapInfo.setType(monsterIter->getType());
-			mapInfo.setXpos(monsterIter->getXpos());
-			mapInfo.setYpos(monsterIter->getYpos());
-			mapInfo.setZOrder(monsterIter->getZOrder());
-			mapInfo.setFileDir(monsterIter->getFileDir());
-			mapInfo.setCount(monsterIter->getCount());
-			mapInfo.setHp(monsterIter->getHp());
-
-			memcpy(message, &mapInfo, sizeof(MapInfo));
+			memcpy(message, &(*monsterIter), sizeof(MapInfo));
 			sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
 		}
 	}
@@ -382,6 +368,74 @@ void GameServer::chatting(SOCKET sock, const char* chatting)
 	}
 }
 
+void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
+{
+	char message[BUF_SIZE];
+	User moveUser;
+	list<User> fieldUserList, regionFieldUserList;
+	list<User>::iterator iter;
+	User user;
+
+	try
+	{
+		memcpy(&user, userInfo, sizeof(User));
+
+		if (user.getAction() == ACTION_MAP_MOVE)
+		{
+			fieldUserList = userService->getFieldLoginUserAll(user.getField());
+			userService->updateUserInfo(user);
+
+			for (iter = fieldUserList.begin(); iter != fieldUserList.end(); iter++)
+			{
+				if (iter->getSock() == sock)
+					continue;
+
+				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
+			}
+		}
+		else if (user.getAction() == ACTION_MAP_POTAL)
+		{
+			moveUser = userService->getUserInfo(user.getName());
+			regionFieldUserList = userService->getFieldLoginUserAll(userService->getUserInfo(user.getName()).getField());
+			moveUser.setAction(ACTION_MAP_OUT);
+
+			for (iter = regionFieldUserList.begin(); iter != regionFieldUserList.end(); iter++)
+			{
+				if (iter->getSock() == sock)
+					continue;
+
+				memcpy(message, &moveUser, sizeof(User));
+				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+
+				iter->setAction(ACTION_MAP_OUT);
+				memcpy(message, &(*iter), sizeof(User));
+				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
+			}
+
+			fieldUserList = userService->getFieldLoginUserAll(user.getField());
+			user.setAction(ACTION_MAP_IN);
+			userService->updateUserInfo(user);
+
+			for (iter = fieldUserList.begin(); iter != fieldUserList.end(); iter++)
+			{
+				if (iter->getSock() == sock)
+					continue;
+
+				memcpy(message, &user, sizeof(User));
+				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+
+				iter->setAction(ACTION_MAP_IN);
+				memcpy(message, &(*iter), sizeof(User));
+				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
+			}
+		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
 #elif __linux__
 void GameServer::accept_linux()
 {
@@ -434,7 +488,7 @@ void GameServer::accept_linux()
 						updateLogin(ep_events[i].data.fd, buffer);
 						break;
 					case USER_MOVE_UPDATE:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
+						updateMoveInfo(ep_events[i].data.fd, buffer);
 						break;
 					case OTHER_USER_MAP_MOVE:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
@@ -680,6 +734,74 @@ void GameServer::chatting(int sock, const char* chatting)
 		{
 			memcpy(message, chatting, sizeof(Chatting));
 			sendRequest(iter->getSock(), CHATTING_PROCESS, message, sizeof(Chatting));
+		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+void GameServer::updateMoveInfo(int sock, const char* userInfo)
+{
+	char message[BUF_SIZE];
+	User moveUser;
+	list<User> fieldUserList, regionFieldUserList;
+	list<User>::iterator iter;
+	User user;
+
+	try
+	{
+		memcpy(&user, userInfo, sizeof(User));
+
+		if (user.getAction() == ACTION_MAP_MOVE)
+		{
+			fieldUserList = userService->getFieldLoginUserAll(user.getField());
+			userService->updateUserInfo(user);
+
+			for (iter = fieldUserList.begin(); iter != fieldUserList.end(); iter++)
+			{
+				if (iter->getSock() == sock)
+					continue;
+
+				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
+			}
+		}
+		else if (user.getAction() == ACTION_MAP_POTAL)
+		{
+			moveUser = userService->getUserInfo(user.getName());
+			regionFieldUserList = userService->getFieldLoginUserAll(userService->getUserInfo(user.getName()).getField());
+			moveUser.setAction(ACTION_MAP_OUT);
+
+			for (iter = regionFieldUserList.begin(); iter != regionFieldUserList.end(); iter++)
+			{
+				if (iter->getSock() == sock)
+					continue;
+
+				memcpy(message, &moveUser, sizeof(User));
+				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+
+				iter->setAction(ACTION_MAP_OUT);
+				memcpy(message, &(*iter), sizeof(User));
+				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
+			}
+
+			fieldUserList = userService->getFieldLoginUserAll(user.getField());
+			user.setAction(ACTION_MAP_IN);
+			userService->updateUserInfo(user);
+
+			for (iter = fieldUserList.begin(); iter != fieldUserList.end(); iter++)
+			{
+				if (iter->getSock() == sock)
+					continue;
+
+				memcpy(message, &user, sizeof(User));
+				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+
+				iter->setAction(ACTION_MAP_IN);
+				memcpy(message, &(*iter), sizeof(User));
+				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
+			}
 		}
 	}
 	catch (const runtime_error& error)

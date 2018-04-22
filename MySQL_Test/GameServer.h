@@ -100,6 +100,7 @@ public:
 	void updateLogout(SOCKET sock);
 
 	void chatting(SOCKET sock, const char* chatting);
+	void updateMoveInfo(SOCKET sock, const char* userInfo);
 #elif __linux__
 	void accept_linux();
 
@@ -115,6 +116,7 @@ public:
 	void updateLogout(int sock);
 
 	void chatting(int sock, const char* chatting);
+	void updateMoveInfo(int sock, const char* userInfo);
 #endif
 
 	void regenMonster();

@@ -52,3 +52,8 @@ list<InventoryInfo> UserService::getUserInventoryInfo(const char* name)
 {
 	return inventoryInfoDao->getUserInventoryList(name);
 }
+
+void UserService::updateUserInfo(User userInfo)
+{
+	userDao->update(userInfo);
+}
