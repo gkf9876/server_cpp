@@ -271,6 +271,12 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 	list<MapInfo> mapMonsterList;
 	list<MapInfo>::iterator monsterIter;
 
+	list<MapInfo> mapObjectList;
+	list<MapInfo>::iterator objectIter;
+
+	list<InventoryInfo> inventoryList;
+	list<InventoryInfo>::iterator inventoryIter;
+
 	try
 	{
 		userService->updateLogin(sock, name);
@@ -298,6 +304,22 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 		{
 			memcpy(message, &(*monsterIter), sizeof(MapInfo));
 			sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
+		}
+
+		mapObjectList = mapManageService->getFieldObject(loginUser.getField());
+
+		for (objectIter = mapObjectList.begin(); objectIter != mapObjectList.end(); objectIter++)
+		{
+			memcpy(message, &(*objectIter), sizeof(MapInfo));
+			sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
+		}
+
+		inventoryList = userService->getUserInventoryInfo(loginUser.getName());
+
+		for (inventoryIter = inventoryList.begin(); inventoryIter != inventoryList.end(); inventoryIter++)
+		{
+			memcpy(message, &(*inventoryIter), sizeof(InventoryInfo));
+			sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
 		}
 	}
 	catch (const runtime_error& error)
@@ -376,12 +398,20 @@ void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
 	list<User>::iterator iter;
 	User user;
 
+	list<MapInfo> mapMonsterList;
+	list<MapInfo>::iterator monsterIter;
+
+	list<MapInfo> mapObjectList;
+	list<MapInfo>::iterator objectIter;
+
 	try
 	{
 		memcpy(&user, userInfo, sizeof(User));
 
 		if (user.getAction() == ACTION_MAP_MOVE)
 		{
+			sendRequest(sock, REQUEST_MAP_MOVE, "map_move_success", strlen("map_move_success") + 1);
+
 			fieldUserList = userService->getFieldLoginUserAll(user.getField());
 			userService->updateUserInfo(user);
 
@@ -392,9 +422,12 @@ void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
 
 				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
 			}
+
 		}
 		else if (user.getAction() == ACTION_MAP_POTAL)
 		{
+			sendRequest(sock, REQUEST_MAP_MOVE, "map_potal_success", strlen("map_potal_success") + 1);
+
 			moveUser = userService->getUserInfo(user.getName());
 			regionFieldUserList = userService->getFieldLoginUserAll(userService->getUserInfo(user.getName()).getField());
 			moveUser.setAction(ACTION_MAP_OUT);
@@ -406,10 +439,6 @@ void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
 
 				memcpy(message, &moveUser, sizeof(User));
 				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
-
-				iter->setAction(ACTION_MAP_OUT);
-				memcpy(message, &(*iter), sizeof(User));
-				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 			}
 
 			fieldUserList = userService->getFieldLoginUserAll(user.getField());
@@ -428,10 +457,27 @@ void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
 				memcpy(message, &(*iter), sizeof(User));
 				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 			}
+
+			mapMonsterList = mapManageService->getFieldMonster(user.getField());
+
+			for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
+			{
+				memcpy(message, &(*monsterIter), sizeof(MapInfo));
+				sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
+			}
+
+			mapObjectList = mapManageService->getFieldObject(user.getField());
+
+			for (objectIter = mapObjectList.begin(); objectIter != mapObjectList.end(); objectIter++)
+			{
+				memcpy(message, &(*objectIter), sizeof(MapInfo));
+				sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
+			}
 		}
 	}
 	catch (const runtime_error& error)
 	{
+		sendRequest(sock, REQUEST_MAP_MOVE, "map_move_fail", strlen("map_move_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -750,12 +796,20 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 	list<User>::iterator iter;
 	User user;
 
+	list<MapInfo> mapMonsterList;
+	list<MapInfo>::iterator monsterIter;
+
+	list<MapInfo> mapObjectList;
+	list<MapInfo>::iterator objectIter;
+
 	try
 	{
 		memcpy(&user, userInfo, sizeof(User));
 
 		if (user.getAction() == ACTION_MAP_MOVE)
 		{
+			sendRequest(sock, REQUEST_MAP_MOVE, "map_move_success", strlen("map_move_success") + 1);
+
 			fieldUserList = userService->getFieldLoginUserAll(user.getField());
 			userService->updateUserInfo(user);
 
@@ -766,9 +820,12 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 
 				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
 			}
+
 		}
 		else if (user.getAction() == ACTION_MAP_POTAL)
 		{
+			sendRequest(sock, REQUEST_MAP_MOVE, "map_potal_success", strlen("map_potal_success") + 1);
+
 			moveUser = userService->getUserInfo(user.getName());
 			regionFieldUserList = userService->getFieldLoginUserAll(userService->getUserInfo(user.getName()).getField());
 			moveUser.setAction(ACTION_MAP_OUT);
@@ -780,10 +837,6 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 
 				memcpy(message, &moveUser, sizeof(User));
 				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
-
-				iter->setAction(ACTION_MAP_OUT);
-				memcpy(message, &(*iter), sizeof(User));
-				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 			}
 
 			fieldUserList = userService->getFieldLoginUserAll(user.getField());
@@ -802,10 +855,27 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 				memcpy(message, &(*iter), sizeof(User));
 				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 			}
+
+			mapMonsterList = mapManageService->getFieldMonster(user.getField());
+
+			for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
+			{
+				memcpy(message, &(*monsterIter), sizeof(MapInfo));
+				sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
+			}
+
+			mapObjectList = mapManageService->getFieldObject(user.getField());
+
+			for (objectIter = mapObjectList.begin(); objectIter != mapObjectList.end(); objectIter++)
+			{
+				memcpy(message, &(*objectIter), sizeof(MapInfo));
+				sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
+			}
 		}
 	}
 	catch (const runtime_error& error)
 	{
+		sendRequest(sock, REQUEST_MAP_MOVE, "map_move_fail", strlen("map_move_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }

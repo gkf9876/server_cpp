@@ -233,3 +233,47 @@ list<MapInfo> MapInfoDao::getFieldObject(const char* field)
 
 	return objectList;
 }
+
+int MapInfoDao::getCountFieldMonster(const char* field)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+	MYSQL_RES* sql_result;
+	MYSQL_ROW sql_row;
+
+	sprintf(query, "select count(name) as count from map_info where field = '%s' and type = 'MONSTER'", field);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
+
+	sql_result = mysql_store_result(&connection);
+	sql_row = mysql_fetch_row(sql_result);
+	mysql_free_result(sql_result);
+
+	return atoi(sql_row[0]);
+}
+
+int MapInfoDao::getCountFieldObject(const char* field)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+	MYSQL_RES* sql_result;
+	MYSQL_ROW sql_row;
+
+	sprintf(query, "select count(name) as count from map_info where field = '%s' and type = 'OBJECT'", field);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
+
+	sql_result = mysql_store_result(&connection);
+	sql_row = mysql_fetch_row(sql_result);
+	mysql_free_result(sql_result);
+
+	return atoi(sql_row[0]);
+}

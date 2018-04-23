@@ -40,6 +40,7 @@
 #define REGEN_MONSTER					16
 #define ATTACK_FILED_OBJECT				17
 #define REQUEST_LOGOUT					18
+#define REQUEST_MAP_MOVE				19
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define CUR_PATH						"/home/gkf9876/server/Resources/"

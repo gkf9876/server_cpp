@@ -176,19 +176,19 @@ void MapInfoDaoTest::getFieldMonster()
 	std::cout << "MapInfoDaoTest : getFieldMonster()" << std::endl;
 
 	mapInfoDao->deleteAll();
-	assertThat(mapInfoDao->getCount(), 0);
+	assertThat(mapInfoDao->getCountFieldMonster(mapInfo1->getField()), 0);
 
 	mapInfoDao->add(*mapInfo1);
-	assertThat(mapInfoDao->getCount(), 1);
+	assertThat(mapInfoDao->getCountFieldMonster(mapInfo1->getField()), 1);
 
 	mapInfoDao->add(*mapInfo2);
-	assertThat(mapInfoDao->getCount(), 2);
+	assertThat(mapInfoDao->getCountFieldMonster(mapInfo1->getField()), 2);
 
 	mapInfoDao->add(*mapInfo3);
-	assertThat(mapInfoDao->getCount(), 3);
+	assertThat(mapInfoDao->getCountFieldMonster(mapInfo1->getField()), 2);
 
 	mapInfoDao->add(*mapInfo4);
-	assertThat(mapInfoDao->getCount(), 4);
+	assertThat(mapInfoDao->getCountFieldMonster(mapInfo1->getField()), 2);
 
 	list<MapInfo> fieldLoginUserList = mapInfoDao->getFieldMonster(mapInfo1->getField());
 	list<MapInfo>::iterator iter;
@@ -205,19 +205,19 @@ void MapInfoDaoTest::getFieldObject()
 	std::cout << "MapInfoDaoTest : getFieldObject()" << std::endl;
 
 	mapInfoDao->deleteAll();
-	assertThat(mapInfoDao->getCount(), 0);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
 
 	mapInfoDao->add(*mapInfo1);
-	assertThat(mapInfoDao->getCount(), 1);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
 
 	mapInfoDao->add(*mapInfo2);
-	assertThat(mapInfoDao->getCount(), 2);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
 
 	mapInfoDao->add(*mapInfo3);
-	assertThat(mapInfoDao->getCount(), 3);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 1);
 
 	mapInfoDao->add(*mapInfo4);
-	assertThat(mapInfoDao->getCount(), 4);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 2);
 
 	list<MapInfo> fieldObjectList = mapInfoDao->getFieldObject(mapInfo1->getField());
 	list<MapInfo>::iterator iter;

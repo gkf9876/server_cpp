@@ -468,7 +468,19 @@ void GameServerTest::run()
 	}
 	printf("\n");
 
-	regenMonster();
+	for (int i = 0; i < 10; i++)
+	{
+		printf("GameServerTest: GameClient %d monster info count : %d\n", i, gameClient[i]->sizeMonsterInfo());
+	}
+	printf("\n");
+
+	for (int i = 0; i < 10; i++)
+	{
+		printf("GameServerTest: GameClient %d object info count : %d\n", i, gameClient[i]->sizeObjectInfo());
+	}
+	printf("\n");
+
+	//regenMonster();
 }
 
 GameServer* GameServerTest::getGameServer()
@@ -709,22 +721,6 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 8)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo objectinfo = gameClient->getObjectInfo(0);
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(0, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -733,21 +729,6 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 18)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(0, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -776,6 +757,17 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(0, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(0, message, "map_move_success");
 			break;
 		default:
 			break;
@@ -984,22 +976,6 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 8)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo objectinfo = gameClient->getObjectInfo(0);
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(1, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -1008,21 +984,6 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 18)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(1, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -1051,6 +1012,17 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(1, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(1, message, "map_move_success");
 			break;
 		default:
 			break;
@@ -1259,22 +1231,6 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 8)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo objectinfo = gameClient->getObjectInfo(0);
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(2, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -1283,21 +1239,6 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 18)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(2, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -1326,6 +1267,17 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(2, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(2, message, "map_move_success");
 			break;
 		default:
 			break;
@@ -1534,22 +1486,6 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 7)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo objectinfo = gameClient->getObjectInfo(0);
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(3, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -1558,21 +1494,6 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 43)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(3, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -1601,6 +1522,17 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(3, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(3, message, "map_move_success");
 			break;
 		default:
 			break;
@@ -1809,22 +1741,6 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 7)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo objectinfo = gameClient->getObjectInfo(0);
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(4, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -1833,21 +1749,6 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 43)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(4, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -1876,6 +1777,17 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(4, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(4, message, "map_move_success");
 			break;
 		default:
 			break;
@@ -2084,22 +1996,6 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 7)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo objectinfo = gameClient->getObjectInfo(0);
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(5, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -2108,21 +2004,6 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 43)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(5, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -2151,6 +2032,17 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(5, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(5, message, "map_move_success");
 			break;
 		default:
 			break;
@@ -2359,22 +2251,6 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 7)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo objectinfo = gameClient->getObjectInfo(0);
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(6, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -2383,21 +2259,6 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 43)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(6, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -2426,6 +2287,17 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(6, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(6, message, "map_move_success");
 			break;
 		default:
 			break;
@@ -2634,21 +2506,6 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 5)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(gameClient->getMainUser().getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(7, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -2657,21 +2514,6 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 28)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(7, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -2700,6 +2542,17 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(7, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(7, message, "map_move_success");
 			break;
 		default:
 			break;
@@ -2908,22 +2761,6 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 5)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo objectinfo = gameClient->getObjectInfo(0);
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(8, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -2932,21 +2769,6 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 28)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(8, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -2975,6 +2797,17 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(8, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(8, message, "map_move_success");
 			break;
 		default:
 			break;
@@ -3183,22 +3016,6 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
 				gameClient->addObjectInfo(objectInfo);
-
-				if (gameClient->sizeObjectInfo() >= 5)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_OBJECT_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo objectinfo = gameClient->getObjectInfo(0);
-					list<MapInfo> dbObjectinfo = mapInfoDao->getFieldObject(objectinfo.getField());
-
-					for (iter = dbObjectinfo.begin(); iter != dbObjectinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(9, gameClient->getObjectInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_FIELD_MONSTER_INFO:
@@ -3207,21 +3024,6 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
 				gameClient->addMonsterInfo(monsterInfo);
-				if (gameClient->sizeMonsterInfo() >= 28)
-				{
-					gameClient->addLog("GameServerTest : REQUEST_FIELD_MONSTER_INFO -> client");
-
-					int count = 0;
-					list<MapInfo>::iterator iter;
-					MapInfo monsterinfo = gameClient->getMonsterInfo(0);
-					list<MapInfo> dbmonsterinfo = mapInfoDao->getFieldMonster(monsterinfo.getField());
-
-					for (iter = dbmonsterinfo.begin(); iter != dbmonsterinfo.end(); iter++)
-					{
-						MapInfo imsi = (MapInfo)*iter;
-						gameServerTest->checkSameMapInfoLog(9, gameClient->getMonsterInfo(count++), imsi);
-					}
-				}
 			}
 			break;
 		case REQUEST_INVENTORY_ITEM_INFO:
@@ -3250,6 +3052,17 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 				gameClient->closeClient();
 				logout = true;
 			}
+			break;
+		case REQUEST_MAP_MOVE:
+			if (!strcmp(message, "map_potal_success"))
+			{
+				gameClient->clearUsersInfo();
+				gameClient->clearObjectInfo();
+				gameClient->clearMonsterInfo();
+				gameServerTest->assertThatLog(9, message, "map_potal_success");
+			}
+			else if (!strcmp(message, "map_move_success"))
+				gameServerTest->assertThatLog(9, message, "map_move_success");
 			break;
 		default:
 			break;

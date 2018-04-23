@@ -100,6 +100,11 @@ User GameClient::getUsersInfo(const char* name)
 	}
 }
 
+void GameClient::clearUsersInfo()
+{
+	this->usersInfo->clear();
+}
+
 void GameClient::addObjectInfo(MapInfo* object)
 {
 	this->objectInfo->push_back(object);
@@ -115,6 +120,11 @@ MapInfo GameClient::getObjectInfo(int idx)
 	return *(this->objectInfo->at(idx));
 }
 
+void GameClient::clearObjectInfo()
+{
+	this->objectInfo->clear();
+}
+
 void GameClient::addMonsterInfo(MapInfo* monster)
 {
 	this->monsterInfo->push_back(monster);
@@ -128,6 +138,11 @@ int GameClient::sizeMonsterInfo()
 MapInfo GameClient::getMonsterInfo(int idx)
 {
 	return *(this->monsterInfo->at(idx));
+}
+
+void GameClient::clearMonsterInfo()
+{
+	this->monsterInfo->clear();
 }
 
 void GameClient::addChattingInfo(Chatting* chatting)

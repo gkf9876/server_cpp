@@ -78,14 +78,17 @@ public:
 	User getUsersInfo(int idx);
 	void moveOtherUser(const char* userName, int xpos, int ypos);
 	User getUsersInfo(const char* name);
+	void clearUsersInfo();
 
 	void addObjectInfo(MapInfo* object);
 	int sizeObjectInfo();
 	MapInfo getObjectInfo(int idx);
+	void clearObjectInfo();
 
 	void addMonsterInfo(MapInfo* monster);
 	int sizeMonsterInfo();
 	MapInfo getMonsterInfo(int idx);
+	void clearMonsterInfo();
 
 	void addChattingInfo(Chatting* chatting);
 	int sizeChattingInfo();
