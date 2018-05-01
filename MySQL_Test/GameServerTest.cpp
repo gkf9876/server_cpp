@@ -4,9 +4,15 @@ int flag = 1;
 
 GameServerTest::GameServerTest()
 {
+	this->mainAssert = new Assert();
+
 	for (int i = 0; i < 10; i++)
 	{
 		this->gameClient[i] = new GameClient();
+
+		this->context[i] = new ApplicationContext();
+		this->assert[i] = new Assert();
+		this->assert[i]->setApplicationContext(context[i]);
 	}
 
 	for(int i=0; i<10; i++)
@@ -216,9 +222,13 @@ GameServerTest::GameServerTest()
 
 GameServerTest::~GameServerTest()
 {
+	delete mainAssert;
+
 	for (int i = 0; i < 10; i++)
 	{
 		delete this->gameClient[i];
+		delete this->assert[i];
+		delete this->context[i];
 	}
 
 	delete this->map1;
@@ -228,6 +238,8 @@ GameServerTest::~GameServerTest()
 
 void GameServerTest::setApplicationContext(ApplicationContext* context)
 {
+	this->mainAssert->setApplicationContext(context);
+
 	this->userDao = context->userDao();
 	this->gameServer = context->gameServer();
 	this->mapDao = context->mapDao();
@@ -236,113 +248,6 @@ void GameServerTest::setApplicationContext(ApplicationContext* context)
 	this->chattingDao = context->chattingDao();
 	this->inventoryInfoDao = context->inventoryInfoDao();
 	this->mapManageService = context->mapManageService();
-}
-
-void GameServerTest::assertThatLog(int clientNum, int value, int compValue)
-{
-	if (value != compValue)
-	{
-		std::ostringstream o;
-		o << "\tExpected is: <" << compValue << "> but: was <" << value << ">";
-		this->gameClient[clientNum]->addLog(o.str());
-	}
-}
-
-void GameServerTest::assertThatLog(int clientNum, char* value, char* compValue)
-{
-	if (strcmp(value, compValue))
-	{
-		std::ostringstream o;
-		o << "\tExpected is: <" << compValue << "> but: was <" << value << ">";
-		this->gameClient[clientNum]->addLog(o.str());
-	}
-}
-
-void GameServerTest::assertThatLog(int clientNum, char* value, const char* compValue)
-{
-	if (strcmp(value, compValue))
-	{
-		std::ostringstream o;
-		o << "\tExpected is: <" << compValue << "> but: was <" << value << ">";
-		this->gameClient[clientNum]->addLog(o.str());
-	}
-}
-
-void GameServerTest::assertThatLog(int clientNum, string value, string compValue)
-{
-	if (value.compare(compValue) != 0)
-	{
-		std::ostringstream o;
-		o << "\tExpected is: <" << compValue << "> but: was <" << value << ">";
-		this->gameClient[clientNum]->addLog(o.str());
-	}
-}
-
-void GameServerTest::checkSameUserLog(int clientNum, User user1, User user2)
-{
-	assertThatLog(clientNum, user1.getSock(), user2.getSock());
-	assertThatLog(clientNum, user1.getName(), user2.getName());
-	assertThatLog(clientNum, user1.getPassword(), user2.getPassword());
-	assertThatLog(clientNum, user1.getXpos(), user2.getXpos());
-	assertThatLog(clientNum, user1.getYpos(), user2.getYpos());
-	assertThatLog(clientNum, user1.getField(), user2.getField());
-	assertThatLog(clientNum, user1.getSeeDirection(), user2.getSeeDirection());
-	assertThatLog(clientNum, user1.getAction(), user2.getAction());
-	assertThatLog(clientNum, user1.getLogin(), user2.getLogin());
-	assertThatLog(clientNum, user1.getLastLogin(), user2.getLastLogin());
-	assertThatLog(clientNum, user1.getLastLogout(), user2.getLastLogout());
-	assertThatLog(clientNum, user1.getJoinDate(), user2.getJoinDate());
-}
-
-void GameServerTest::checkSameChatLog(int clientNum, Chatting chat1, Chatting chat2)
-{
-	assertThatLog(clientNum, chat1.getName(), chat2.getName());
-	assertThatLog(clientNum, chat1.getContent(), chat2.getContent());
-	assertThatLog(clientNum, chat1.getField(), chat2.getField());
-}
-
-void GameServerTest::checkSameMapInfoLog(int clientNum, MapInfo mapInfo1, MapInfo mapInfo2)
-{
-	assertThatLog(clientNum, mapInfo1.getField(), mapInfo2.getField());
-	assertThatLog(clientNum, mapInfo1.getObjectCode(), mapInfo2.getObjectCode());
-	assertThatLog(clientNum, mapInfo1.getName(), mapInfo2.getName());
-	assertThatLog(clientNum, mapInfo1.getType(), mapInfo2.getType());
-	assertThatLog(clientNum, mapInfo1.getXpos(), mapInfo2.getXpos());
-	assertThatLog(clientNum, mapInfo1.getYpos(), mapInfo2.getYpos());
-	assertThatLog(clientNum, mapInfo1.getZOrder(), mapInfo2.getZOrder());
-	assertThatLog(clientNum, mapInfo1.getFileDir(), mapInfo2.getFileDir());
-	assertThatLog(clientNum, mapInfo1.getCount(), mapInfo2.getCount());
-	assertThatLog(clientNum, mapInfo1.getHp(), mapInfo2.getHp());
-}
-
-void GameServerTest::checkSameInventoryInfo(int clientNum, InventoryInfo inventoryInfo1, InventoryInfo inventoryInfo2)
-{
-	assertThatLog(clientNum, inventoryInfo1.getItemName(), inventoryInfo2.getItemName());
-	assertThatLog(clientNum, inventoryInfo1.getUserName(), inventoryInfo2.getUserName());
-	assertThatLog(clientNum, inventoryInfo1.getType(), inventoryInfo2.getType());
-	assertThatLog(clientNum, inventoryInfo1.getXpos(), inventoryInfo2.getXpos());
-	assertThatLog(clientNum, inventoryInfo1.getYpos(), inventoryInfo2.getYpos());
-	assertThatLog(clientNum, inventoryInfo1.getFileDir(), inventoryInfo2.getFileDir());
-	assertThatLog(clientNum, inventoryInfo1.getCount(), inventoryInfo2.getCount());
-}
-
-void GameServerTest::assertThat(int value, int compValue)
-{
-	if (value != compValue)
-		std::cout << "\tExpected is: <" << compValue << "> but: was <" << value << ">" << std::endl;
-}
-
-void GameServerTest::assertThat(string value, string compValue)
-{
-	if (value.compare(compValue) != 0)
-		std::cout << "\tExpected is: <" << compValue.c_str() << "> but: was <" << value.c_str() << ">" << std::endl;
-}
-
-void GameServerTest::checkSameChat(Chatting chat1, Chatting chat2)
-{
-	assertThat(chat1.getName(), chat2.getName());
-	assertThat(chat1.getContent(), chat2.getContent());
-	assertThat(chat1.getField(), chat2.getField());
 }
 
 void GameServerTest::run()
@@ -505,6 +410,11 @@ GameClient* GameServerTest::getGameClient(int idx)
 	return this->gameClient[idx];
 }
 
+Assert* GameServerTest::getAssert(int idx)
+{
+	return this->assert[idx];
+}
+
 UserDao* GameServerTest::getUserDao()
 {
 	return this->userDao;
@@ -579,15 +489,21 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient);
 
-#ifdef _WIN32
-		Sleep(2000);
-#elif __linux__
-		sleep(2);
-#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(10, 11, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(10, 12, gameClient->getMainUser().getField());
@@ -752,39 +668,15 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -851,11 +743,7 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(0, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(0, message, "map_move_success");
-				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
 					gameClient->setIsMapPotalFinish(true);
@@ -872,6 +760,10 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -927,15 +819,21 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient);
 
-#ifdef _WIN32
-		Sleep(2000);
-#elif __linux__
-		sleep(2);
-#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(20, 11, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(20, 12, gameClient->getMainUser().getField());
@@ -1057,39 +955,15 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -1156,11 +1030,7 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(1, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(1, message, "map_move_success");
-				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
 					gameClient->setIsMapPotalFinish(true);
@@ -1177,6 +1047,10 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -1232,15 +1106,21 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient);
 
-#ifdef _WIN32
-		Sleep(2000);
-#elif __linux__
-		sleep(2);
-#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(12, 11, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(12, 12, gameClient->getMainUser().getField());
@@ -1349,7 +1229,6 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 					gameClient->setIsLogin(false);
 					gameClient->setPopupLoginFail(true);
 				}
-				gameServerTest->assertThatLog(2, message, "login okey");
 				break;
 			case CHATTING_PROCESS:
 				{
@@ -1364,39 +1243,15 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -1463,11 +1318,7 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(2, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(2, message, "map_move_success");
-				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
 					gameClient->setIsMapPotalFinish(true);
@@ -1484,6 +1335,10 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -1539,15 +1394,21 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient);
 
-#ifdef _WIN32
-		Sleep(2000);
-#elif __linux__
-		sleep(2);
-#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(1, 11, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(1, 12, gameClient->getMainUser().getField());
@@ -1670,39 +1531,15 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -1769,10 +1606,7 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(3, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(3, message, "map_move_success");
 				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
@@ -1790,6 +1624,10 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -1845,15 +1683,21 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient);
 
-#ifdef _WIN32
-		Sleep(2000);
-#elif __linux__
-		sleep(2);
-#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField());
@@ -1976,39 +1820,15 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -2075,10 +1895,7 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(4, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(4, message, "map_move_success");
 				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
@@ -2096,6 +1913,10 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -2151,15 +1972,21 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient);
 
-#ifdef _WIN32
-		Sleep(2000);
-#elif __linux__
-		sleep(2);
-#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(10, 5, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(10, 6, gameClient->getMainUser().getField());
@@ -2282,39 +2109,15 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -2381,10 +2184,7 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(5, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(5, message, "map_move_success");
 				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
@@ -2402,6 +2202,10 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -2457,15 +2261,21 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient);
 
-#ifdef _WIN32
-		Sleep(2000);
-#elif __linux__
-		sleep(2);
-#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(10, 2, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(10, 3, gameClient->getMainUser().getField());
@@ -2588,39 +2398,15 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -2687,10 +2473,7 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(6, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(6, message, "map_move_success");
 				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
@@ -2708,6 +2491,10 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -2763,15 +2550,21 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient);
 
-#ifdef _WIN32
-		Sleep(2000);
-#elif __linux__
-		sleep(2);
-#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(5, 5, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(5, 6, gameClient->getMainUser().getField());
@@ -2894,39 +2687,15 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -2993,10 +2762,7 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(7, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(7, message, "map_move_success");
 				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
@@ -3014,6 +2780,10 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -3069,15 +2839,21 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient);
 
-	#ifdef _WIN32
-		Sleep(2000);
-	#elif __linux__
-		sleep(2);
-	#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(2, 8, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(2, 9, gameClient->getMainUser().getField());
@@ -3200,39 +2976,15 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -3299,10 +3051,7 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(8, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(8, message, "map_move_success");
 				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
@@ -3320,6 +3069,10 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -3375,15 +3128,21 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 
 		while (gameClient->getIsGetUserInfo() != true);
 
+		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameClient->chatting("Hello World2");
-		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient);
 
-#ifdef _WIN32
-		Sleep(2000);
-#elif __linux__
-		sleep(2);
-#endif
+		gameClient->chatting("Hello World2");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient);
+
+		gameClient->chatting("Hello World3");
+		while (gameClient->getIsChattingFinish() != true);
+		gameClient->setIsChattingFinish(false);
+		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->requestMapMove(101, 11, gameClient->getMainUser().getField());
 		gameClient->requestMapMove(101, 12, gameClient->getMainUser().getField());
@@ -3506,39 +3265,15 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 					memcpy(user, message, sizeof(User));
 
 					if (user->getAction() == ACTION_MAP_IN)
-					{
 						gameClient->addUsersInfo(user);
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_IN -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-					}
 					else if (user->getAction() == ACTION_MAP_OUT)
 					{
 						gameClient->removeUsersInfo(user->getName());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_OUT -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
 						delete user;
 					}
 					else if (user->getAction() == ACTION_MAP_MOVE)
 					{
 						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-
-						gameClient->addLog("GameServerTest : OTHER_USER_MAP_MOVE, ACTION_MAP_MOVE -> client");
-						User otherUser = gameClient->getUsersInfo(user->getName());
-
-						char message[1024];
-						sprintf(message, "\tname(%s), pos(%d, %d)", user->getName(), user->getXpos(), user->getYpos());
-						gameClient->addLog(message);
-
 						delete user;
 					}
 				}
@@ -3605,10 +3340,7 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 					gameClient->clearObjectInfo();
 					gameClient->clearMonsterInfo();
 					gameClient->clearItemInfo();
-					gameServerTest->assertThatLog(9, message, "map_potal_success");
 				}
-				else if (!strcmp(message, "map_move_success"))
-					gameServerTest->assertThatLog(9, message, "map_move_success");
 				break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
@@ -3626,6 +3358,10 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
 					gameClient->setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					gameClient->setIsChattingFinish(true);
 				break;
 			default:
 				break;
@@ -3670,9 +3406,9 @@ void GameServerTest::regenMonster()
 
 	for (iter = mapList.begin(); iter != mapList.end(); iter++)
 	{
-		assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster1()), iter->getMonster1Count());
-		assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster2()), iter->getMonster2Count());
-		assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster3()), iter->getMonster3Count());
+		this->mainAssert->assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster1()), iter->getMonster1Count());
+		this->mainAssert->assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster2()), iter->getMonster2Count());
+		this->mainAssert->assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster3()), iter->getMonster3Count());
 	}
 
 	mapInfoDao->deleteAll();
@@ -3694,8 +3430,8 @@ void GameServerTest::regenMonster()
 
 	for (iter = mapList.begin(); iter != mapList.end(); iter++)
 	{
-		assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster1()), iter->getMonster1Count());
-		assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster2()), iter->getMonster2Count());
-		assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster3()), iter->getMonster3Count());
+		this->mainAssert->assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster1()), iter->getMonster1Count());
+		this->mainAssert->assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster2()), iter->getMonster2Count());
+		this->mainAssert->assertThat(mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster3()), iter->getMonster3Count());
 	}
 }

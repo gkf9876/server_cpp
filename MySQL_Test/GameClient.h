@@ -48,6 +48,7 @@
 #define REQUEST_MAP_POTAL_FINISH		22
 #define REQUEST_THROW_ITEM_FINISH		23
 #define REQUEST_GET_ITEM_FINISH			24
+#define REQUEST_CHATTING_FINISH			25
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 
@@ -81,6 +82,7 @@ private:
 	bool isMapPotalFinish = false;
 	bool isThrowItemFinish = false;
 	bool isGetItemFinish = false;
+	bool isChattingFinish = false;
 
 	vector<string> * log = NULL;
 public:
@@ -144,6 +146,8 @@ public:
 	bool getIsThrowItemFinish();
 	void setIsGetItemFinish(bool value);
 	bool getIsGetItemFinish();
+	void setIsChattingFinish(bool value);
+	bool getIsChattingFinish();
 
 	void addLog(string message);
 	void printAllLog();

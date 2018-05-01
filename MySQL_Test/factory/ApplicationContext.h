@@ -20,7 +20,7 @@
 class ApplicationContext
 {
 private:
-	DataSource* dataSourceInstance;
+	DataSource* dataSourceInstance = NULL;
 
 	ChattingDao* chattingDaoInstance = NULL;
 	InventoryInfoDao* inventoryInfoDaoInstance = NULL;

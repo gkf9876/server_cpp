@@ -48,6 +48,7 @@
 #define REQUEST_MAP_POTAL_FINISH		22
 #define REQUEST_THROW_ITEM_FINISH		23
 #define REQUEST_GET_ITEM_FINISH			24
+#define REQUEST_CHATTING_FINISH			25
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define CUR_PATH						"/home/gkf9876/server/Resources/"

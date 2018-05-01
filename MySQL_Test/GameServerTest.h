@@ -13,6 +13,7 @@
 #include "GameServer.h"
 #include "GameClient.h"
 #include "factory/ApplicationContext.h"
+#include "test/Assert.h"
 
 using namespace std;
 
@@ -20,7 +21,10 @@ class GameServerTest
 {
 private:
 	GameServer* gameServer;
+	Assert* mainAssert;
 	GameClient* gameClient[10];
+	Assert* assert[10];
+	ApplicationContext* context[10];
 
 	UserDao* userDao;
 	MapDao* mapDao;
@@ -71,23 +75,12 @@ public:
 	~GameServerTest();
 	void setApplicationContext(ApplicationContext* context);
 
-	void assertThatLog(int clientNum, int value, int compValue);
-	void assertThatLog(int clientNum, string value, string compValue);
-	void assertThatLog(int clientNum, char* value, char* compValue);
-	void assertThatLog(int clientNum, char* value, const char* compValue);
-	void checkSameUserLog(int clientNum, User user1, User user2);
-	void checkSameChatLog(int clientNum, Chatting chat1, Chatting chat2);
-	void checkSameMapInfoLog(int clientNum, MapInfo mapInfo1, MapInfo mapInfo2);
-	void checkSameInventoryInfo(int clientNum, InventoryInfo inventoryInfo1, InventoryInfo inventoryInfo2);
-
-	void assertThat(int value, int compValue);
-	void assertThat(string value, string compValue);
-	void checkSameChat(Chatting chat1, Chatting chat2);
-
 	void run();
 
 	GameServer* getGameServer();
 	GameClient* getGameClient(int idx);
+	Assert* getAssert(int idx);
+
 	UserDao* getUserDao();
 	User getUser(int idx);
 

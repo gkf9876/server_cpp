@@ -374,6 +374,16 @@ bool GameClient::getIsGetItemFinish()
 	return this->isGetItemFinish;
 }
 
+void GameClient::setIsChattingFinish(bool value)
+{
+	this->isChattingFinish = value;
+}
+
+bool GameClient::getIsChattingFinish()
+{
+	return this->isChattingFinish;
+}
+
 void GameClient::addLog(string message)
 {
 	log->push_back(message);

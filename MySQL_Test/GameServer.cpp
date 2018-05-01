@@ -582,9 +582,10 @@ void GameServer::chatting(int sock, const char* chatting)
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			memcpy(message, &chatting, sizeof(Chatting));
-			sendRequest(iter->getSock(), CHATTING_PROCESS, message, sizeof(Chatting));
+			sendRequest(iter->getSock(), CHATTING_PROCESS, chatting, sizeof(Chatting));
 		}
+
+		sendRequest(sock, REQUEST_CHATTING_FINISH, "chatting_finish", strlen("chatting_finish") + 1);
 	}
 	catch (const runtime_error& error)
 	{
