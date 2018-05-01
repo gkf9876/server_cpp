@@ -80,18 +80,22 @@ private:
 	int epfd, event_cnt;
 	int clientCount;
 #endif
-	DataSource* dataSource;
 	UserService* userService;
 	ChattingService* chattingService;
 	MapManageService* mapManageService;
 public:
-	GameServer(DataSource* dataSource);
+	GameServer();
 	~GameServer();
+	void setUserService(UserService* userService);
+	void setChattingService(ChattingService* chattingService);
+	void setMapManageService(MapManageService* mapManageService);
 
 	void ErrorHandling(const char* message);
 
 	void openServer(int port);
 	void closeServer();
+
+	int getClientCount();
 
 #ifdef _WIN32
 	void accept_win();
@@ -101,7 +105,6 @@ public:
 
 	void sendRequest(SOCKET sock, int code, const char* data, int size);
 	int recvRequest(SOCKET sock, int* code, char* data);
-	int getClientCount();
 
 	void getUserInfo(SOCKET sock, const char* name);
 	void updateLogin(SOCKET sock, const char* name);
@@ -121,7 +124,6 @@ public:
 
 	void sendRequest(int sock, int code, const char* data, int size);
 	int recvRequest(int sock, int* code, char* data);
-	int getClientCount();
 
 	void getUserInfo(int sock, const char* name);
 	void updateLogin(int sock, const char* name);

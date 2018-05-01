@@ -1,12 +1,16 @@
 ﻿#include "UserDao.h"
 
-UserDao::UserDao(DataSource* dataSource)
+UserDao::UserDao()
 {
-	this->dataSource = dataSource;
 }
 
 UserDao::~UserDao()
 {
+}
+
+void UserDao::setDataSource(DataSource* dataSource)
+{
+	this->dataSource = dataSource;
 }
 
 void UserDao::add(User user)

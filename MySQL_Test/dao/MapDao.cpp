@@ -1,12 +1,16 @@
 ﻿#include "MapDao.h"
 
-MapDao::MapDao(DataSource* dataSource)
+MapDao::MapDao()
 {
-	this->dataSource = dataSource;
 }
 
 MapDao::~MapDao()
 {
+}
+
+void MapDao::setDataSource(DataSource* dataSource)
+{
+	this->dataSource = dataSource;
 }
 
 void MapDao::add(Map map)

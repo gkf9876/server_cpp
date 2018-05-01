@@ -2,9 +2,6 @@
 
 ChattingDaoTest::ChattingDaoTest()
 {
-	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
-	this->chattingDao = new ChattingDao(this->dataSource);
-
 	this->chat1 = new Chatting();
 	chat1->setIdx(1);
 	chat1->setInputdate("2018-03-17 00:42:57");
@@ -29,11 +26,14 @@ ChattingDaoTest::ChattingDaoTest()
 
 ChattingDaoTest::~ChattingDaoTest()
 {
-	delete dataSource;
-	delete chattingDao;
 	delete chat1;
 	delete chat2;
 	delete chat3;
+}
+
+void ChattingDaoTest::setApplicationContext(ApplicationContext* context)
+{
+	this->chattingDao = context->chattingDao();
 }
 
 void ChattingDaoTest::run()

@@ -2,9 +2,6 @@
 
 UserDaoTest::UserDaoTest()
 {
-	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
-	this->userDao = new UserDao(this->dataSource);
-
 	this->user1 = new User();
 	user1->setSock(1);
 	user1->setName("GKF1234");
@@ -50,11 +47,14 @@ UserDaoTest::UserDaoTest()
 
 UserDaoTest::~UserDaoTest()
 {
-	delete dataSource;
-	delete userDao;
 	delete user1;
 	delete user2;
 	delete user3;
+}
+
+void UserDaoTest::setApplicationContext(ApplicationContext* context)
+{
+	this->userDao = context->userDao();
 }
 
 void UserDaoTest::run()

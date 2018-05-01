@@ -1,12 +1,16 @@
 #include "InventoryInfoDao.h"
 
-InventoryInfoDao::InventoryInfoDao(DataSource* dataSource)
+InventoryInfoDao::InventoryInfoDao()
 {
-	this->dataSource = dataSource;
 }
 
 InventoryInfoDao::~InventoryInfoDao()
 {
+}
+
+void InventoryInfoDao::setDataSource(DataSource* dataSource)
+{
+	this->dataSource = dataSource;
 }
 
 void InventoryInfoDao::add(InventoryInfo InventoryInfo)

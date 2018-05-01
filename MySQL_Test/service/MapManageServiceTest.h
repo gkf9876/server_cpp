@@ -4,12 +4,12 @@
 #include <iostream>
 #include "MapManageService.h"
 #include "../datasource/DataSource.h"
+#include "../factory/ApplicationContext.h"
 
 class MapManageServiceTest
 {
 private:
 	MapManageService* mapManageService;
-	DataSource* dataSource;
 
 	MapDao* mapDao;
 	MapInfoDao* mapInfoDao;
@@ -39,6 +39,8 @@ private:
 public:
 	MapManageServiceTest();
 	~MapManageServiceTest();
+	void setApplicationContext(ApplicationContext* context);
+
 	void assertThat(int value, int compValue);
 	void assertThat(string value, string compValue);
 	void checkSameMapInfo(MapInfo mapInfo1, MapInfo mapInfo2);

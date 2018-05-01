@@ -14,8 +14,9 @@ class InventoryInfoDao
 private:
 	DataSource* dataSource;
 public:
-	InventoryInfoDao(DataSource* dataSource);
+	InventoryInfoDao();
 	~InventoryInfoDao();
+	void setDataSource(DataSource* dataSource);
 
 	void add(InventoryInfo inventoryInfo);
 	void deleteAll();

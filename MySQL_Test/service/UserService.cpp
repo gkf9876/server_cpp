@@ -1,16 +1,21 @@
 ﻿#include "UserService.h"
 
-UserService::UserService(DataSource* dataSource)
+UserService::UserService()
 {
-	this->dataSource = dataSource;
-	this->userDao = new UserDao(dataSource);
-	this->inventoryInfoDao = new InventoryInfoDao(dataSource);
 }
 
 UserService::~UserService()
 {
-	delete this->userDao;
-	delete this->inventoryInfoDao;
+}
+
+void UserService::setUserDao(UserDao* userDao)
+{
+	this->userDao = userDao;
+}
+
+void UserService::setInventoryInfoDao(InventoryInfoDao* inventoryInfoDao)
+{
+	this->inventoryInfoDao = inventoryInfoDao;
 }
 
 User UserService::getUserInfo(const char* name)

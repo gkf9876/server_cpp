@@ -2,15 +2,14 @@
 #define __USER_DAO_TEST_H_
 
 #include<iostream>
-#include "../datasource/DataSource.h"
 #include "UserDao.h"
+#include "../factory/ApplicationContext.h"
 
 using namespace std;
 
 class UserDaoTest
 {
 private:
-	DataSource* dataSource;
 	UserDao* userDao;
 
 	User * user1;
@@ -19,6 +18,7 @@ private:
 public:
 	UserDaoTest();
 	~UserDaoTest();
+	void setApplicationContext(ApplicationContext* context);
 	void run();
 
 	void assertThat(int value, int compValue);

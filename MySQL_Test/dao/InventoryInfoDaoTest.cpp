@@ -2,9 +2,6 @@
 
 InventoryInfoDaoTest::InventoryInfoDaoTest()
 {
-	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
-	this->inventoryInfoDao = new InventoryInfoDao(this->dataSource);
-
 	this->inventoryInfo1 = new InventoryInfo();
 	inventoryInfo1->setIdx(1);
 	inventoryInfo1->setItemName("사과");
@@ -67,11 +64,14 @@ InventoryInfoDaoTest::InventoryInfoDaoTest()
 
 InventoryInfoDaoTest::~InventoryInfoDaoTest()
 {
-	delete dataSource;
-	delete inventoryInfoDao;
 	delete inventoryInfo1;
 	delete inventoryInfo2;
 	delete inventoryInfo3;
+}
+
+void InventoryInfoDaoTest::setApplicationContext(ApplicationContext* context)
+{
+	this->inventoryInfoDao = context->inventoryInfoDao();
 }
 
 void InventoryInfoDaoTest::run()

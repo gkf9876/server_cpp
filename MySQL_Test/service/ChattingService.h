@@ -9,10 +9,10 @@ class ChattingService
 {
 private:
 	ChattingDao* chattingDao;
-	DataSource* dataSource;
 public:
-	ChattingService(DataSource* dataSource);
+	ChattingService();
 	~ChattingService();
+	void setChattingDao(ChattingDao* chattingDao);
 
 	void add(Chatting chatting);
 };

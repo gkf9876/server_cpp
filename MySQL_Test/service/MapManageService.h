@@ -15,8 +15,12 @@ private:
 	MonsterDao* monsterDao;
 	DataSource* dataSource;
 public:
-	MapManageService(DataSource* dataSource);
+	MapManageService();
 	~MapManageService();
+	void setMapDao(MapDao* mapDao);
+	void setMapInfoDao(MapInfoDao* mapInfoDao);
+	void setMonsterDao(MonsterDao* monsterDao);
+	void setDataSource(DataSource* dataSource);
 
 	void regenMonster();
 	list<MapInfo> getFieldMonster(const char* field);

@@ -2,9 +2,6 @@
 
 MonsterDaoTest::MonsterDaoTest()
 {
-	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
-	this->monsterDao = new MonsterDao(this->dataSource);
-
 	this->monster1 = new Monster();
 	monster1->setIdx(1);
 	monster1->setName("다람쥐");
@@ -29,11 +26,14 @@ MonsterDaoTest::MonsterDaoTest()
 
 MonsterDaoTest::~MonsterDaoTest()
 {
-	delete dataSource;
-	delete monsterDao;
 	delete monster1;
 	delete monster2;
 	delete monster3;
+}
+
+void MonsterDaoTest::setApplicationContext(ApplicationContext* context)
+{
+	this->monsterDao = context->monsterDao();
 }
 
 void MonsterDaoTest::run()

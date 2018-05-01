@@ -14,8 +14,9 @@ class MapInfoDao
 private:
 	DataSource* dataSource;
 public:
-	MapInfoDao(DataSource* dataSource);
+	MapInfoDao();
 	~MapInfoDao();
+	void setDataSource(DataSource* dataSource);
 
 	void add(MapInfo mapinfo);
 	void deleteAll();

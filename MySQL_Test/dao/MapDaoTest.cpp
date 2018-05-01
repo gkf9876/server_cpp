@@ -2,9 +2,6 @@
 
 MapDaoTest::MapDaoTest()
 {
-	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
-	this->mapDao = new MapDao(this->dataSource);
-
 	this->map1 = new Map();
 	map1->setIdx(1);
 	map1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
@@ -38,11 +35,14 @@ MapDaoTest::MapDaoTest()
 
 MapDaoTest::~MapDaoTest()
 {
-	delete dataSource;
-	delete mapDao;
 	delete map1;
 	delete map2;
 	delete map3;
+}
+
+void MapDaoTest::setApplicationContext(ApplicationContext* context)
+{
+	this->mapDao = context->mapDao();
 }
 
 void MapDaoTest::run()

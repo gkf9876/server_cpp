@@ -2,15 +2,14 @@
 #define __CHATTING_DAO_TEST_H_
 
 #include<iostream>
-#include "../datasource/DataSource.h"
 #include "ChattingDao.h"
+#include "../factory/ApplicationContext.h"
 
 using namespace std;
 
 class ChattingDaoTest
 {
 private:
-	DataSource* dataSource;
 	ChattingDao* chattingDao;
 
 	Chatting * chat1;
@@ -19,6 +18,7 @@ private:
 public:
 	ChattingDaoTest();
 	~ChattingDaoTest();
+	void setApplicationContext(ApplicationContext* context);
 	void run();
 
 	void assertThat(int value, int compValue);

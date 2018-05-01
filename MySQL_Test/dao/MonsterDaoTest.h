@@ -2,15 +2,14 @@
 #define __MONSTER_DAO_TEST_H_
 
 #include<iostream>
-#include "../datasource/DataSource.h"
 #include "MonsterDao.h"
+#include "../factory/ApplicationContext.h"
 
 using namespace std;
 
 class MonsterDaoTest
 {
 private:
-	DataSource* dataSource;
 	MonsterDao* monsterDao;
 
 	Monster * monster1;
@@ -19,6 +18,7 @@ private:
 public:
 	MonsterDaoTest();
 	~MonsterDaoTest();
+	void setApplicationContext(ApplicationContext* context);
 	void run();
 
 	void assertThat(int value, int compValue);

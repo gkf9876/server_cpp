@@ -1,12 +1,16 @@
 ﻿#include "MonsterDao.h"
 
-MonsterDao::MonsterDao(DataSource* dataSource)
+MonsterDao::MonsterDao()
 {
-	this->dataSource = dataSource;
 }
 
 MonsterDao::~MonsterDao()
 {
+}
+
+void MonsterDao::setDataSource(DataSource* dataSource)
+{
+	this->dataSource = dataSource;
 }
 
 void MonsterDao::add(Monster monster)

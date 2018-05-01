@@ -2,10 +2,6 @@
 
 ChattingServiceTest::ChattingServiceTest()
 {
-	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
-	this->chattingService = new ChattingService(this->dataSource);
-	this->chattingDao = new ChattingDao(this->dataSource);
-
 	this->chatting1 = new Chatting();
 	chatting1->setIdx(1);
 	chatting1->setInputdate("2018-03-17 00:42:57");
@@ -30,13 +26,15 @@ ChattingServiceTest::ChattingServiceTest()
 
 ChattingServiceTest::~ChattingServiceTest()
 {
-	delete this->dataSource;
-	delete this->chattingService;
-	delete this->chattingDao;
-
 	delete this->chatting1;
 	delete this->chatting2;
 	delete this->chatting3;
+}
+
+void ChattingServiceTest::setApplicationContext(ApplicationContext* context)
+{
+	chattingService = context->chattingService();
+	chattingDao = context->chattingDao();
 }
 
 void ChattingServiceTest::assertThat(int value, int compValue)

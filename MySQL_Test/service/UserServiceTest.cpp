@@ -2,11 +2,6 @@
 
 UserServiceTest::UserServiceTest()
 {
-	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
-	this->userService = new UserService(this->dataSource);
-	this->userDao = new UserDao(this->dataSource);
-	this->inventoryInfoDao = new InventoryInfoDao(this->dataSource);
-
 	this->user1 = new User();
 	user1->setSock(1);
 	user1->setName("GKF1234");
@@ -81,14 +76,16 @@ UserServiceTest::UserServiceTest()
 
 UserServiceTest::~UserServiceTest()
 {
-	delete this->dataSource;
-	delete this->userService;
-	delete this->userDao;
-	delete this->inventoryInfoDao;
-
 	delete this->user1;
 	delete this->user2;
 	delete this->user3;
+}
+
+void UserServiceTest::setApplicationContext(ApplicationContext* context)
+{
+	userService = context->userService();
+	userDao = context->userDao();
+	inventoryInfoDao = context->inventoryInfoDao();
 }
 
 void UserServiceTest::assertThat(int value, int compValue)

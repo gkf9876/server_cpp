@@ -13,8 +13,9 @@ class MonsterDao
 private:
 	DataSource* dataSource;
 public:
-	MonsterDao(DataSource* dataSource);
+	MonsterDao();
 	~MonsterDao();
+	void setDataSource(DataSource* dataSource);
 
 	void add(Monster monster);
 	void update(Monster monster);

@@ -1,12 +1,16 @@
 ﻿#include "MapInfoDao.h"
 
-MapInfoDao::MapInfoDao(DataSource* dataSource)
+MapInfoDao::MapInfoDao()
 {
-	this->dataSource = dataSource;
 }
 
 MapInfoDao::~MapInfoDao()
 {
+}
+
+void MapInfoDao::setDataSource(DataSource* dataSource)
+{
+	this->dataSource = dataSource;
 }
 
 void MapInfoDao::add(MapInfo mapInfo)

@@ -15,8 +15,9 @@ class ChattingDao
 private:
 	DataSource* dataSource;
 public:
-	ChattingDao(DataSource* dataSource);
+	ChattingDao();
 	~ChattingDao();
+	void setDataSource(DataSource* dataSource);
 
 	void add(Chatting chatting);
 	void deleteAll();

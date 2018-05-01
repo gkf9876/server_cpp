@@ -2,15 +2,14 @@
 #define __MAP_INFO_DAO_TEST_H_
 
 #include<iostream>
-#include "../datasource/DataSource.h"
 #include "MapInfoDao.h"
+#include "../factory/ApplicationContext.h"
 
 using namespace std;
 
 class MapInfoDaoTest
 {
 private:
-	DataSource* dataSource;
 	MapInfoDao* mapInfoDao;
 
 	MapInfo * mapInfo1;
@@ -22,6 +21,7 @@ private:
 public:
 	MapInfoDaoTest();
 	~MapInfoDaoTest();
+	void setApplicationContext(ApplicationContext* context);
 	void run();
 
 	void assertThat(int value, int compValue);

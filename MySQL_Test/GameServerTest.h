@@ -12,6 +12,7 @@
 
 #include "GameServer.h"
 #include "GameClient.h"
+#include "factory/ApplicationContext.h"
 
 using namespace std;
 
@@ -21,7 +22,6 @@ private:
 	GameServer* gameServer;
 	GameClient* gameClient[10];
 
-	DataSource* dataSource;
 	UserDao* userDao;
 	MapDao* mapDao;
 	MapInfoDao* mapInfoDao;
@@ -69,6 +69,8 @@ private:
 public:
 	GameServerTest();
 	~GameServerTest();
+	void setApplicationContext(ApplicationContext* context);
+
 	void assertThatLog(int clientNum, int value, int compValue);
 	void assertThatLog(int clientNum, string value, string compValue);
 	void assertThatLog(int clientNum, char* value, char* compValue);

@@ -15,8 +15,9 @@ class UserDao
 private:
 	DataSource* dataSource;
 public:
-	UserDao(DataSource* dataSource);
+	UserDao();
 	~UserDao();
+	void setDataSource(DataSource* dataSource);
 
 	void add(User user);
 	void update(User user);

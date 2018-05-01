@@ -1,18 +1,26 @@
 ﻿#include "GameServer.h"
 
-GameServer::GameServer(DataSource* dataSource)
+GameServer::GameServer()
 {
-	this->dataSource = dataSource;
-	this->userService = new UserService(dataSource);
-	this->chattingService = new ChattingService(dataSource);
-	this->mapManageService = new MapManageService(dataSource);
 }
 
 GameServer::~GameServer()
 {
-	delete this->userService;
-	delete this->chattingService;
-	delete this->mapManageService;
+}
+
+void GameServer::setUserService(UserService* userService)
+{
+	this->userService = userService;
+}
+
+void GameServer::setChattingService(ChattingService* chattingService)
+{
+	this->chattingService = chattingService;
+}
+
+void GameServer::setMapManageService(MapManageService* mapManageService)
+{
+	this->mapManageService = mapManageService;
 }
 
 void GameServer::ErrorHandling(const char* message)
@@ -78,6 +86,15 @@ void GameServer::closeServer()
 #elif __linux__
 	close(hServSock);
 	close(epfd);
+#endif
+}
+
+int GameServer::getClientCount()
+{
+#ifdef _WIN32
+	return reads.fd_count;
+#elif __linux__
+	return clientCount;
 #endif
 }
 
@@ -241,425 +258,45 @@ int GameServer::recvRequest(SOCKET sock, int* code, char* data)
 		return 0;
 }
 
-int GameServer::getClientCount()
-{
-	return reads.fd_count;
-}
-
-void GameServer::getUserInfo(SOCKET sock, const char* name)
-{
-	char message[BUF_SIZE];
-
-	try
-	{
-		User getUser = userService->getUserInfo(name);
-		memcpy(message, &getUser, sizeof(User));
-
-		sendRequest(sock, REQUEST_USER_INFO, message, sizeof(User));
-	}
-	catch (const runtime_error& error)
-	{
-		sendRequest(sock, REQUEST_ERROR, error.what(), strlen(error.what()) + 1);
-		std::cout << '\t' << error.what() << std::endl;
-	}
-}
-
-void GameServer::updateLogin(SOCKET sock, const char* name)
-{
-	char message[BUF_SIZE];
-	list<User> loginUserList;
-	list<User>::iterator iter;
-	User loginUser;
-
-	list<MapInfo> mapMonsterList;
-	list<MapInfo>::iterator monsterIter;
-
-	list<MapInfo> mapObjectList;
-	list<MapInfo>::iterator objectIter;
-
-	list<InventoryInfo> inventoryList;
-	list<InventoryInfo>::iterator inventoryIter;
-
-	list<MapInfo> itemList;
-	list<MapInfo>::iterator itemIter;
-
-	try
-	{
-		userService->updateLogin(sock, name);
-		loginUser = userService->getUserInfo(name);
-		sendRequest(sock, REQUEST_LOGIN, "login okey", strlen("login okey") + 1);
-
-		loginUserList = userService->getFieldLoginUserAll(loginUser.getField());
-
-		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
-		{
-			if (iter->getSock() == sock)
-				continue;
-
-			memcpy(message, &loginUser, sizeof(User));
-			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
-
-			iter->setAction(ACTION_MAP_IN);
-			memcpy(message, &(*iter), sizeof(User));
-			sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
-		}
-
-		mapMonsterList = mapManageService->getFieldMonster(loginUser.getField());
-
-		for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
-		{
-			memcpy(message, &(*monsterIter), sizeof(MapInfo));
-			sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
-		}
-
-		mapObjectList = mapManageService->getFieldObject(loginUser.getField());
-
-		for (objectIter = mapObjectList.begin(); objectIter != mapObjectList.end(); objectIter++)
-		{
-			memcpy(message, &(*objectIter), sizeof(MapInfo));
-			sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
-		}
-
-		inventoryList = userService->getUserInventoryInfo(loginUser.getName());
-
-		for (inventoryIter = inventoryList.begin(); inventoryIter != inventoryList.end(); inventoryIter++)
-		{
-			memcpy(message, &(*inventoryIter), sizeof(InventoryInfo));
-			sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
-		}
-
-		itemList = mapManageService->getFieldItem(loginUser.getField());
-
-		for (itemIter = itemList.begin(); itemIter != itemList.end(); itemIter++)
-		{
-			memcpy(message, &(*itemIter), sizeof(MapInfo));
-			sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail"));
-		std::cout << '\t' << error.what() << std::endl;
-	}
-}
-
-void GameServer::updateLogout(SOCKET sock)
-{
-	char message[BUF_SIZE];
-	list<User> loginUserList;
-	list<User>::iterator iter;
-	User logoutUser;
-
-	try
-	{
-		logoutUser = userService->getUserInfo(sock);
-		userService->updateLogout(logoutUser.getName());
-		sendRequest(sock, REQUEST_LOGOUT, "logout okey", strlen("logout okey") + 1);
-
-		loginUserList = userService->getFieldLoginUserAll(logoutUser.getField());
-
-		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
-		{
-			if (iter->getSock() == sock)
-				continue;
-
-			logoutUser.setAction(ACTION_MAP_OUT);
-			memcpy(message, &logoutUser, sizeof(User));
-			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << '\t' << error.what() << std::endl;
-		sendRequest(sock, REQUEST_LOGOUT, "logout fail", strlen("logout fail") + 1);
-	}
-}
-
-
-void GameServer::chatting(SOCKET sock, const char* chatting)
-{
-	char message[BUF_SIZE];
-	list<User> loginUserList;
-	list<User>::iterator iter;
-	User chattingUser;
-	Chatting chattingInfo;
-
-	try
-	{
-		chattingUser = userService->getUserInfo(sock);
-		loginUserList = userService->getFieldLoginUserAll(chattingUser.getField());
-
-		memcpy(&chattingInfo, chatting, sizeof(Chatting));
-		chattingService->add(chattingInfo);
-
-		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
-		{
-			memcpy(message, &chatting, sizeof(Chatting));
-			sendRequest(iter->getSock(), CHATTING_PROCESS, message, sizeof(Chatting));
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << '\t' << error.what() << std::endl;
-	}
-}
-
-void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
-{
-	char message[BUF_SIZE];
-	User moveUser;
-	list<User> fieldUserList, regionFieldUserList;
-	list<User>::iterator iter;
-	User user;
-
-	list<MapInfo> mapMonsterList;
-	list<MapInfo>::iterator monsterIter;
-
-	list<MapInfo> mapObjectList;
-	list<MapInfo>::iterator objectIter;
-
-	list<MapInfo> mapItemList;
-	list<MapInfo>::iterator itemIter;
-
-	try
-	{
-		memcpy(&user, userInfo, sizeof(User));
-
-		if (user.getAction() == ACTION_MAP_MOVE)
-		{
-			sendRequest(sock, REQUEST_MAP_MOVE, "map_move_success", strlen("map_move_success") + 1);
-
-			fieldUserList = userService->getFieldLoginUserAll(user.getField());
-			userService->updateUserInfo(user);
-
-			for (iter = fieldUserList.begin(); iter != fieldUserList.end(); iter++)
-			{
-				if (iter->getSock() == sock)
-					continue;
-
-				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
-			}
-		}
-		else if (user.getAction() == ACTION_MAP_POTAL)
-		{
-			sendRequest(sock, REQUEST_MAP_MOVE, "map_potal_success", strlen("map_potal_success") + 1);
-
-			moveUser = userService->getUserInfo(user.getName());
-			regionFieldUserList = userService->getFieldLoginUserAll(userService->getUserInfo(user.getName()).getField());
-			moveUser.setAction(ACTION_MAP_OUT);
-
-			for (iter = regionFieldUserList.begin(); iter != regionFieldUserList.end(); iter++)
-			{
-				if (iter->getSock() == sock)
-					continue;
-
-				memcpy(message, &moveUser, sizeof(User));
-				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
-			}
-
-			fieldUserList = userService->getFieldLoginUserAll(user.getField());
-			user.setAction(ACTION_MAP_IN);
-			userService->updateUserInfo(user);
-
-			for (iter = fieldUserList.begin(); iter != fieldUserList.end(); iter++)
-			{
-				if (iter->getSock() == sock)
-					continue;
-
-				memcpy(message, &user, sizeof(User));
-				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
-
-				iter->setAction(ACTION_MAP_IN);
-				memcpy(message, &(*iter), sizeof(User));
-				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
-			}
-
-			mapMonsterList = mapManageService->getFieldMonster(user.getField());
-
-			for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
-			{
-				memcpy(message, &(*monsterIter), sizeof(MapInfo));
-				sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
-			}
-
-			mapObjectList = mapManageService->getFieldObject(user.getField());
-
-			for (objectIter = mapObjectList.begin(); objectIter != mapObjectList.end(); objectIter++)
-			{
-				memcpy(message, &(*objectIter), sizeof(MapInfo));
-				sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
-			}
-
-			mapItemList = mapManageService->getFieldItem(user.getField());
-
-			for (itemIter = mapItemList.begin(); itemIter != mapItemList.end(); itemIter++)
-			{
-				memcpy(message, &(*itemIter), sizeof(MapInfo));
-				sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
-			}
-
-			sendRequest(sock, REQUEST_MAP_POTAL_FINISH, "map_potal_finish", strlen("map_potal_finish") + 1);
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		sendRequest(sock, REQUEST_MAP_MOVE, "map_move_fail", strlen("map_move_fail") + 1);
-		std::cout << '\t' << error.what() << std::endl;
-	}
-}
-
-void GameServer::createThrowItemOnMap(SOCKET sock, const char* inventoryInfo)
-{
-	char message[BUF_SIZE];
-	list<User> loginUserList;
-	list<User>::iterator iter;
-	User user;
-	InventoryInfo inventoryItemInfo;
-	MapInfo insertMapInfo;
-	MapInfo backItem;
-
-	try
-	{
-		user = userService->getUserInfo(sock);
-		loginUserList = userService->getFieldLoginUserAll(user.getField());
-		backItem = mapManageService->getMaxOrderItem(user.getField(), user.getXpos(), user.getYpos());
-
-		memcpy(&inventoryItemInfo, inventoryInfo, sizeof(InventoryInfo));
-
-		insertMapInfo.setField(user.getField());
-		insertMapInfo.setObjectCode(12);
-		insertMapInfo.setName(inventoryItemInfo.getItemName());
-		insertMapInfo.setType(inventoryItemInfo.getType());
-		insertMapInfo.setXpos(user.getXpos());
-		insertMapInfo.setYpos(user.getYpos());
-		insertMapInfo.setZOrder(backItem.getZOrder() + 1);
-		insertMapInfo.setFileDir(inventoryItemInfo.getFileDir());
-		insertMapInfo.setCount(inventoryItemInfo.getCount());
-		insertMapInfo.setHp(0);
-
-		mapManageService->addFieldMapInfo(insertMapInfo);
-		insertMapInfo = mapManageService->getMaxOrderItem(user.getField(), user.getXpos(), user.getYpos());
-		userService->deleteInventoryItem(user.getName(), inventoryItemInfo.getXpos(), inventoryItemInfo.getYpos());
-
-		memcpy(message, &insertMapInfo, sizeof(MapInfo));
-
-		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
-		{
-			sendRequest(iter->getSock(), REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
-		}
-
-		sendRequest(sock, REQUEST_THROW_ITEM_FINISH, inventoryInfo, sizeof(InventoryInfo));
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << '\t' << error.what() << std::endl;
-	}
-}
-
-void GameServer::userGetMapItem(SOCKET sock, const char* userInfo)
-{
-	char message[BUF_SIZE];
-	list<User> loginUserList;
-	list<User>::iterator iter;
-	User getUser;
-	MapInfo itemInfo;
-	InventoryInfo inventoryInfo;
-	list<InventoryInfo> userInventoryInfo;
-	list<InventoryInfo>::iterator userInventoryInfoIter;
-
-	try
-	{
-		memcpy(&getUser, userInfo, sizeof(User));
-		loginUserList = userService->getFieldLoginUserAll(getUser.getField());
-
-		itemInfo = mapManageService->getMaxOrderItem(getUser.getField(), getUser.getXpos(), getUser.getYpos());
-		userInventoryInfo = userService->getUserInventoryInfo(getUser.getName());
-		userInventoryInfoIter = userInventoryInfo.begin();
-
-		for (int i = 0; i < INVENTORY_X_SIZE; i++)
-		{
-			for (int j = 0; j < INVENTORY_Y_SIZE; j++)
-			{
-				if (userInventoryInfo.size() != 0 && userInventoryInfoIter->getXpos() == i && userInventoryInfoIter->getYpos() == j)
-				{
-					userInventoryInfoIter++;
-					continue;
-				}
-				else
-				{
-					mapManageService->deleteMaxOrderItem(getUser.getField(), getUser.getXpos(), getUser.getYpos());
-
-					for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
-					{
-						memcpy(message, &itemInfo, sizeof(MapInfo));
-						sendRequest(iter->getSock(), DELETE_FIELD_ITEM, message, sizeof(MapInfo));
-					}
-
-					inventoryInfo.setItemName(itemInfo.getName());
-					inventoryInfo.setUserName(getUser.getName());
-					inventoryInfo.setType("ITEM");
-					inventoryInfo.setXpos(i);
-					inventoryInfo.setYpos(j);
-					inventoryInfo.setFileDir(itemInfo.getFileDir());
-					inventoryInfo.setCount(itemInfo.getCount());
-
-					userService->addInventoryItem(inventoryInfo);
-
-					memcpy(message, &inventoryInfo, sizeof(InventoryInfo));
-					sendRequest(sock, REQUEST_EAT_ITEM, message, sizeof(InventoryInfo));
-					sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
-					return;
-				}
-			}
-		}
-
-		sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << '\t' << error.what() << std::endl;
-	}
-}
-
 #elif __linux__
 void GameServer::accept_linux()
 {
 	int code;
 	int size;
 
-	event_cnt = epoll_wait(epfd, ep_events, EPOLL_SIZE, -1);
-	if(event_cnt == -1)
+	try
 	{
-		puts("epoll_wait() error");
-		return;
-	}
-
-	for(int i=0; i<event_cnt; i++)
-	{
-		if(ep_events[i].data.fd == hServSock)
+		event_cnt = epoll_wait(epfd, ep_events, EPOLL_SIZE, -1);
+		if (event_cnt == -1)
 		{
-			adr_sz = sizeof(clntAddr);
-			hClntSock = accept(hServSock, (struct sockaddr*)&clntAddr, &adr_sz);
-			event.events = EPOLLIN;
-			event.data.fd = hClntSock;
-			epoll_ctl(epfd, EPOLL_CTL_ADD, hClntSock, &event);
-			clientCount++;
+			puts("epoll_wait() error");
+			return;
 		}
-		else
-		{
-			strLen = recvRequest(ep_events[i].data.fd, &code, buffer);
-			size = strLen - 8;
-			if(strLen == 0)
-			{
-				updateLogout(ep_events[i].data.fd);
-				clientCount--;
 
-				epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
-				close(ep_events[i].data.fd);
+		for (int i = 0; i < event_cnt; i++)
+		{
+			if (ep_events[i].data.fd == hServSock)
+			{
+				adr_sz = sizeof(clntAddr);
+				hClntSock = accept(hServSock, (struct sockaddr*)&clntAddr, &adr_sz);
+				event.events = EPOLLIN;
+				event.data.fd = hClntSock;
+				epoll_ctl(epfd, EPOLL_CTL_ADD, hClntSock, &event);
+				clientCount++;
 			}
 			else
 			{
-				try
+				strLen = recvRequest(ep_events[i].data.fd, &code, buffer);
+				size = strLen - 8;
+				if (strLen == 0)
+				{
+					updateLogout(ep_events[i].data.fd);
+					clientCount--;
+
+					epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
+					close(ep_events[i].data.fd);
+				}
+				else
 				{
 					switch (code)
 					{
@@ -715,25 +352,25 @@ void GameServer::accept_linux()
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
 					case REQUEST_LOGOUT:
-						{
-							updateLogout(ep_events[i].data.fd);
-							clientCount--;
+					{
+						updateLogout(ep_events[i].data.fd);
+						clientCount--;
 
-							epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
-							close(ep_events[i].data.fd);
-						}
-						break;
+						epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
+						close(ep_events[i].data.fd);
+					}
+					break;
 					default:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
 					}
 				}
-				catch (const runtime_error& error)
-				{
-					std::cout << '\t' << error.what() << std::endl;
-				}
 			}
 		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
 	}
 }
 
@@ -780,12 +417,13 @@ int GameServer::recvRequest(int sock, int* code, char* data)
 		return 0;
 }
 
-int GameServer::getClientCount()
-{
-	return clientCount;
-}
+#endif
 
+#ifdef _WIN32
+void GameServer::getUserInfo(SOCKET sock, const char* name)
+#elif __linux__
 void GameServer::getUserInfo(int sock, const char* name)
+#endif
 {
 	char message[BUF_SIZE];
 
@@ -798,12 +436,16 @@ void GameServer::getUserInfo(int sock, const char* name)
 	}
 	catch (const runtime_error& error)
 	{
-		sendRequest(sock, REQUEST_ERROR, error.what(), strlen(error.what()));
+		sendRequest(sock, REQUEST_ERROR, error.what(), strlen(error.what()) + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
 
+#ifdef _WIN32
+void GameServer::updateLogin(SOCKET sock, const char* name)
+#elif __linux__
 void GameServer::updateLogin(int sock, const char* name)
+#endif
 {
 	char message[BUF_SIZE];
 	list<User> loginUserList;
@@ -882,7 +524,11 @@ void GameServer::updateLogin(int sock, const char* name)
 	}
 }
 
+#ifdef _WIN32
+void GameServer::updateLogout(SOCKET sock)
+#elif __linux__
 void GameServer::updateLogout(int sock)
+#endif
 {
 	char message[BUF_SIZE];
 	list<User> loginUserList;
@@ -910,10 +556,15 @@ void GameServer::updateLogout(int sock)
 	catch (const runtime_error& error)
 	{
 		std::cout << '\t' << error.what() << std::endl;
+		sendRequest(sock, REQUEST_LOGOUT, "logout fail", strlen("logout fail") + 1);
 	}
 }
 
+#ifdef _WIN32
+void GameServer::chatting(SOCKET sock, const char* chatting)
+#elif __linux__
 void GameServer::chatting(int sock, const char* chatting)
+#endif
 {
 	char message[BUF_SIZE];
 	list<User> loginUserList;
@@ -931,7 +582,7 @@ void GameServer::chatting(int sock, const char* chatting)
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			memcpy(message, chatting, sizeof(Chatting));
+			memcpy(message, &chatting, sizeof(Chatting));
 			sendRequest(iter->getSock(), CHATTING_PROCESS, message, sizeof(Chatting));
 		}
 	}
@@ -941,7 +592,11 @@ void GameServer::chatting(int sock, const char* chatting)
 	}
 }
 
+#ifdef _WIN32
+void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
+#elif __linux__
 void GameServer::updateMoveInfo(int sock, const char* userInfo)
+#endif
 {
 	char message[BUF_SIZE];
 	User moveUser;
@@ -1045,7 +700,11 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 	}
 }
 
+#ifdef _WIN32
+void GameServer::createThrowItemOnMap(SOCKET sock, const char* inventoryInfo)
+#elif __linux__
 void GameServer::createThrowItemOnMap(int sock, const char* inventoryInfo)
+#endif
 {
 	char message[BUF_SIZE];
 	list<User> loginUserList;
@@ -1093,7 +752,11 @@ void GameServer::createThrowItemOnMap(int sock, const char* inventoryInfo)
 	}
 }
 
+#ifdef _WIN32
+void GameServer::userGetMapItem(SOCKET sock, const char* userInfo)
+#elif __linux__
 void GameServer::userGetMapItem(int sock, const char* userInfo)
+#endif
 {
 	char message[BUF_SIZE];
 	list<User> loginUserList;
@@ -1157,8 +820,6 @@ void GameServer::userGetMapItem(int sock, const char* userInfo)
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
-
-#endif
 
 void GameServer::regenMonster()
 {

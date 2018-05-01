@@ -1,12 +1,16 @@
 ﻿#include "ChattingDao.h"
 
-ChattingDao::ChattingDao(DataSource* dataSource)
+ChattingDao::ChattingDao()
 {
-	this->dataSource = dataSource;
 }
 
 ChattingDao::~ChattingDao()
 {
+}
+
+void ChattingDao::setDataSource(DataSource* dataSource)
+{
+	this->dataSource = dataSource;
 }
 
 void ChattingDao::add(Chatting chatting)

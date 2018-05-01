@@ -4,6 +4,7 @@
 #include <iostream>
 #include "UserService.h"
 #include "../datasource/DataSource.h"
+#include "../factory/ApplicationContext.h"
 
 class UserServiceTest
 {
@@ -11,7 +12,6 @@ private:
 	UserService* userService;
 	UserDao* userDao;
 	InventoryInfoDao* inventoryInfoDao;
-	DataSource* dataSource;
 
 	User* user1;
 	User* user2;
@@ -21,6 +21,8 @@ private:
 public:
 	UserServiceTest();
 	~UserServiceTest();
+	void setApplicationContext(ApplicationContext* context);
+
 	void assertThat(int value, int compValue);
 	void assertThat(string value, string compValue);
 	void checkSameUser(User user1, User user2);

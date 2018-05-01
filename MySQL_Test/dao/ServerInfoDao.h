@@ -13,8 +13,9 @@ class ServerInfoDao
 private:
 	DataSource* dataSource;
 public:
-	ServerInfoDao(DataSource* dataSource);
+	ServerInfoDao();
 	~ServerInfoDao();
+	void setDataSource(DataSource* dataSource);
 };
 
 #endif

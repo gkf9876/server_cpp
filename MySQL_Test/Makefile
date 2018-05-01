@@ -1,9 +1,12 @@
-server : Main.o DataSource.o Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o GameClient.o GameServer.o GameServerTest.o
-	gcc -o server Main.o DataSource.o Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o GameClient.o GameServer.o GameServerTest.o libtmx.a `xml2-config --libs` -lz -lpthread -lmysqlclient -lstdc++ -o server
+server : Main.o ApplicationContext.o DataSource.o Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o GameClient.o GameServer.o GameServerTest.o
+	gcc -o server Main.o ApplicationContext.o DataSource.o Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o GameClient.o GameServer.o GameServerTest.o libtmx.a `xml2-config --libs` -lz -lpthread -lmysqlclient -lstdc++ -o server
 
 
 Main.o : Main.cpp
 	gcc -c -o Main.o Main.cpp
+	
+ApplicationContext.o : factory/ApplicationContext.cpp
+	gcc -c -o ApplicationContext.o factory/ApplicationContext.cpp
 
 DataSource.o : datasource/DataSource.cpp
 	gcc -c -o DataSource.o datasource/DataSource.cpp

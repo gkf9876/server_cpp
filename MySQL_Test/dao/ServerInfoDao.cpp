@@ -1,6 +1,6 @@
 ﻿#include "ServerInfoDao.h"
 
-ServerInfoDao::ServerInfoDao(DataSource* dataSource)
+ServerInfoDao::ServerInfoDao()
 {
 
 }
@@ -8,4 +8,9 @@ ServerInfoDao::ServerInfoDao(DataSource* dataSource)
 ServerInfoDao::~ServerInfoDao()
 {
 
+}
+
+void ServerInfoDao::setDataSource(DataSource* dataSource)
+{
+	this->dataSource = dataSource;
 }

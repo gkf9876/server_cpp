@@ -2,9 +2,6 @@
 
 MapInfoDaoTest::MapInfoDaoTest()
 {
-	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
-	this->mapInfoDao = new MapInfoDao(this->dataSource);
-
 	this->mapInfo1 = new MapInfo();
 	mapInfo1->setIdx(1);
 	mapInfo1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
@@ -77,12 +74,15 @@ MapInfoDaoTest::MapInfoDaoTest()
 
 MapInfoDaoTest::~MapInfoDaoTest()
 {
-	delete dataSource;
-	delete mapInfoDao;
 	delete mapInfo1;
 	delete mapInfo2;
 	delete mapInfo3;
 	delete mapInfo4;
+}
+
+void MapInfoDaoTest::setApplicationContext(ApplicationContext* context)
+{
+	this->mapInfoDao = context->mapInfoDao();
 }
 
 void MapInfoDaoTest::run()

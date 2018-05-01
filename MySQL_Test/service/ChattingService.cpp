@@ -1,14 +1,16 @@
 ﻿#include "ChattingService.h"
 
-ChattingService::ChattingService(DataSource* dataSource)
+ChattingService::ChattingService()
 {
-	this->dataSource = dataSource;
-	this->chattingDao = new ChattingDao(dataSource);
 }
 
 ChattingService::~ChattingService()
 {
-	delete this->chattingDao;
+}
+
+void ChattingService::setChattingDao(ChattingDao* chattingDao)
+{
+	this->chattingDao = chattingDao;
 }
 
 void ChattingService::add(Chatting chatting)

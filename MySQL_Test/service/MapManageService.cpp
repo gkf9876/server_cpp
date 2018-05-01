@@ -1,18 +1,31 @@
 ﻿#include "MapManageService.h"
 
-MapManageService::MapManageService(DataSource* dataSource)
+MapManageService::MapManageService()
 {
-	this->dataSource = dataSource;
-	this->mapDao = new MapDao(dataSource);
-	this->mapInfoDao = new MapInfoDao(dataSource);
-	this->monsterDao = new MonsterDao(dataSource);
 }
 
 MapManageService::~MapManageService()
 {
-	delete this->mapDao;
-	delete this->mapInfoDao;
-	delete this->monsterDao;
+}
+
+void MapManageService::setMapDao(MapDao* mapDao)
+{
+	this->mapDao = mapDao;
+}
+
+void MapManageService::setMapInfoDao(MapInfoDao* mapInfoDao)
+{
+	this->mapInfoDao = mapInfoDao;
+}
+
+void MapManageService::setMonsterDao(MonsterDao* monsterDao)
+{
+	this->monsterDao = monsterDao;
+}
+
+void MapManageService::setDataSource(DataSource* dataSource)
+{
+	this->dataSource = dataSource;
 }
 
 void MapManageService::regenMonster()

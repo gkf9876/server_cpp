@@ -2,12 +2,6 @@
 
 MapManageServiceTest::MapManageServiceTest()
 {
-	this->dataSource = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
-	this->mapManageService = new MapManageService(this->dataSource);
-	this->mapDao = new MapDao(this->dataSource);
-	this->mapInfoDao = new MapInfoDao(this->dataSource);
-	this->monsterDao = new MonsterDao(this->dataSource);
-
 	this->map1 = new Map();
 	map1->setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
 	map1->setMonster1("다람쥐");
@@ -155,14 +149,18 @@ MapManageServiceTest::MapManageServiceTest()
 
 MapManageServiceTest::~MapManageServiceTest()
 {
-	delete this->dataSource;
-	delete this->mapManageService;
-	delete this->mapDao;
-	delete this->mapInfoDao;
-
 	delete this->map1;
 	delete this->map2;
 	delete this->map3;
+}
+
+void MapManageServiceTest::setApplicationContext(ApplicationContext* context)
+{
+	mapManageService = context->mapManageService();
+
+	mapDao = context->mapDao();
+	mapInfoDao = context->mapInfoDao();
+	monsterDao = context->monsterDao();
 }
 
 void MapManageServiceTest::assertThat(int value, int compValue)

@@ -15,8 +15,10 @@ private:
 	InventoryInfoDao* inventoryInfoDao;
 	DataSource* dataSource;
 public:
-	UserService(DataSource* dataSource);
+	UserService();
 	~UserService();
+	void setUserDao(UserDao* userDao);
+	void setInventoryInfoDao(InventoryInfoDao* inventoryInfoDao);
 
 	User getUserInfo(const char* name);
 	User getUserInfo(int sock);

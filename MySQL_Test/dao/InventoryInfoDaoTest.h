@@ -3,15 +3,14 @@
 
 #include <iostream>
 #include <list>
-#include "../datasource/DataSource.h"
 #include "InventoryInfoDao.h"
+#include "../factory/ApplicationContext.h"
 
 using namespace std;
 
 class InventoryInfoDaoTest
 {
 private:
-	DataSource* dataSource;
 	InventoryInfoDao* inventoryInfoDao;
 
 	InventoryInfo * inventoryInfo1;
@@ -22,6 +21,7 @@ private:
 public:
 	InventoryInfoDaoTest();
 	~InventoryInfoDaoTest();
+	void setApplicationContext(ApplicationContext* context);
 	void run();
 
 	void assertThat(int value, int compValue);
