@@ -160,7 +160,7 @@ list<InventoryInfo> InventoryInfoDao::getUserInventoryList(const char* userName)
 	MYSQL_RES* sql_result;
 	MYSQL_ROW sql_row;
 
-	sprintf(query, "select idx, itemName, userName, type, xpos, ypos, file_dir, count from inventory_info where userName='%s'", userName);
+	sprintf(query, "select idx, itemName, userName, type, xpos, ypos, file_dir, count from inventory_info where userName='%s' order by xpos asc, ypos asc", userName);
 
 	query_stat = mysql_query(&connection, query);
 
@@ -189,4 +189,18 @@ list<InventoryInfo> InventoryInfoDao::getUserInventoryList(const char* userName)
 	mysql_free_result(sql_result);
 
 	return inventoryInfoList;
+}
+
+void InventoryInfoDao::deleteInventoryInfo(const char* userName, int xpos, int ypos)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+
+	sprintf(query, "delete from inventory_info where userName = '%s' and xpos = '%d' and ypos = '%d'", userName, xpos, ypos);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
 }

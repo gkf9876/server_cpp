@@ -35,6 +35,7 @@ public:
 	void getFieldLoginUserAll();
 	void getUserInventoryInfo();
 	void updateUserInfo();
+	void deleteInventoryItem();
 };
 
 #endif

@@ -82,6 +82,7 @@ void InventoryInfoDaoTest::run()
 		getUserFailure();
 		update();
 		getUserInventoryInfo();
+		deleteInventoryInfo();
 	}
 	catch (const runtime_error& error)
 	{
@@ -192,5 +193,31 @@ void InventoryInfoDaoTest::getUserInventoryInfo()
 	{
 		checkSameInventoryInfo(*iter, item[i]);
 		iter++;
+	}
+}
+
+void InventoryInfoDaoTest::deleteInventoryInfo()
+{
+	std::cout << "InventoryInfoDaoTest : deleteInventoryInfo()" << std::endl;
+
+	inventoryInfoDao->deleteAll();
+	assertThat(inventoryInfoDao->getCount(), 0);
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventoryInfoDao->add(item[i]);
+		assertThat(inventoryInfoDao->getCount(), i + 1);
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		inventoryInfoDao->deleteInventoryInfo("gkf1234", item[i].getXpos(), item[i].getYpos());
+		assertThat(inventoryInfoDao->getCount(), 19 - i);
+	}
+
+	for (int i = 10; i < 20; i++)
+	{
+		inventoryInfoDao->deleteInventoryInfo("gkf1234", item[i].getXpos(), item[i].getYpos());
+		assertThat(inventoryInfoDao->getCount(), 10);
 	}
 }

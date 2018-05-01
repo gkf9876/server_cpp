@@ -108,7 +108,7 @@ int MapInfoDao::getCountFieldMonster(const char* field, const char* name)
 	return atoi(sql_row[0]);
 }
 
-MapInfo MapInfoDao::getMonster(int xpos, int ypos)
+MapInfo MapInfoDao::getMonster(const char* field, int xpos, int ypos)
 {
 	char query[1024];
 	int query_stat;
@@ -116,7 +116,7 @@ MapInfo MapInfoDao::getMonster(int xpos, int ypos)
 	MYSQL_RES* sql_result;
 	MYSQL_ROW sql_row;
 
-	sprintf(query, "select idx, field, object_code, name, z_order, file_dir, count, hp from map_info where xpos='%d' and ypos='%d' and type = 'MONSTER'", xpos, ypos);
+	sprintf(query, "select idx, field, object_code, name, z_order, file_dir, count, hp from map_info where xpos='%d' and ypos='%d' and type = 'MONSTER' and field = '%s'", xpos, ypos, field);
 
 	query_stat = mysql_query(&connection, query);
 
@@ -276,4 +276,128 @@ int MapInfoDao::getCountFieldObject(const char* field)
 	mysql_free_result(sql_result);
 
 	return atoi(sql_row[0]);
+}
+
+MapInfo MapInfoDao::getMaxOrderItem(const char* field, int xpos, int ypos)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+	MYSQL_RES* sql_result;
+	MYSQL_ROW sql_row;
+
+	sprintf(query, "select A.idx, A.field, A.object_code, A.name, A.z_order, A.file_dir, A.count, A.hp from map_info A,(select max(z_order) as z_order from map_info where xpos='%d' and ypos='%d' and type = 'ITEM' and field = '%s') B where xpos='%d' and ypos='%d' and type = 'ITEM' and field = '%s' and B.z_order = A.z_order", xpos, ypos, field, xpos, ypos, field);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
+
+	sql_result = mysql_store_result(&connection);
+	sql_row = mysql_fetch_row(sql_result);
+
+	MapInfo mapInfo;
+
+	if (sql_row != NULL)
+	{
+		mapInfo.setIdx(atoi(sql_row[0]));
+		mapInfo.setField(sql_row[1]);
+		mapInfo.setObjectCode(atoi(sql_row[2]));
+		mapInfo.setName(sql_row[3]);
+		mapInfo.setType("ITEM");
+		mapInfo.setXpos(xpos);
+		mapInfo.setYpos(ypos);
+		mapInfo.setZOrder(atoi(sql_row[4]));
+		mapInfo.setFileDir(sql_row[5]);
+		mapInfo.setCount(atoi(sql_row[6]));
+		mapInfo.setHp(atoi(sql_row[7]));
+	}
+	else
+	{
+		mapInfo.setName("nothing");
+		mapInfo.setXpos(xpos);
+		mapInfo.setYpos(ypos);
+		mapInfo.setZOrder(-1);
+	}
+
+	mysql_free_result(sql_result);
+
+	return mapInfo;
+}
+
+int MapInfoDao::getCountFieldItem(const char* field)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+	MYSQL_RES* sql_result;
+	MYSQL_ROW sql_row;
+
+	sprintf(query, "select count(name) as count from map_info where field = '%s' and type = 'ITEM'", field);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
+
+	sql_result = mysql_store_result(&connection);
+	sql_row = mysql_fetch_row(sql_result);
+	mysql_free_result(sql_result);
+
+	return atoi(sql_row[0]);
+}
+
+list<MapInfo> MapInfoDao::getFieldItem(const char* field)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+	MYSQL_RES* sql_result;
+	MYSQL_ROW sql_row;
+
+	sprintf(query, "select * from map_info where field='%s' and type='ITEM'", field);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
+
+	sql_result = mysql_store_result(&connection);
+
+	MapInfo object;
+	list<MapInfo> objectList;
+
+	while ((sql_row = mysql_fetch_row(sql_result)) != NULL)
+	{
+		object.setIdx(atoi(sql_row[0]));
+		object.setField(sql_row[1]);
+		object.setObjectCode(atoi(sql_row[2]));
+		object.setName(sql_row[3]);
+		object.setType(sql_row[4]);
+		object.setXpos(atoi(sql_row[5]));
+		object.setYpos(atoi(sql_row[6]));
+		object.setZOrder(atoi(sql_row[7]));
+		object.setFileDir(sql_row[8]);
+		object.setCount(atoi(sql_row[9]));
+		object.setHp(atoi(sql_row[10]));
+		objectList.push_back(object);
+	}
+
+	mysql_free_result(sql_result);
+
+	return objectList;
+}
+
+void MapInfoDao::deleteMapInfo(int idx, const char* field)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+
+	sprintf(query, "delete from map_info where field='%s' and idx='%d'", field, idx);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
 }

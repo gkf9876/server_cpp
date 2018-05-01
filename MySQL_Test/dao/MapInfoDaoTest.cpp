@@ -56,6 +56,23 @@ MapInfoDaoTest::MapInfoDaoTest()
 	mapInfo4->setFileDir("Images/신호등.jpg");
 	mapInfo4->setCount(2);
 	mapInfo4->setHp(200);
+
+	for (int i = 0; i < 10; i++)
+	{
+		char message[1024];
+		item[i].setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+		item[i].setObjectCode(14);
+		sprintf(message, "도토리_%d", i);
+		item[i].setName(message);
+		item[i].setType("ITEM");
+		item[i].setXpos(211);
+		item[i].setYpos(131);
+		item[i].setZOrder(i);
+		sprintf(message, "Images/도토리_%d.jpg", i);
+		item[i].setFileDir(message);
+		item[i].setCount(2 + i);
+		item[i].setHp(0);
+	}
 }
 
 MapInfoDaoTest::~MapInfoDaoTest()
@@ -76,6 +93,9 @@ void MapInfoDaoTest::run()
 		getCountMonster();
 		getFieldMonster();
 		getFieldObject();
+		getMaxOrderItem();
+		getFieldItem();
+		deleteMapInfo();
 	}
 	catch (const runtime_error& error)
 	{
@@ -97,7 +117,6 @@ void MapInfoDaoTest::assertThat(const char* value, const char* compValue)
 
 void MapInfoDaoTest::checkSameMapInfo(MapInfo mapInfo1, MapInfo mapInfo2)
 {
-	assertThat(mapInfo1.getIdx(), mapInfo2.getIdx());
 	assertThat(mapInfo1.getField(), mapInfo2.getField());
 	assertThat(mapInfo1.getObjectCode(), mapInfo2.getObjectCode());
 	assertThat(mapInfo1.getName(), mapInfo2.getName());
@@ -123,10 +142,10 @@ void MapInfoDaoTest::addAndGet()
 		mapInfoDao->add(*mapInfo2);
 		assertThat(mapInfoDao->getCount(), 2);
 
-		MapInfo mapinfoget1 = mapInfoDao->getMonster(mapInfo1->getXpos(), mapInfo1->getYpos());
+		MapInfo mapinfoget1 = mapInfoDao->getMonster(mapInfo1->getField(), mapInfo1->getXpos(), mapInfo1->getYpos());
 		checkSameMapInfo(mapinfoget1, *mapInfo1);
 
-		MapInfo mapinfoget2 = mapInfoDao->getMonster(mapInfo2->getXpos(), mapInfo2->getYpos());
+		MapInfo mapinfoget2 = mapInfoDao->getMonster(mapInfo2->getField(), mapInfo2->getXpos(), mapInfo2->getYpos());
 		checkSameMapInfo(mapinfoget2, *mapInfo2);
 	}
 	catch (const runtime_error& error)
@@ -227,4 +246,113 @@ void MapInfoDaoTest::getFieldObject()
 
 	iter++;
 	checkSameMapInfo(*iter, *mapInfo4);
+}
+
+void MapInfoDaoTest::getMaxOrderItem()
+{
+	std::cout << "MapInfoDaoTest : getMaxOrderItem()" << std::endl;
+
+	char message[1024];
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
+
+	mapInfoDao->add(*mapInfo1);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
+
+	mapInfoDao->add(*mapInfo2);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
+
+	mapInfoDao->add(*mapInfo3);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 1);
+
+	mapInfoDao->add(*mapInfo4);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 2);
+
+	for (int i = 0; i < 10; i++)
+	{
+		mapInfoDao->add(item[i]);
+		assertThat(mapInfoDao->getCountFieldItem(mapInfo3->getField()), i + 1);
+		checkSameMapInfo(mapInfoDao->getMaxOrderItem(item[0].getField(), item[0].getXpos(), item[0].getYpos()), item[i]);
+	}
+}
+
+void MapInfoDaoTest::getFieldItem()
+{
+	std::cout << "MapInfoDaoTest : getFieldItem()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
+
+	mapInfoDao->add(*mapInfo1);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
+
+	mapInfoDao->add(*mapInfo2);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
+
+	mapInfoDao->add(*mapInfo3);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 1);
+
+	mapInfoDao->add(*mapInfo4);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 2);
+
+	for (int i = 0; i < 10; i++)
+	{
+		mapInfoDao->add(item[i]);
+		assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 2);
+	}
+
+	list<MapInfo> fieldItemList = mapInfoDao->getFieldItem(item[0].getField());
+	list<MapInfo>::iterator iter;
+	iter = fieldItemList.begin();
+
+	for (int i = 0; i < 10; i++)
+	{
+		checkSameMapInfo(*iter, item[i]);
+		iter++;
+	}
+}
+
+void MapInfoDaoTest::deleteMapInfo()
+{
+	std::cout << "MapInfoDaoTest : deleteMapInfo()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
+
+	mapInfoDao->add(*mapInfo1);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
+
+	mapInfoDao->add(*mapInfo2);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 0);
+
+	mapInfoDao->add(*mapInfo3);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 1);
+
+	mapInfoDao->add(*mapInfo4);
+	assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 2);
+
+	for (int i = 0; i < 10; i++)
+	{
+		mapInfoDao->add(item[i]);
+		assertThat(mapInfoDao->getCountFieldObject(mapInfo3->getField()), 2);
+	}
+
+	mapInfoDao->deleteMapInfo(1, mapInfo1->getField());
+	assertThat(mapInfoDao->getCount(), 13);
+
+	mapInfoDao->deleteMapInfo(2, mapInfo2->getField());
+	assertThat(mapInfoDao->getCount(), 12);
+
+	mapInfoDao->deleteMapInfo(3, mapInfo3->getField());
+	assertThat(mapInfoDao->getCount(), 11);
+
+	mapInfoDao->deleteMapInfo(4, mapInfo4->getField());
+	assertThat(mapInfoDao->getCount(), 10);
+
+	for (int i = 0; i < 10; i++)
+	{
+		mapInfoDao->deleteMapInfo(5 + i, item[i].getField());
+		assertThat(mapInfoDao->getCount(), 9 - i);
+	}
 }

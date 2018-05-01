@@ -21,6 +21,8 @@
 
 #define BUF_SIZE 1024
 #define EPOLL_SIZE 50
+#define INVENTORY_X_SIZE 3
+#define INVENTORY_Y_SIZE 5
 
 #define REQUEST_USER_INFO				1
 #define REQUEST_LOGIN					2
@@ -35,11 +37,17 @@
 #define REQUEST_FIELD_OBJECT_INFO		11
 #define REQUEST_FIELD_MONSTER_INFO		12
 #define REQUEST_INVENTORY_ITEM_INFO		13
-#define MOVE_INVENTORY_ITEM				14
-#define THROW_ITEM						15
-#define REGEN_MONSTER					16
-#define ATTACK_FILED_OBJECT				17
-#define REQUEST_LOGOUT					18
+#define REQUEST_FIELD_ITEM_INFO			14
+#define MOVE_INVENTORY_ITEM				15
+#define REQUEST_THROW_ITEM				16
+#define REQUEST_EAT_ITEM				17
+#define REGEN_MONSTER					18
+#define ATTACK_FILED_OBJECT				19
+#define REQUEST_LOGOUT					20
+#define REQUEST_MAP_MOVE				21
+#define REQUEST_MAP_POTAL_FINISH		22
+#define REQUEST_THROW_ITEM_FINISH		23
+#define REQUEST_GET_ITEM_FINISH			24
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 
@@ -58,12 +66,21 @@ private:
 	vector<User*> * usersInfo = NULL;								//현재 맵의 다른 유저들
 	vector<MapInfo*> * objectInfo = NULL;							//현재 맵의 오브젝트
 	vector<MapInfo*> * monsterInfo = NULL;							//현재 맵의 몬스터
+	vector<MapInfo*> * itemInfo = NULL;
 	vector<Chatting*> * chattingInfo = NULL;						//현재 맵의 채팅
 	InventoryInfo * inventory_items_Info[3][5];						//아이템창에 있는 아이템 목록
 
 	bool isLogin = false;
 	bool isGetUserInfo = false;
 	bool popupLoginFail = false;
+
+	bool isGetObjectInfo = false;
+	bool isGetMonsterInfo = false;
+	bool isGetItemInfo = false;
+	bool isGetInventoryInfo = false;
+	bool isMapPotalFinish = false;
+	bool isThrowItemFinish = false;
+	bool isGetItemFinish = false;
 
 	vector<string> * log = NULL;
 public:
@@ -90,21 +107,43 @@ public:
 	MapInfo getMonsterInfo(int idx);
 	void clearMonsterInfo();
 
+	void addItemInfo(MapInfo* itemInfo);
+	int sizeItemInfo();
+	MapInfo getItemInfo(int idx);
+	void clearItemInfo();
+	void removeItemInfo(int idx);
+
 	void addChattingInfo(Chatting* chatting);
 	int sizeChattingInfo();
 	Chatting getChattingInfo(int idx);
 
 	void addInventoryInfo(InventoryInfo* inventoryInfo);
 	int sizeInventoryInfo();
-	InventoryInfo getInventoryInfo(int xpos, int ypos);
+	InventoryInfo* getInventoryInfo(int xpos, int ypos);
 	void getItem(MapInfo mapInfo);
+	void removeInventoryInfo(int xpos, int ypos);
 
 	void setIsLogin(bool value);
 	bool getIsLogin();
-	void setGetUserInfo(bool value);
-	bool getGetUserInfo();
+	void setIsGetUserInfo(bool value);
+	bool getIsGetUserInfo();
 	void setPopupLoginFail(bool value);
 	bool getPopupLoginFail();
+
+	void setIsGetObjectInfo(bool value);
+	bool getIsGetObjectInfo();
+	void setIsGetMonsterInfo(bool value);
+	bool getIsGetMonsterInfo();
+	void setIsGetItemInfo(bool value);
+	bool getIsGetItemInfo();
+	void setIsGetInventoryInfo(bool value);
+	bool getIsGetInventoryInfo();
+	void setIsMapPotalFinish(bool value);
+	bool getIsMapPotalFinish();
+	void setIsThrowItemFinish(bool value);
+	bool getIsThrowItemFinish();
+	void setIsGetItemFinish(bool value);
+	bool getIsGetItemFinish();
 
 	void addLog(string message);
 	void printAllLog();
@@ -127,6 +166,9 @@ public:
 
 	void chatting(const char* chattingInfo);
 	void requestMapMove(int xpos, int ypos, const char* field);
+
+	void requestThrowItem(int xpos, int ypos);
+	void requestGetItem();
 };
 
 #endif

@@ -132,7 +132,7 @@ void GameServer::accept_win()
 							updateLogin(reads.fd_array[i], buffer);
 							break;
 						case USER_MOVE_UPDATE:
-							sendRequest(reads.fd_array[i], code, buffer, size);
+							updateMoveInfo(reads.fd_array[i], buffer);
 							break;
 						case OTHER_USER_MAP_MOVE:
 							sendRequest(reads.fd_array[i], code, buffer, size);
@@ -164,8 +164,11 @@ void GameServer::accept_win()
 						case MOVE_INVENTORY_ITEM:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
-						case THROW_ITEM:
-							sendRequest(reads.fd_array[i], code, buffer, size);
+						case REQUEST_THROW_ITEM:
+							createThrowItemOnMap(reads.fd_array[i], buffer);
+							break;
+						case REQUEST_EAT_ITEM:
+							userGetMapItem(reads.fd_array[i], buffer);
 							break;
 						case ATTACK_FILED_OBJECT:
 							sendRequest(reads.fd_array[i], code, buffer, size);
@@ -277,6 +280,9 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 	list<InventoryInfo> inventoryList;
 	list<InventoryInfo>::iterator inventoryIter;
 
+	list<MapInfo> itemList;
+	list<MapInfo>::iterator itemIter;
+
 	try
 	{
 		userService->updateLogin(sock, name);
@@ -320,6 +326,14 @@ void GameServer::updateLogin(SOCKET sock, const char* name)
 		{
 			memcpy(message, &(*inventoryIter), sizeof(InventoryInfo));
 			sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
+		}
+
+		itemList = mapManageService->getFieldItem(loginUser.getField());
+
+		for (itemIter = itemList.begin(); itemIter != itemList.end(); itemIter++)
+		{
+			memcpy(message, &(*itemIter), sizeof(MapInfo));
+			sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
 		}
 	}
 	catch (const runtime_error& error)
@@ -404,6 +418,9 @@ void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
 	list<MapInfo> mapObjectList;
 	list<MapInfo>::iterator objectIter;
 
+	list<MapInfo> mapItemList;
+	list<MapInfo>::iterator itemIter;
+
 	try
 	{
 		memcpy(&user, userInfo, sizeof(User));
@@ -422,7 +439,6 @@ void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
 
 				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
 			}
-
 		}
 		else if (user.getAction() == ACTION_MAP_POTAL)
 		{
@@ -473,11 +489,134 @@ void GameServer::updateMoveInfo(SOCKET sock, const char* userInfo)
 				memcpy(message, &(*objectIter), sizeof(MapInfo));
 				sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
 			}
+
+			mapItemList = mapManageService->getFieldItem(user.getField());
+
+			for (itemIter = mapItemList.begin(); itemIter != mapItemList.end(); itemIter++)
+			{
+				memcpy(message, &(*itemIter), sizeof(MapInfo));
+				sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
+			}
+
+			sendRequest(sock, REQUEST_MAP_POTAL_FINISH, "map_potal_finish", strlen("map_potal_finish") + 1);
 		}
 	}
 	catch (const runtime_error& error)
 	{
 		sendRequest(sock, REQUEST_MAP_MOVE, "map_move_fail", strlen("map_move_fail") + 1);
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+void GameServer::createThrowItemOnMap(SOCKET sock, const char* inventoryInfo)
+{
+	char message[BUF_SIZE];
+	list<User> loginUserList;
+	list<User>::iterator iter;
+	User user;
+	InventoryInfo inventoryItemInfo;
+	MapInfo insertMapInfo;
+	MapInfo backItem;
+
+	try
+	{
+		user = userService->getUserInfo(sock);
+		loginUserList = userService->getFieldLoginUserAll(user.getField());
+		backItem = mapManageService->getMaxOrderItem(user.getField(), user.getXpos(), user.getYpos());
+
+		memcpy(&inventoryItemInfo, inventoryInfo, sizeof(InventoryInfo));
+
+		insertMapInfo.setField(user.getField());
+		insertMapInfo.setObjectCode(12);
+		insertMapInfo.setName(inventoryItemInfo.getItemName());
+		insertMapInfo.setType(inventoryItemInfo.getType());
+		insertMapInfo.setXpos(user.getXpos());
+		insertMapInfo.setYpos(user.getYpos());
+		insertMapInfo.setZOrder(backItem.getZOrder() + 1);
+		insertMapInfo.setFileDir(inventoryItemInfo.getFileDir());
+		insertMapInfo.setCount(inventoryItemInfo.getCount());
+		insertMapInfo.setHp(0);
+
+		mapManageService->addFieldMapInfo(insertMapInfo);
+		insertMapInfo = mapManageService->getMaxOrderItem(user.getField(), user.getXpos(), user.getYpos());
+		userService->deleteInventoryItem(user.getName(), inventoryItemInfo.getXpos(), inventoryItemInfo.getYpos());
+
+		memcpy(message, &insertMapInfo, sizeof(MapInfo));
+
+		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
+		{
+			sendRequest(iter->getSock(), REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
+		}
+
+		sendRequest(sock, REQUEST_THROW_ITEM_FINISH, inventoryInfo, sizeof(InventoryInfo));
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+void GameServer::userGetMapItem(SOCKET sock, const char* userInfo)
+{
+	char message[BUF_SIZE];
+	list<User> loginUserList;
+	list<User>::iterator iter;
+	User getUser;
+	MapInfo itemInfo;
+	InventoryInfo inventoryInfo;
+	list<InventoryInfo> userInventoryInfo;
+	list<InventoryInfo>::iterator userInventoryInfoIter;
+
+	try
+	{
+		memcpy(&getUser, userInfo, sizeof(User));
+		loginUserList = userService->getFieldLoginUserAll(getUser.getField());
+
+		itemInfo = mapManageService->getMaxOrderItem(getUser.getField(), getUser.getXpos(), getUser.getYpos());
+		userInventoryInfo = userService->getUserInventoryInfo(getUser.getName());
+		userInventoryInfoIter = userInventoryInfo.begin();
+
+		for (int i = 0; i < INVENTORY_X_SIZE; i++)
+		{
+			for (int j = 0; j < INVENTORY_Y_SIZE; j++)
+			{
+				if (userInventoryInfo.size() != 0 && userInventoryInfoIter->getXpos() == i && userInventoryInfoIter->getYpos() == j)
+				{
+					userInventoryInfoIter++;
+					continue;
+				}
+				else
+				{
+					mapManageService->deleteMaxOrderItem(getUser.getField(), getUser.getXpos(), getUser.getYpos());
+
+					for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
+					{
+						memcpy(message, &itemInfo, sizeof(MapInfo));
+						sendRequest(iter->getSock(), DELETE_FIELD_ITEM, message, sizeof(MapInfo));
+					}
+
+					inventoryInfo.setItemName(itemInfo.getName());
+					inventoryInfo.setUserName(getUser.getName());
+					inventoryInfo.setType("ITEM");
+					inventoryInfo.setXpos(i);
+					inventoryInfo.setYpos(j);
+					inventoryInfo.setFileDir(itemInfo.getFileDir());
+					inventoryInfo.setCount(itemInfo.getCount());
+
+					userService->addInventoryItem(inventoryInfo);
+
+					memcpy(message, &inventoryInfo, sizeof(InventoryInfo));
+					sendRequest(sock, REQUEST_EAT_ITEM, message, sizeof(InventoryInfo));
+					sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
+					return;
+				}
+			}
+		}
+
+		sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
+	}
+	catch (const runtime_error& error)
+	{
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -566,8 +705,11 @@ void GameServer::accept_linux()
 					case MOVE_INVENTORY_ITEM:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
-					case THROW_ITEM:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
+					case REQUEST_THROW_ITEM:
+						createThrowItemOnMap(ep_events[i].data.fd, buffer);
+						break;
+					case REQUEST_EAT_ITEM:
+						userGetMapItem(ep_events[i].data.fd, buffer);
 						break;
 					case ATTACK_FILED_OBJECT:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
@@ -677,6 +819,9 @@ void GameServer::updateLogin(int sock, const char* name)
 	list<InventoryInfo> inventoryList;
 	list<InventoryInfo>::iterator inventoryIter;
 
+	list<MapInfo> itemList;
+	list<MapInfo>::iterator itemIter;
+
 	try
 	{
 		userService->updateLogin(sock, name);
@@ -720,6 +865,14 @@ void GameServer::updateLogin(int sock, const char* name)
 		{
 			memcpy(message, &(*inventoryIter), sizeof(InventoryInfo));
 			sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
+		}
+
+		itemList = mapManageService->getFieldItem(loginUser.getField());
+
+		for (itemIter = itemList.begin(); itemIter != itemList.end(); itemIter++)
+		{
+			memcpy(message, &(*itemIter), sizeof(MapInfo));
+			sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
 		}
 	}
 	catch (const runtime_error& error)
@@ -802,6 +955,9 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 	list<MapInfo> mapObjectList;
 	list<MapInfo>::iterator objectIter;
 
+	list<MapInfo> mapItemList;
+	list<MapInfo>::iterator itemIter;
+
 	try
 	{
 		memcpy(&user, userInfo, sizeof(User));
@@ -820,7 +976,6 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 
 				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
 			}
-
 		}
 		else if (user.getAction() == ACTION_MAP_POTAL)
 		{
@@ -871,11 +1026,134 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 				memcpy(message, &(*objectIter), sizeof(MapInfo));
 				sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
 			}
+
+			mapItemList = mapManageService->getFieldItem(user.getField());
+
+			for (itemIter = mapItemList.begin(); itemIter != mapItemList.end(); itemIter++)
+			{
+				memcpy(message, &(*itemIter), sizeof(MapInfo));
+				sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
+			}
+
+			sendRequest(sock, REQUEST_MAP_POTAL_FINISH, "map_potal_finish", strlen("map_potal_finish") + 1);
 		}
 	}
 	catch (const runtime_error& error)
 	{
 		sendRequest(sock, REQUEST_MAP_MOVE, "map_move_fail", strlen("map_move_fail") + 1);
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+void GameServer::createThrowItemOnMap(int sock, const char* inventoryInfo)
+{
+	char message[BUF_SIZE];
+	list<User> loginUserList;
+	list<User>::iterator iter;
+	User user;
+	InventoryInfo inventoryItemInfo;
+	MapInfo insertMapInfo;
+	MapInfo backItem;
+
+	try
+	{
+		user = userService->getUserInfo(sock);
+		loginUserList = userService->getFieldLoginUserAll(user.getField());
+		backItem = mapManageService->getMaxOrderItem(user.getField(), user.getXpos(), user.getYpos());
+
+		memcpy(&inventoryItemInfo, inventoryInfo, sizeof(InventoryInfo));
+
+		insertMapInfo.setField(user.getField());
+		insertMapInfo.setObjectCode(12);
+		insertMapInfo.setName(inventoryItemInfo.getItemName());
+		insertMapInfo.setType(inventoryItemInfo.getType());
+		insertMapInfo.setXpos(user.getXpos());
+		insertMapInfo.setYpos(user.getYpos());
+		insertMapInfo.setZOrder(backItem.getZOrder() + 1);
+		insertMapInfo.setFileDir(inventoryItemInfo.getFileDir());
+		insertMapInfo.setCount(inventoryItemInfo.getCount());
+		insertMapInfo.setHp(0);
+
+		mapManageService->addFieldMapInfo(insertMapInfo);
+		insertMapInfo = mapManageService->getMaxOrderItem(user.getField(), user.getXpos(), user.getYpos());
+		userService->deleteInventoryItem(user.getName(), inventoryItemInfo.getXpos(), inventoryItemInfo.getYpos());
+
+		memcpy(message, &insertMapInfo, sizeof(MapInfo));
+
+		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
+		{
+			sendRequest(iter->getSock(), REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
+		}
+
+		sendRequest(sock, REQUEST_THROW_ITEM_FINISH, inventoryInfo, sizeof(InventoryInfo));
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+void GameServer::userGetMapItem(int sock, const char* userInfo)
+{
+	char message[BUF_SIZE];
+	list<User> loginUserList;
+	list<User>::iterator iter;
+	User getUser;
+	MapInfo itemInfo;
+	InventoryInfo inventoryInfo;
+	list<InventoryInfo> userInventoryInfo;
+	list<InventoryInfo>::iterator userInventoryInfoIter;
+
+	try
+	{
+		memcpy(&getUser, userInfo, sizeof(User));
+		loginUserList = userService->getFieldLoginUserAll(getUser.getField());
+
+		itemInfo = mapManageService->getMaxOrderItem(getUser.getField(), getUser.getXpos(), getUser.getYpos());
+		userInventoryInfo = userService->getUserInventoryInfo(getUser.getName());
+		userInventoryInfoIter = userInventoryInfo.begin();
+
+		for (int i = 0; i < INVENTORY_X_SIZE; i++)
+		{
+			for (int j = 0; j < INVENTORY_Y_SIZE; j++)
+			{
+				if (userInventoryInfo.size() != 0 && userInventoryInfoIter->getXpos() == i && userInventoryInfoIter->getYpos() == j)
+				{
+					userInventoryInfoIter++;
+					continue;
+				}
+				else
+				{
+					mapManageService->deleteMaxOrderItem(getUser.getField(), getUser.getXpos(), getUser.getYpos());
+
+					for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
+					{
+						memcpy(message, &itemInfo, sizeof(MapInfo));
+						sendRequest(iter->getSock(), DELETE_FIELD_ITEM, message, sizeof(MapInfo));
+					}
+
+					inventoryInfo.setItemName(itemInfo.getName());
+					inventoryInfo.setUserName(getUser.getName());
+					inventoryInfo.setType("ITEM");
+					inventoryInfo.setXpos(i);
+					inventoryInfo.setYpos(j);
+					inventoryInfo.setFileDir(itemInfo.getFileDir());
+					inventoryInfo.setCount(itemInfo.getCount());
+
+					userService->addInventoryItem(inventoryInfo);
+
+					memcpy(message, &inventoryInfo, sizeof(InventoryInfo));
+					sendRequest(sock, REQUEST_EAT_ITEM, message, sizeof(InventoryInfo));
+					sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
+					return;
+				}
+			}
+		}
+
+		sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
+	}
+	catch (const runtime_error& error)
+	{
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }

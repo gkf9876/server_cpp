@@ -142,6 +142,7 @@ void UserServiceTest::run()
 		getFieldLoginUserAll();
 		getUserInventoryInfo();
 		updateUserInfo();
+		deleteInventoryItem();
 	}
 	catch (const runtime_error& error)
 	{
@@ -321,6 +322,7 @@ void UserServiceTest::getUserInventoryInfo()
 
 	inventoryInfoDao->deleteAll();
 	assertThat(inventoryInfoDao->getCount(), 0);
+	assertThat(inventoryInfoDao->getUserInventoryList("gkf1234").size(), 0);
 
 	for (int i = 0; i < 20; i++)
 	{
@@ -365,4 +367,30 @@ void UserServiceTest::updateUserInfo()
 	checkSameUser(user1Update, *user1);
 	User user2Update = userDao->get(user2->getName());
 	checkSameUser(user2Update, *user2);
+}
+
+void UserServiceTest::deleteInventoryItem()
+{
+	std::cout << "UserServiceTest : deleteInventoryItem()" << std::endl;
+
+	inventoryInfoDao->deleteAll();
+	assertThat(inventoryInfoDao->getCount(), 0);
+
+	for (int i = 0; i < 20; i++)
+	{
+		userService->addInventoryItem(item[i]);
+		assertThat(inventoryInfoDao->getCount(), i + 1);
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		userService->deleteInventoryItem("gkf1234", item[i].getXpos(), item[i].getYpos());
+		assertThat(inventoryInfoDao->getCount(), 19 - i);
+	}
+
+	for (int i = 10; i < 20; i++)
+	{
+		userService->deleteInventoryItem("gkf1234", item[i].getXpos(), item[i].getYpos());
+		assertThat(inventoryInfoDao->getCount(), 10);
+	}
 }

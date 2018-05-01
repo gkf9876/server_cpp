@@ -57,3 +57,13 @@ void UserService::updateUserInfo(User userInfo)
 {
 	userDao->update(userInfo);
 }
+
+void UserService::deleteInventoryItem(const char* name, int xpos, int ypos)
+{
+	inventoryInfoDao->deleteInventoryInfo(name, xpos, ypos);
+}
+
+void UserService::addInventoryItem(InventoryInfo inventoryInfo)
+{
+	inventoryInfoDao->add(inventoryInfo);
+}

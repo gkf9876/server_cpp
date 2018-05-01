@@ -21,6 +21,8 @@
 
 #define BUF_SIZE 1024
 #define EPOLL_SIZE 50
+#define INVENTORY_X_SIZE 3
+#define INVENTORY_Y_SIZE 5
 
 #define REQUEST_USER_INFO				1
 #define REQUEST_LOGIN					2
@@ -35,12 +37,17 @@
 #define REQUEST_FIELD_OBJECT_INFO		11
 #define REQUEST_FIELD_MONSTER_INFO		12
 #define REQUEST_INVENTORY_ITEM_INFO		13
-#define MOVE_INVENTORY_ITEM				14
-#define THROW_ITEM						15
-#define REGEN_MONSTER					16
-#define ATTACK_FILED_OBJECT				17
-#define REQUEST_LOGOUT					18
-#define REQUEST_MAP_MOVE				19
+#define REQUEST_FIELD_ITEM_INFO			14
+#define MOVE_INVENTORY_ITEM				15
+#define REQUEST_THROW_ITEM				16
+#define REQUEST_EAT_ITEM				17
+#define REGEN_MONSTER					18
+#define ATTACK_FILED_OBJECT				19
+#define REQUEST_LOGOUT					20
+#define REQUEST_MAP_MOVE				21
+#define REQUEST_MAP_POTAL_FINISH		22
+#define REQUEST_THROW_ITEM_FINISH		23
+#define REQUEST_GET_ITEM_FINISH			24
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define CUR_PATH						"/home/gkf9876/server/Resources/"
@@ -102,6 +109,10 @@ public:
 
 	void chatting(SOCKET sock, const char* chatting);
 	void updateMoveInfo(SOCKET sock, const char* userInfo);
+
+	void createThrowItemOnMap(SOCKET sock, const char* mapInfo);
+	void userGetMapItem(SOCKET sock, const char* userInfo);
+
 #elif __linux__
 	void accept_linux();
 
@@ -118,6 +129,10 @@ public:
 
 	void chatting(int sock, const char* chatting);
 	void updateMoveInfo(int sock, const char* userInfo);
+
+	void createThrowItemOnMap(int sock, const char* mapInfo);
+	void userGetMapItem(int sock, const char* userInfo);
+
 #endif
 
 	void regenMonster();

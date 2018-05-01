@@ -22,11 +22,15 @@ public:
 	void initAutoIncrement();
 	int getCount();
 	int getCountFieldMonster(const char* field, const char* name);
-	MapInfo getMonster(int xpos, int ypos);
+	MapInfo getMonster(const char* field, int xpos, int ypos);
 	list<MapInfo> getFieldMonster(const char* field);
 	list<MapInfo> getFieldObject(const char* field);
 	int getCountFieldMonster(const char* field);
 	int getCountFieldObject(const char* field);
+	MapInfo getMaxOrderItem(const char* field, int xpos, int ypos);
+	int getCountFieldItem(const char* field);
+	list<MapInfo> getFieldItem(const char* field);
+	void deleteMapInfo(int idx, const char* field);
 };
 
 #endif

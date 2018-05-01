@@ -5,11 +5,12 @@ GameClient::GameClient()
 	usersInfo = new vector<User*>();								//현재 맵의 다른 유저들
 	objectInfo = new vector<MapInfo*>();							//현재 맵의 오브젝트
 	monsterInfo = new vector<MapInfo*>();							//현재 맵의 몬스터
+	itemInfo = new vector<MapInfo*>();
 	chattingInfo = new vector<Chatting*>();							//현재 맵의 채팅
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < INVENTORY_X_SIZE; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < INVENTORY_Y_SIZE; j++)
 		{
 			inventory_items_Info[i][j] = NULL;
 		}
@@ -23,11 +24,12 @@ GameClient::~GameClient()
 	delete usersInfo;
 	delete objectInfo;
 	delete monsterInfo;
+	delete itemInfo;
 	delete chattingInfo;
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < INVENTORY_X_SIZE; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < INVENTORY_Y_SIZE; j++)
 		{
 			if (inventory_items_Info[i][j] != NULL)
 				delete inventory_items_Info[i][j];
@@ -145,6 +147,40 @@ void GameClient::clearMonsterInfo()
 	this->monsterInfo->clear();
 }
 
+void GameClient::addItemInfo(MapInfo* itemInfo)
+{
+	this->itemInfo->push_back(itemInfo);
+}
+
+int GameClient::sizeItemInfo()
+{
+	return this->itemInfo->size();
+}
+
+MapInfo GameClient::getItemInfo(int idx)
+{
+	return *(this->itemInfo->at(idx));
+}
+
+void GameClient::clearItemInfo()
+{
+	this->itemInfo->clear();
+}
+
+void GameClient::removeItemInfo(int idx)
+{
+	for (int i = 0; i < this->itemInfo->size(); i++)
+	{
+		MapInfo* mapInfo = this->itemInfo->at(i);
+
+		if (mapInfo->getIdx() == idx)
+		{
+			this->itemInfo->erase(this->itemInfo->begin() + i);
+			return;
+		}
+	}
+}
+
 void GameClient::addChattingInfo(Chatting* chatting)
 {
 	this->chattingInfo->push_back(chatting);
@@ -169,9 +205,9 @@ int GameClient::sizeInventoryInfo()
 {
 	int size = 0;
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < INVENTORY_X_SIZE; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < INVENTORY_Y_SIZE; j++)
 		{
 			if (inventory_items_Info[i][j] != NULL)
 				size++;
@@ -181,9 +217,12 @@ int GameClient::sizeInventoryInfo()
 	return size;
 }
 
-InventoryInfo GameClient::getInventoryInfo(int xpos, int ypos)
+InventoryInfo* GameClient::getInventoryInfo(int xpos, int ypos)
 {
-	return *this->inventory_items_Info[xpos][ypos];
+	if (xpos >= INVENTORY_X_SIZE || ypos >= INVENTORY_Y_SIZE || xpos < 0 || ypos < 0)
+		return NULL;
+	else
+		return this->inventory_items_Info[xpos][ypos];
 }
 
 void GameClient::getItem(MapInfo mapInfo)
@@ -191,9 +230,9 @@ void GameClient::getItem(MapInfo mapInfo)
 	if (strcmp(mapInfo.getType(), "ITEM"))
 		return;
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < INVENTORY_X_SIZE; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < INVENTORY_Y_SIZE; j++)
 		{
 			if (this->inventory_items_Info[i][j] != NULL && !strcmp(mapInfo.getName(), this->inventory_items_Info[i][j]->getItemName()))
 			{
@@ -203,9 +242,9 @@ void GameClient::getItem(MapInfo mapInfo)
 		}
 	}
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < INVENTORY_X_SIZE; i++)
 	{
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < INVENTORY_Y_SIZE; j++)
 		{
 			if (this->inventory_items_Info[i][j] != NULL)
 			{
@@ -224,6 +263,17 @@ void GameClient::getItem(MapInfo mapInfo)
 	}
 }
 
+void GameClient::removeInventoryInfo(int xpos, int ypos)
+{
+	if (xpos >= INVENTORY_X_SIZE || ypos >= INVENTORY_Y_SIZE || xpos < 0 || ypos < 0)
+		return;
+	else if (inventory_items_Info[xpos][ypos] != NULL)
+	{
+		delete inventory_items_Info[xpos][ypos];
+		inventory_items_Info[xpos][ypos] = NULL;
+	}
+}
+
 void GameClient::setIsLogin(bool value)
 {
 	this->isLogin = value;
@@ -234,12 +284,12 @@ bool GameClient::getIsLogin()
 	return this->isLogin;
 }
 
-void GameClient::setGetUserInfo(bool value)
+void GameClient::setIsGetUserInfo(bool value)
 {
 	this->isGetUserInfo = value;
 }
 
-bool GameClient::getGetUserInfo()
+bool GameClient::getIsGetUserInfo()
 {
 	return this->isGetUserInfo;
 }
@@ -252,6 +302,76 @@ void GameClient::setPopupLoginFail(bool value)
 bool GameClient::getPopupLoginFail()
 {
 	return this->popupLoginFail;
+}
+
+void GameClient::setIsGetObjectInfo(bool value)
+{
+	this->isGetObjectInfo = value;
+}
+
+bool GameClient::getIsGetObjectInfo()
+{
+	return this->isGetObjectInfo;
+}
+
+void GameClient::setIsGetMonsterInfo(bool value)
+{
+	this->isGetMonsterInfo = value;
+}
+
+bool GameClient::getIsGetMonsterInfo()
+{
+	return this->isGetMonsterInfo;
+}
+
+void GameClient::setIsGetItemInfo(bool value)
+{
+	this->isGetItemInfo = value;
+}
+
+bool GameClient::getIsGetItemInfo()
+{
+	return this->isGetItemInfo;
+}
+
+void GameClient::setIsGetInventoryInfo(bool value)
+{
+	this->isGetInventoryInfo = value;
+}
+
+bool GameClient::getIsGetInventoryInfo()
+{
+	return this->isGetInventoryInfo;
+}
+
+void GameClient::setIsMapPotalFinish(bool value)
+{
+	this->isMapPotalFinish = value;
+}
+
+bool GameClient::getIsMapPotalFinish()
+{
+	return this->isMapPotalFinish;
+}
+
+void GameClient::setIsThrowItemFinish(bool value)
+{
+	this->isThrowItemFinish = value;
+}
+
+bool GameClient::getIsThrowItemFinish()
+{
+	return this->isThrowItemFinish;
+}
+
+void GameClient::setIsGetItemFinish(bool value)
+{
+	this->isGetItemFinish = value;
+}
+
+bool GameClient::getIsGetItemFinish()
+{
+	return this->isGetItemFinish;
 }
 
 void GameClient::addLog(string message)
@@ -411,4 +531,20 @@ void GameClient::requestMapMove(int xpos, int ypos, const char* field)
 
 	memcpy(message, &mainUser, sizeof(User));
 	sendRequest(USER_MOVE_UPDATE, message, sizeof(User));
+}
+
+void GameClient::requestThrowItem(int xpos, int ypos)
+{
+	char message[BUF_SIZE];
+	memcpy(message, inventory_items_Info[xpos][ypos], sizeof(InventoryInfo));
+
+	sendRequest(REQUEST_THROW_ITEM, message, sizeof(InventoryInfo));
+}
+
+void GameClient::requestGetItem()
+{
+	char message[BUF_SIZE];
+	memcpy(message, &mainUser, sizeof(User));
+
+	sendRequest(REQUEST_EAT_ITEM, message, sizeof(InventoryInfo));
 }

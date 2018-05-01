@@ -21,6 +21,10 @@ public:
 	void regenMonster();
 	list<MapInfo> getFieldMonster(const char* field);
 	list<MapInfo> getFieldObject(const char* field);
+	void addFieldMapInfo(MapInfo mapInfo);
+	MapInfo getMaxOrderItem(const char* field, int xpos, int ypos);
+	list<MapInfo> getFieldItem(const char* field);
+	void deleteMaxOrderItem(const char* field, int xpos, int ypos);
 };
 
 #endif

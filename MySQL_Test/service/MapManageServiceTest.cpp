@@ -134,6 +134,23 @@ MapManageServiceTest::MapManageServiceTest()
 	mapInfo5.setFileDir("Images/신호등.jpg");
 	mapInfo5.setCount(2);
 	mapInfo5.setHp(200);
+
+	for (int i = 0; i < 10; i++)
+	{
+		char message[1024];
+		item[i].setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+		item[i].setObjectCode(14);
+		sprintf(message, "도토리_%d", i);
+		item[i].setName(message);
+		item[i].setType("ITEM");
+		item[i].setXpos(211);
+		item[i].setYpos(131);
+		item[i].setZOrder(i);
+		sprintf(message, "Images/도토리_%d.jpg", i);
+		item[i].setFileDir(message);
+		item[i].setCount(2 + i);
+		item[i].setHp(0);
+	}
 }
 
 MapManageServiceTest::~MapManageServiceTest()
@@ -182,6 +199,10 @@ void MapManageServiceTest::run()
 		regenMonsterTransaction();
 		getFieldMonster();
 		getFieldObject();
+		addFieldMapInfo();
+		getMaxOrderItem();
+		getFieldItem();
+		deleteMaxOrderItem();
 	}
 	catch (const runtime_error& error)
 	{
@@ -345,4 +366,142 @@ void MapManageServiceTest::getFieldObject()
 
 	iter++;
 	checkSameMapInfo(*iter, mapInfo5);
+}
+
+void MapManageServiceTest::addFieldMapInfo()
+{
+	std::cout << "MapManageServiceTest : addFieldMapInfo()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCount(), 0);
+
+	mapManageService->addFieldMapInfo(mapInfo1);
+	assertThat(mapInfoDao->getCount(), 1);
+
+	mapManageService->addFieldMapInfo(mapInfo2);
+	assertThat(mapInfoDao->getCount(), 2);
+
+	mapManageService->addFieldMapInfo(mapInfo3);
+	assertThat(mapInfoDao->getCount(), 3);
+
+	mapManageService->addFieldMapInfo(mapInfo4);
+	assertThat(mapInfoDao->getCount(), 4);
+
+	mapManageService->addFieldMapInfo(mapInfo5);
+	assertThat(mapInfoDao->getCount(), 5);
+
+	list<MapInfo> fieldLoginObjectList = mapInfoDao->getFieldObject(mapInfo1.getField());
+	list<MapInfo>::iterator iter;
+	iter = fieldLoginObjectList.begin();
+
+	checkSameMapInfo(*iter, mapInfo4);
+
+	iter++;
+	checkSameMapInfo(*iter, mapInfo5);
+}
+
+void MapManageServiceTest::getMaxOrderItem()
+{
+	std::cout << "MapManageServiceTest : getMaxOrderItem()" << std::endl;
+
+	char message[1024];
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCount(), 0);
+
+	mapManageService->addFieldMapInfo(mapInfo1);
+	assertThat(mapInfoDao->getCount(), 1);
+
+	mapManageService->addFieldMapInfo(mapInfo2);
+	assertThat(mapInfoDao->getCount(), 2);
+
+	mapManageService->addFieldMapInfo(mapInfo3);
+	assertThat(mapInfoDao->getCount(), 3);
+
+	mapManageService->addFieldMapInfo(mapInfo4);
+	assertThat(mapInfoDao->getCount(), 4);
+
+	mapManageService->addFieldMapInfo(mapInfo5);
+	assertThat(mapInfoDao->getCount(), 5);
+
+	for (int i = 0; i < 10; i++)
+	{
+		mapInfoDao->add(item[i]);
+		assertThat(mapInfoDao->getCountFieldItem(item[0].getField()), i + 1);
+		checkSameMapInfo(mapManageService->getMaxOrderItem(item[i].getField(), item[i].getXpos(), item[i].getYpos()), item[i]);
+	}
+}
+
+void MapManageServiceTest::getFieldItem()
+{
+	std::cout << "MapManageServiceTest : getFieldItem()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCount(), 0);
+
+	mapInfoDao->add(mapInfo1);
+	assertThat(mapInfoDao->getCount(), 1);
+
+	mapInfoDao->add(mapInfo2);
+	assertThat(mapInfoDao->getCount(), 2);
+
+	mapInfoDao->add(mapInfo3);
+	assertThat(mapInfoDao->getCount(), 3);
+
+	mapInfoDao->add(mapInfo4);
+	assertThat(mapInfoDao->getCount(), 4);
+
+	mapInfoDao->add(mapInfo5);
+	assertThat(mapInfoDao->getCount(), 5);
+
+	for (int i = 0; i < 10; i++)
+	{
+		mapInfoDao->add(item[i]);
+		assertThat(mapInfoDao->getCount(), 6 + i);
+	}
+
+	list<MapInfo> fieldLoginItemList = mapInfoDao->getFieldItem(mapInfo1.getField());
+	list<MapInfo>::iterator iter;
+	iter = fieldLoginItemList.begin();
+
+	for (int i = 0; i < 10; i++)
+	{
+		checkSameMapInfo(*iter, item[i]);
+		iter++;
+	}
+}
+
+void MapManageServiceTest::deleteMaxOrderItem()
+{
+	std::cout << "MapManageServiceTest : deleteMaxOrderItem()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCount(), 0);
+
+	mapInfoDao->add(mapInfo1);
+	assertThat(mapInfoDao->getCount(), 1);
+
+	mapInfoDao->add(mapInfo2);
+	assertThat(mapInfoDao->getCount(), 2);
+
+	mapInfoDao->add(mapInfo3);
+	assertThat(mapInfoDao->getCount(), 3);
+
+	mapInfoDao->add(mapInfo4);
+	assertThat(mapInfoDao->getCount(), 4);
+
+	mapInfoDao->add(mapInfo5);
+	assertThat(mapInfoDao->getCount(), 5);
+
+	for (int i = 0; i < 10; i++)
+	{
+		mapInfoDao->add(item[i]);
+		assertThat(mapInfoDao->getCount(), 6 + i);
+	}
+
+	for (int i = 0; i < 9; i++)
+	{
+		mapManageService->deleteMaxOrderItem(item[0].getField(), item[0].getXpos(), item[0].getYpos());
+		checkSameMapInfo(mapManageService->getMaxOrderItem(item[0].getField(), item[0].getXpos(), item[0].getYpos()), item[8 - i]);
+	}
 }

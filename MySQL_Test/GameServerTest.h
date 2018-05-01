@@ -72,6 +72,7 @@ public:
 	void assertThatLog(int clientNum, int value, int compValue);
 	void assertThatLog(int clientNum, string value, string compValue);
 	void assertThatLog(int clientNum, char* value, char* compValue);
+	void assertThatLog(int clientNum, char* value, const char* compValue);
 	void checkSameUserLog(int clientNum, User user1, User user2);
 	void checkSameChatLog(int clientNum, Chatting chat1, Chatting chat2);
 	void checkSameMapInfoLog(int clientNum, MapInfo mapInfo1, MapInfo mapInfo2);

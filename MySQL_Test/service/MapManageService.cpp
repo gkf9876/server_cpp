@@ -119,3 +119,33 @@ list<MapInfo> MapManageService::getFieldObject(const char* field)
 {
 	return this->mapInfoDao->getFieldObject(field);
 }
+
+void MapManageService::addFieldMapInfo(MapInfo mapInfo)
+{
+	this->mapInfoDao->add(mapInfo);
+}
+
+MapInfo MapManageService::getMaxOrderItem(const char* field, int xpos, int ypos)
+{
+	return this->mapInfoDao->getMaxOrderItem(field, xpos, ypos);
+}
+
+list<MapInfo> MapManageService::getFieldItem(const char* field)
+{
+	return this->mapInfoDao->getFieldItem(field);
+}
+
+void MapManageService::deleteMaxOrderItem(const char* field, int xpos, int ypos)
+{
+	try
+	{
+		MapInfo maxOrderItem = mapInfoDao->getMaxOrderItem(field, xpos, ypos);
+
+		if (strcmp(maxOrderItem.getName(), "nothing"))
+			mapInfoDao->deleteMapInfo(maxOrderItem.getIdx(), maxOrderItem.getField());
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}

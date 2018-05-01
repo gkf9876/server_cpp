@@ -27,6 +27,8 @@ public:
 	int getUserCount(const char* field);
 	list<InventoryInfo> getUserInventoryInfo(const char* name);
 	void updateUserInfo(User userInfo);
+	void deleteInventoryItem(const char* name, int xpos, int ypos);
+	void addInventoryItem(InventoryInfo inventoryInfo);
 };
 
 #endif

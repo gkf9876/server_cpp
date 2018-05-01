@@ -34,6 +34,8 @@ private:
 	MapInfo mapInfo3;
 	MapInfo mapInfo4;
 	MapInfo mapInfo5;
+
+	MapInfo item[10];
 public:
 	MapManageServiceTest();
 	~MapManageServiceTest();
@@ -46,6 +48,10 @@ public:
 	void regenMonsterTransaction();
 	void getFieldMonster();
 	void getFieldObject();
+	void addFieldMapInfo();
+	void getMaxOrderItem();
+	void getFieldItem();
+	void deleteMaxOrderItem();
 };
 
 #endif

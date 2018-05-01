@@ -32,6 +32,7 @@ public:
 	void getUserFailure();
 	void update();
 	void getUserInventoryInfo();
+	void deleteInventoryInfo();
 };
 
 #endif

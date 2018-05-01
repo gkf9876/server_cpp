@@ -24,6 +24,7 @@ public:
 	InventoryInfo get(const char* itemName);
 	void update(InventoryInfo inventoryInfo);
 	list<InventoryInfo> getUserInventoryList(const char* userName);
+	void deleteInventoryInfo(const char* userName, int xpos, int ypos);
 };
 
 #endif
