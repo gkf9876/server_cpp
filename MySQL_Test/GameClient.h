@@ -49,6 +49,7 @@
 #define REQUEST_THROW_ITEM_FINISH		23
 #define REQUEST_GET_ITEM_FINISH			24
 #define REQUEST_CHATTING_FINISH			25
+#define REQUEST_MAP_MOVE_FINISH			26
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 
@@ -83,6 +84,7 @@ private:
 	bool isThrowItemFinish = false;
 	bool isGetItemFinish = false;
 	bool isChattingFinish = false;
+	bool isMapMoveFinish = false;
 
 	vector<string> * log = NULL;
 public:
@@ -90,6 +92,8 @@ public:
 	~GameClient();
 	void setMainUser(User user);
 	User getMainUser();
+	void setMainUserAction(int value);
+	int getMainUserAction();
 
 	void addUsersInfo(User* user);
 	void removeUsersInfo(const char* userName);
@@ -148,6 +152,8 @@ public:
 	bool getIsGetItemFinish();
 	void setIsChattingFinish(bool value);
 	bool getIsChattingFinish();
+	void setIsMapMoveFinish(bool value);
+	bool getIsMapMoveFinish();
 
 	void addLog(string message);
 	void printAllLog();

@@ -2,6 +2,7 @@
 #define __ASSERT_H__
 
 #include <iostream>
+#include <algorithm>
 
 #include "../factory/ApplicationContext.h"
 
@@ -50,6 +51,8 @@ public:
 	void checkSameInventoryInfoLog(GameClient* gameClient, InventoryInfo inventoryInfo1, InventoryInfo inventoryInfo2);
 
 	void checkSameDatabaseChattingListLog(GameClient* gameClient);
+	void checkSameDatabaseUserListLog(GameClient* targetGameClient, vector<GameClient*> gameClientList);
+	void checkSameDatabaseMapUserInfoLog(GameClient* targetGameClient, vector<GameClient*> gameClientList);
 
 	void assertThat(int value, int compValue);
 	void assertThat(string value, string compValue);

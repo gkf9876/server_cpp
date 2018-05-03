@@ -133,6 +133,124 @@ void Assert::checkSameDatabaseChattingListLog(GameClient* gameClient)
 	}
 }
 
+void Assert::checkSameDatabaseUserListLog(GameClient* targetGameClient, vector<GameClient*> gameClientList)
+{
+	list<GameClient*>::iterator iter;
+	User mainUser = targetGameClient->getMainUser();
+
+	for (int i=0; i<gameClientList.size(); i++)
+	{
+		GameClient* otherUserClient = gameClientList.at(i);
+		User otherUser = otherUserClient->getUsersInfo(mainUser.getName());
+
+		if (!strcmp(otherUser.getField(), mainUser.getField()))
+			checkSameUserLog(targetGameClient, mainUser, otherUser);
+	}
+}
+
+void Assert::checkSameDatabaseMapUserInfoLog(GameClient* targetGameClient, vector<GameClient*> gameClientList)
+{
+	User targetMainUser;
+	vector<User> targetUsersInfo;
+	vector<MapInfo> targetObjectInfo;
+	vector<MapInfo> targetMonsterInfo;
+	vector<MapInfo> targetItemInfo;
+
+	User otherMainUser[10];
+	vector<User> otherUsersInfo[10];
+	vector<MapInfo> otherObjectInfo[10];
+	vector<MapInfo> otherMonsterInfo[10];
+	vector<MapInfo> otherItemInfo[10];
+
+	int minSize_usersInfo;
+	int minSize_objectInfo;
+	int minSize_monsterInfo;
+	int minSize_otherItemInfo;
+
+	char message[BUF_SIZE];
+
+	targetMainUser = targetGameClient->getMainUser();
+
+	for (int i = 0; i < targetGameClient->sizeUserInfo(); i++)
+	{
+		targetUsersInfo.push_back(targetGameClient->getUsersInfo(i));
+	}
+	sort(targetUsersInfo.begin(), targetUsersInfo.end());
+
+	for (int i = 0; i < targetGameClient->sizeObjectInfo(); i++)
+	{
+		targetObjectInfo.push_back(targetGameClient->getObjectInfo(i));
+	}
+	sort(targetObjectInfo.begin(), targetObjectInfo.end());
+
+	for (int i = 0; i < targetGameClient->sizeMonsterInfo(); i++)
+	{
+		targetMonsterInfo.push_back(targetGameClient->getMonsterInfo(i));
+	}
+	sort(targetMonsterInfo.begin(), targetMonsterInfo.end());
+
+	for (int i = 0; i < targetGameClient->sizeItemInfo(); i++)
+	{
+		targetItemInfo.push_back(targetGameClient->getItemInfo(i));
+	}
+	sort(targetItemInfo.begin(), targetItemInfo.end());
+
+	for (int i = 0; i < gameClientList.size(); i++)
+	{
+		otherMainUser[i] = gameClientList.at(i)->getMainUser();
+
+		for (int j = 0; j < gameClientList.at(i)->sizeUserInfo(); j++)
+		{
+			otherUsersInfo[i].push_back(gameClientList.at(i)->getUsersInfo(j));
+		}
+		sort(otherUsersInfo[i].begin(), otherUsersInfo[i].end());
+
+		for (int j = 0; j < gameClientList.at(i)->sizeObjectInfo(); j++)
+		{
+			otherObjectInfo[i].push_back(gameClientList.at(i)->getObjectInfo(j));
+		}
+		sort(otherObjectInfo[i].begin(), otherObjectInfo[i].end());
+
+		for (int j = 0; j < gameClientList.at(i)->sizeMonsterInfo(); j++)
+		{
+			otherMonsterInfo[i].push_back(gameClientList.at(i)->getMonsterInfo(j));
+		}
+		sort(otherMonsterInfo[i].begin(), otherMonsterInfo[i].end());
+
+		for (int j = 0; j < gameClientList.at(i)->sizeItemInfo(); j++)
+		{
+			otherItemInfo[i].push_back(gameClientList.at(i)->getItemInfo(j));
+		}
+		sort(otherItemInfo[i].begin(), otherItemInfo[i].end());
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (!strcmp(targetMainUser.getField(), otherMainUser[i].getField()) && (otherMainUser[i].getAction() != ACTION_MAP_POTAL) && (targetMainUser.getAction() != ACTION_MAP_POTAL))
+		{
+			minSize_usersInfo = (otherUsersInfo[i].size() < targetUsersInfo.size()) ? otherUsersInfo[i].size() : targetUsersInfo.size();
+			minSize_objectInfo = (otherObjectInfo[i].size() < targetObjectInfo.size()) ? otherObjectInfo[i].size() : targetObjectInfo.size();
+			minSize_monsterInfo = (otherMonsterInfo[i].size() < targetMonsterInfo.size()) ? otherMonsterInfo[i].size() : targetMonsterInfo.size();
+			minSize_otherItemInfo = (otherItemInfo[i].size() < targetItemInfo.size()) ? otherItemInfo[i].size() : targetItemInfo.size();
+
+			for (int j = 0; j < minSize_objectInfo; j++)
+			{
+				checkSameMapInfoLog(targetGameClient, otherObjectInfo[i].at(j), targetObjectInfo.at(j));
+			}
+
+			for (int j = 0; j < minSize_monsterInfo; j++)
+			{
+				checkSameMapInfoLog(targetGameClient, otherMonsterInfo[i].at(j), targetMonsterInfo.at(j));
+			}
+
+			for (int j = 0; j < minSize_otherItemInfo; j++)
+			{
+				checkSameMapInfoLog(targetGameClient, otherItemInfo[i].at(j), targetItemInfo.at(j));
+			}
+		}
+	}
+}
+
 void Assert::assertThat(int value, int compValue)
 {
 	if (value != compValue)

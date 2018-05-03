@@ -15,6 +15,8 @@
 #include "factory/ApplicationContext.h"
 #include "test/Assert.h"
 
+#define GAME_CLIENT_COUNT	10
+
 using namespace std;
 
 class GameServerTest
@@ -22,9 +24,9 @@ class GameServerTest
 private:
 	GameServer* gameServer;
 	Assert* mainAssert;
-	GameClient* gameClient[10];
-	Assert* assert[10];
-	ApplicationContext* context[10];
+	GameClient* gameClient[GAME_CLIENT_COUNT];
+	Assert* assert[GAME_CLIENT_COUNT];
+	ApplicationContext* context[GAME_CLIENT_COUNT];
 
 	UserDao* userDao;
 	MapDao* mapDao;
@@ -61,7 +63,7 @@ private:
 
 #ifdef _WIN32
 	HANDLE hServerThread;
-	HANDLE hClientThread[10];
+	HANDLE hClientThread[GAME_CLIENT_COUNT];
 	CRITICAL_SECTION cs;
 #elif __linux__
 	pthread_t hServerThread;
@@ -79,6 +81,8 @@ public:
 
 	GameServer* getGameServer();
 	GameClient* getGameClient(int idx);
+	vector<GameClient*> getGameClientList();
+
 	Assert* getAssert(int idx);
 
 	UserDao* getUserDao();

@@ -23,6 +23,7 @@ private:
 public:
 	MapInfo();
 	~MapInfo();
+	bool operator<(const MapInfo &t);
 
 	void setIdx(int idx);
 	int getIdx();

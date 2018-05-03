@@ -10,6 +10,16 @@ User::~User()
 
 }
 
+bool User::operator<(const User& t) const
+{
+	return (sock < t.sock);
+}
+
+bool User::operator==(const User& t) const
+{
+	return (sock == t.sock);
+}
+
 void User::setSock(int sock)
 {
 	this->sock = sock;

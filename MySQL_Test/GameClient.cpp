@@ -49,6 +49,16 @@ User GameClient::getMainUser()
 	return this->mainUser;
 }
 
+void GameClient::setMainUserAction(int value)
+{
+	mainUser.setAction(value);
+}
+
+int GameClient::getMainUserAction()
+{
+	return mainUser.getAction();
+}
+
 void GameClient::addUsersInfo(User* user)
 {
 	this->usersInfo->push_back(user);
@@ -100,6 +110,12 @@ User GameClient::getUsersInfo(const char* name)
 		if (!strcmp(this->usersInfo->at(i)->getName(), name))
 			return *this->usersInfo->at(i);
 	}
+
+	User unknownUser;
+	unknownUser.setName("unknown_id");
+	unknownUser.setField("unknown_field");
+
+	return unknownUser;
 }
 
 void GameClient::clearUsersInfo()
@@ -384,6 +400,16 @@ bool GameClient::getIsChattingFinish()
 	return this->isChattingFinish;
 }
 
+void GameClient::setIsMapMoveFinish(bool value)
+{
+	this->isMapMoveFinish = value;
+}
+
+bool GameClient::getIsMapMoveFinish()
+{
+	return this->isMapMoveFinish;
+}
+
 void GameClient::addLog(string message)
 {
 	log->push_back(message);
@@ -522,25 +548,40 @@ void GameClient::chatting(const char* chattingInfo)
 
 	memcpy(message, &chatting, sizeof(Chatting));
 	sendRequest(CHATTING_PROCESS, message, sizeof(Chatting));
+
+	while (isChattingFinish != true);
+	isChattingFinish = false;
 }
 
 void GameClient::requestMapMove(int xpos, int ypos, const char* field)
 {
 	char message[BUF_SIZE];
+	User sendUserInfo = mainUser;
 
-	mainUser.setXpos(xpos);
-	mainUser.setYpos(ypos);
+	sendUserInfo.setXpos(xpos);
+	sendUserInfo.setYpos(ypos);
 
 	if (!strcmp(mainUser.getField(), field))
-		mainUser.setAction(ACTION_MAP_MOVE);
+	{
+		sendUserInfo.setAction(ACTION_MAP_MOVE);
+
+		memcpy(message, &sendUserInfo, sizeof(User));
+		sendRequest(USER_MOVE_UPDATE, message, sizeof(User));
+
+		while (isMapMoveFinish != true);
+		isMapMoveFinish = false;
+	}
 	else
 	{
-		mainUser.setAction(ACTION_MAP_POTAL);
-		mainUser.setField(field);
-	}
+		sendUserInfo.setAction(ACTION_MAP_POTAL);
+		sendUserInfo.setField(field);
 
-	memcpy(message, &mainUser, sizeof(User));
-	sendRequest(USER_MOVE_UPDATE, message, sizeof(User));
+		memcpy(message, &sendUserInfo, sizeof(User));
+		sendRequest(USER_MOVE_UPDATE, message, sizeof(User));
+
+		while (isMapPotalFinish != true);
+		isMapPotalFinish = false;
+	}
 }
 
 void GameClient::requestThrowItem(int xpos, int ypos)
@@ -549,6 +590,9 @@ void GameClient::requestThrowItem(int xpos, int ypos)
 	memcpy(message, inventory_items_Info[xpos][ypos], sizeof(InventoryInfo));
 
 	sendRequest(REQUEST_THROW_ITEM, message, sizeof(InventoryInfo));
+
+	while (isThrowItemFinish != true);
+	isThrowItemFinish = false;
 }
 
 void GameClient::requestGetItem()
@@ -557,4 +601,7 @@ void GameClient::requestGetItem()
 	memcpy(message, &mainUser, sizeof(User));
 
 	sendRequest(REQUEST_EAT_ITEM, message, sizeof(InventoryInfo));
+
+	while (isGetItemFinish != true);
+	isGetItemFinish = false;
 }

@@ -10,6 +10,11 @@ MapInfo::~MapInfo()
 
 }
 
+bool MapInfo::operator<(const MapInfo &t)
+{
+	return (idx < t.idx);
+}
+
 void MapInfo::setIdx(int idx)
 {
 	this->idx = idx;

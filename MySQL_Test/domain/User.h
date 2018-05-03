@@ -32,6 +32,8 @@ private:
 public:
 	User();
 	~User();
+	bool operator<(const User &t) const;
+	bool operator==(const User &t) const;
 
 	void setSock(int sock);
 	int getSock();

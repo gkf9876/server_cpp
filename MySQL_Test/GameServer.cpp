@@ -620,7 +620,7 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 
 		if (user.getAction() == ACTION_MAP_MOVE)
 		{
-			sendRequest(sock, REQUEST_MAP_MOVE, "map_move_success", strlen("map_move_success") + 1);
+			sendRequest(sock, REQUEST_MAP_MOVE, userInfo, sizeof(User));
 
 			fieldUserList = userService->getFieldLoginUserAll(user.getField());
 			userService->updateUserInfo(user);
@@ -632,13 +632,15 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 
 				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
 			}
+
+			sendRequest(sock, REQUEST_MAP_MOVE_FINISH, "map_move_finish", strlen("map_move_finish") + 1);
 		}
 		else if (user.getAction() == ACTION_MAP_POTAL)
 		{
-			sendRequest(sock, REQUEST_MAP_MOVE, "map_potal_success", strlen("map_potal_success") + 1);
+			sendRequest(sock, REQUEST_MAP_MOVE, userInfo, sizeof(User));
 
 			moveUser = userService->getUserInfo(user.getName());
-			regionFieldUserList = userService->getFieldLoginUserAll(userService->getUserInfo(user.getName()).getField());
+			regionFieldUserList = userService->getFieldLoginUserAll(moveUser.getField());
 			moveUser.setAction(ACTION_MAP_OUT);
 
 			for (iter = regionFieldUserList.begin(); iter != regionFieldUserList.end(); iter++)
