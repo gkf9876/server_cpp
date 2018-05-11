@@ -40,21 +40,21 @@ public:
 	ApplicationContext();
 	~ApplicationContext();
 
-	DataSource* dataSource();
+	virtual DataSource* dataSource();
 
-	ChattingDao* chattingDao();
-	InventoryInfoDao* inventoryInfoDao();
-	MapDao* mapDao();
-	MapInfoDao* mapInfoDao();
-	MonsterDao* monsterDao();
-	ServerInfoDao* serverInfoDao();
-	UserDao* userDao();
+	virtual ChattingDao* chattingDao();
+	virtual InventoryInfoDao* inventoryInfoDao();
+	virtual MapDao* mapDao();
+	virtual MapInfoDao* mapInfoDao();
+	virtual MonsterDao* monsterDao();
+	virtual ServerInfoDao* serverInfoDao();
+	virtual UserDao* userDao();
 
-	ChattingService* chattingService();
-	MapManageService* mapManageService();
-	UserService* userService();
+	virtual ChattingService* chattingService();
+	virtual MapManageService* mapManageService();
+	virtual UserService* userService();
 
-	GameServer* gameServer();
+	virtual GameServer* gameServer();
 };
 
 #endif

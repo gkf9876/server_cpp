@@ -1,10 +1,10 @@
-﻿#include "ApplicationContext.h"
+﻿#include "TestApplicationContext.h"
 
-ApplicationContext::ApplicationContext()
+TestApplicationContext::TestApplicationContext()
 {
 }
 
-ApplicationContext::~ApplicationContext()
+TestApplicationContext::~TestApplicationContext()
 {
 	if (dataSourceInstance != NULL)
 		delete this->dataSourceInstance;
@@ -43,18 +43,18 @@ ApplicationContext::~ApplicationContext()
 		delete this->gameServerInstance;
 }
 
-DataSource* ApplicationContext::dataSource()
+DataSource* TestApplicationContext::dataSource()
 {
 	if (this->dataSourceInstance != NULL)
 		return this->dataSourceInstance;
 	else
 	{
-		this->dataSourceInstance = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "gameServer");
+		this->dataSourceInstance = new DataSource("127.0.0.1", "gkf9876", "9109382616@", "test");
 		return this->dataSourceInstance;
 	}
 }
 
-ChattingDao* ApplicationContext::chattingDao()
+ChattingDao* TestApplicationContext::chattingDao()
 {
 	if (this->chattingDaoInstance != NULL)
 		return this->chattingDaoInstance;
@@ -66,7 +66,7 @@ ChattingDao* ApplicationContext::chattingDao()
 	}
 }
 
-InventoryInfoDao* ApplicationContext::inventoryInfoDao()
+InventoryInfoDao* TestApplicationContext::inventoryInfoDao()
 {
 	if (this->inventoryInfoDaoInstance != NULL)
 		return this->inventoryInfoDaoInstance;
@@ -78,7 +78,7 @@ InventoryInfoDao* ApplicationContext::inventoryInfoDao()
 	}
 }
 
-MapDao* ApplicationContext::mapDao()
+MapDao* TestApplicationContext::mapDao()
 {
 	if (this->mapDaoInstance != NULL)
 		return this->mapDaoInstance;
@@ -90,7 +90,7 @@ MapDao* ApplicationContext::mapDao()
 	}
 }
 
-MapInfoDao* ApplicationContext::mapInfoDao()
+MapInfoDao* TestApplicationContext::mapInfoDao()
 {
 	if (this->mapInfoDaoInstance != NULL)
 		return this->mapInfoDaoInstance;
@@ -102,7 +102,7 @@ MapInfoDao* ApplicationContext::mapInfoDao()
 	}
 }
 
-MonsterDao* ApplicationContext::monsterDao()
+MonsterDao* TestApplicationContext::monsterDao()
 {
 	if (this->monsterDaoInstance != NULL)
 		return this->monsterDaoInstance;
@@ -114,7 +114,7 @@ MonsterDao* ApplicationContext::monsterDao()
 	}
 }
 
-ServerInfoDao* ApplicationContext::serverInfoDao()
+ServerInfoDao* TestApplicationContext::serverInfoDao()
 {
 	if (this->serverInfoDaoInstance != NULL)
 		return this->serverInfoDaoInstance;
@@ -126,7 +126,7 @@ ServerInfoDao* ApplicationContext::serverInfoDao()
 	}
 }
 
-UserDao* ApplicationContext::userDao()
+UserDao* TestApplicationContext::userDao()
 {
 	if (this->userDaoInstance != NULL)
 		return this->userDaoInstance;
@@ -138,7 +138,7 @@ UserDao* ApplicationContext::userDao()
 	}
 }
 
-ChattingService* ApplicationContext::chattingService()
+ChattingService* TestApplicationContext::chattingService()
 {
 	if (this->chattingServiceInstance != NULL)
 		return this->chattingServiceInstance;
@@ -150,7 +150,7 @@ ChattingService* ApplicationContext::chattingService()
 	}
 }
 
-MapManageService* ApplicationContext::mapManageService()
+MapManageService* TestApplicationContext::mapManageService()
 {
 	if (this->mapManageServiceInstance != NULL)
 		return this->mapManageServiceInstance;
@@ -165,7 +165,7 @@ MapManageService* ApplicationContext::mapManageService()
 	}
 }
 
-UserService* ApplicationContext::userService()
+UserService* TestApplicationContext::userService()
 {
 	if (this->userServiceInstance != NULL)
 		return this->userServiceInstance;
@@ -178,7 +178,7 @@ UserService* ApplicationContext::userService()
 	}
 }
 
-GameServer* ApplicationContext::gameServer()
+GameServer* TestApplicationContext::gameServer()
 {
 	if (this->gameServerInstance != NULL)
 		return this->gameServerInstance;

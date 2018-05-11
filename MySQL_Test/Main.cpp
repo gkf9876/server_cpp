@@ -2,6 +2,8 @@
 #include "GameServerTest.h"
 
 #include "factory/ApplicationContext.h"
+#include "factory/TestApplicationContext.h"
+
 #include "dao/UserDaoTest.h"
 #include "dao/ChattingDaoTest.h"
 #include "dao/InventoryInfoDaoTest.h"
@@ -15,58 +17,84 @@
 
 int main()
 {
-	ApplicationContext* context = new ApplicationContext();
+	TestApplicationContext* testContext = new TestApplicationContext();
 
 	UserDaoTest * userDaoTest = new UserDaoTest();
-	userDaoTest->setApplicationContext(context);
+	userDaoTest->setApplicationContext(testContext);
 	userDaoTest->run();
 	delete userDaoTest;
 
 	ChattingDaoTest * chattingDaoTest = new ChattingDaoTest();
-	chattingDaoTest->setApplicationContext(context);
+	chattingDaoTest->setApplicationContext(testContext);
 	chattingDaoTest->run();
 	delete chattingDaoTest;
 	
 	InventoryInfoDaoTest * inventoryInfoDaoTest = new InventoryInfoDaoTest();
-	inventoryInfoDaoTest->setApplicationContext(context);
+	inventoryInfoDaoTest->setApplicationContext(testContext);
 	inventoryInfoDaoTest->run();
 	delete inventoryInfoDaoTest;
 	
 	MapDaoTest * mapDaoTest = new MapDaoTest();
-	mapDaoTest->setApplicationContext(context);
+	mapDaoTest->setApplicationContext(testContext);
 	mapDaoTest->run();
 	delete mapDaoTest;
 	
 	MapInfoDaoTest * mapInfoDaoTest = new MapInfoDaoTest();
-	mapInfoDaoTest->setApplicationContext(context);
+	mapInfoDaoTest->setApplicationContext(testContext);
 	mapInfoDaoTest->run();
 	delete mapInfoDaoTest;
 	
 	MonsterDaoTest * monsterDaoTest = new MonsterDaoTest();
-	monsterDaoTest->setApplicationContext(context);
+	monsterDaoTest->setApplicationContext(testContext);
 	monsterDaoTest->run();
 	delete monsterDaoTest;
 	
 	MapManageServiceTest* mapManageServiceTest = new MapManageServiceTest();
-	mapManageServiceTest->setApplicationContext(context);
+	mapManageServiceTest->setApplicationContext(testContext);
 	mapManageServiceTest->run();
 	delete mapManageServiceTest;
 	
 	UserServiceTest* userServiceTest = new UserServiceTest();
-	userServiceTest->setApplicationContext(context);
+	userServiceTest->setApplicationContext(testContext);
 	userServiceTest->run();
 	delete userServiceTest;
 	
 	ChattingServiceTest* chattingServiceTest = new ChattingServiceTest();
-	chattingServiceTest->setApplicationContext(context);
+	chattingServiceTest->setApplicationContext(testContext);
 	chattingServiceTest->run();
 	delete chattingServiceTest;
 	
 	GameServerTest * gameServerTest = new GameServerTest();
-	gameServerTest->setApplicationContext(context);
+	gameServerTest->setApplicationContext(testContext);
 	gameServerTest->run();
 	delete gameServerTest;
 
-	delete context;
+	delete testContext;
+
+	ApplicationContext* context = new ApplicationContext();
+	GameServer * gameServer = context->gameServer();
+
+	try
+	{
+		gameServer->openServer(9190);
+
+		while (1)
+		{
+#ifdef _WIN32
+			gameServer->accept_win();
+#elif __linux__
+			gameServer->accept_linux();
+#endif
+		}
+
+		gameServer->closeServer();
+		delete gameServer;
+		delete context;
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << error.what() << std::endl;
+	}
+
 	return 0;
 }
