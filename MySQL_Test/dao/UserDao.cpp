@@ -38,7 +38,10 @@ void UserDao::add(User user)
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 }
 
 void UserDao::update(User user)
@@ -67,7 +70,10 @@ void UserDao::update(User user)
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 }
 
 void UserDao::deleteAll()
@@ -81,7 +87,10 @@ void UserDao::deleteAll()
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 }
 
 int UserDao::getCount()
@@ -97,7 +106,10 @@ int UserDao::getCount()
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 
 	sql_result = mysql_store_result(&connection);
 	sql_row = mysql_fetch_row(sql_result);
@@ -119,7 +131,10 @@ int UserDao::getCount(const char* field)
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 
 	sql_result = mysql_store_result(&connection);
 	sql_row = mysql_fetch_row(sql_result);
@@ -141,7 +156,10 @@ User UserDao::get(const char* name)
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 
 	sql_result = mysql_store_result(&connection);
 	sql_row = mysql_fetch_row(sql_result);
@@ -188,7 +206,10 @@ User UserDao::get(int sock)
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 
 	sql_result = mysql_store_result(&connection);
 	sql_row = mysql_fetch_row(sql_result);
@@ -237,7 +258,10 @@ void UserDao::updateLogout(const char* name)
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 }
 
 void UserDao::updateLogin(int sock, const char* name)
@@ -251,7 +275,10 @@ void UserDao::updateLogin(int sock, const char* name)
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 }
 
 list<User> UserDao::getLoginUserAll()
@@ -267,7 +294,10 @@ list<User> UserDao::getLoginUserAll()
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 
 	sql_result = mysql_store_result(&connection);
 
@@ -309,7 +339,10 @@ list<User> UserDao::getFieldLoginUserAll(const char* field)
 	query_stat = mysql_query(&connection, query);
 
 	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
 		throw runtime_error(mysql_error(&connection));
+	}
 
 	sql_result = mysql_store_result(&connection);
 

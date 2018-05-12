@@ -76,6 +76,8 @@ private:
 	bool isGetUserInfo = false;
 	bool popupLoginFail = false;
 
+	bool isRequestLoginFinish = false;
+
 	bool isGetObjectInfo = false;
 	bool isGetMonsterInfo = false;
 	bool isGetItemInfo = false;
@@ -87,9 +89,13 @@ private:
 	bool isMapMoveFinish = false;
 
 	vector<string> * log = NULL;
+
+	bool logout = false;
 public:
 	GameClient();
 	~GameClient();
+	void recvRun();
+
 	void setMainUser(User user);
 	User getMainUser();
 	void setMainUserAction(int value);
@@ -99,7 +105,7 @@ public:
 	void removeUsersInfo(const char* userName);
 	int sizeUserInfo();
 	User getUsersInfo(int idx);
-	void moveOtherUser(const char* userName, int xpos, int ypos);
+	void moveOtherUser(const char* userName, int xpos, int ypos, int seeDirection);
 	User getUsersInfo(const char* name);
 	void clearUsersInfo();
 
@@ -136,6 +142,9 @@ public:
 	void setPopupLoginFail(bool value);
 	bool getPopupLoginFail();
 
+	void setIsRequestLoginFinish(bool value);
+	bool getIsRequestLoginFinish();
+
 	void setIsGetObjectInfo(bool value);
 	bool getIsGetObjectInfo();
 	void setIsGetMonsterInfo(bool value);
@@ -154,6 +163,9 @@ public:
 	bool getIsChattingFinish();
 	void setIsMapMoveFinish(bool value);
 	bool getIsMapMoveFinish();
+
+	void setLogout(bool value);
+	bool getLogout();
 
 	void addLog(string message);
 	void printAllLog();
@@ -175,7 +187,7 @@ public:
 	void requestLogout();
 
 	void chatting(const char* chattingInfo);
-	void requestMapMove(int xpos, int ypos, const char* field);
+	void requestMapMove(int xpos, int ypos, const char* field, int seeDirection);
 
 	void requestThrowItem(int xpos, int ypos);
 	void requestGetItem();

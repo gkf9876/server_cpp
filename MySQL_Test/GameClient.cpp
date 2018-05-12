@@ -2,6 +2,8 @@
 
 GameClient::GameClient()
 {
+	mainUser.setLogin(0);
+
 	usersInfo = new vector<User*>();								//현재 맵의 다른 유저들
 	objectInfo = new vector<MapInfo*>();							//현재 맵의 오브젝트
 	monsterInfo = new vector<MapInfo*>();							//현재 맵의 몬스터
@@ -37,6 +39,179 @@ GameClient::~GameClient()
 	}
 
 	delete log;
+}
+
+void GameClient::recvRun()
+{
+	char message[1024];
+	int code;
+
+	try
+	{
+		while (logout != true)
+		{
+			recvRequest(&code, message);
+
+			switch (code)
+			{
+			case REQUEST_USER_INFO:
+			{
+				User user;
+				memcpy(&user, message, sizeof(User));
+				setMainUser(user);
+				isGetUserInfo = true;
+			}
+			break;
+			case REQUEST_LOGIN:
+				if (!strcmp(message, "login okey"))
+				{
+					setIsLogin(true);
+					setIsRequestLoginFinish(true);
+				}
+				else
+				{
+					isLogin = false;
+					popupLoginFail = true;
+					isRequestLoginFinish = true;
+				}
+				break;
+			case CHATTING_PROCESS:
+			{
+				Chatting* chatting = new Chatting();
+				memcpy(chatting, message, sizeof(Chatting));
+				addChattingInfo(chatting);
+			}
+			break;
+			case OTHER_USER_MAP_MOVE:
+			{
+				User* user = new User();
+				memcpy(user, message, sizeof(User));
+
+				if (user->getAction() == ACTION_MAP_IN)
+					addUsersInfo(user);
+				else if (user->getAction() == ACTION_MAP_OUT)
+				{
+					removeUsersInfo(user->getName());
+					delete user;
+				}
+				else if (user->getAction() == ACTION_MAP_MOVE)
+				{
+					moveOtherUser(user->getName(), user->getXpos(), user->getYpos(), user->getSeeDirection());
+					delete user;
+				}
+			}
+			break;
+			case DELETE_FIELD_ITEM:
+			{
+				MapInfo itemInfo;
+				memcpy(&itemInfo, message, sizeof(MapInfo));
+
+				removeItemInfo(itemInfo.getIdx());
+			}
+			break;
+			case REQUEST_FIELD_OBJECT_INFO:
+			{
+				MapInfo* objectInfo = new MapInfo();
+				memcpy(objectInfo, message, sizeof(MapInfo));
+
+				addObjectInfo(objectInfo);
+			}
+			break;
+			case REQUEST_FIELD_MONSTER_INFO:
+			{
+				MapInfo* monsterInfo = new MapInfo();
+				memcpy(monsterInfo, message, sizeof(MapInfo));
+
+				addMonsterInfo(monsterInfo);
+			}
+			break;
+			case REQUEST_INVENTORY_ITEM_INFO:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				addInventoryInfo(inventoryInfo);
+			}
+			break;
+			case REQUEST_FIELD_ITEM_INFO:
+			{
+				MapInfo* itemInfo = new MapInfo();
+				memcpy(itemInfo, message, sizeof(MapInfo));
+
+				addItemInfo(itemInfo);
+			}
+			break;
+			case REQUEST_EAT_ITEM:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				addInventoryInfo(inventoryInfo);
+			}
+			break;
+			case REQUEST_LOGOUT:
+				if (!strcmp(message, "logout okey"))
+				{
+					closeClient();
+					logout = true;
+				}
+				break;
+			case REQUEST_MAP_MOVE:
+			{
+				User userInfo;
+				memcpy(&userInfo, message, sizeof(User));
+				setMainUser(userInfo);
+
+				if (userInfo.getAction() == ACTION_MAP_MOVE)
+				{
+
+				}
+				else if (userInfo.getAction() == ACTION_MAP_POTAL)
+				{
+					clearUsersInfo();
+					clearObjectInfo();
+					clearMonsterInfo();
+					clearItemInfo();
+				}
+			}
+			break;
+			case REQUEST_MAP_POTAL_FINISH:
+				if (!strcmp(message, "map_potal_finish"))
+				{
+					setMainUserAction(ACTION_MAP_IN);
+					setIsMapPotalFinish(true);
+				}
+				break;
+			case REQUEST_THROW_ITEM_FINISH:
+			{
+				InventoryInfo* inventoryInfo = new InventoryInfo();
+				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+				setIsThrowItemFinish(true);
+				removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
+			}
+			break;
+			case REQUEST_GET_ITEM_FINISH:
+				if (!strcmp(message, "get_item_finish"))
+					setIsGetItemFinish(true);
+				break;
+			case REQUEST_CHATTING_FINISH:
+				if (!strcmp(message, "chatting_finish"))
+					setIsChattingFinish(true);
+				break;
+			case REQUEST_MAP_MOVE_FINISH:
+				if (!strcmp(message, "map_move_finish"))
+					setIsMapMoveFinish(true);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << "\tClient 0 : " << error.what() << std::endl;
+	}
 }
 
 void GameClient::setMainUser(User user)
@@ -88,7 +263,7 @@ User GameClient::getUsersInfo(int idx)
 	return *(this->usersInfo->at(idx));
 }
 
-void GameClient::moveOtherUser(const char* userName, int xpos, int ypos)
+void GameClient::moveOtherUser(const char* userName, int xpos, int ypos, int seeDirection)
 {
 	for (int i = 0; i < this->usersInfo->size(); i++)
 	{
@@ -97,6 +272,7 @@ void GameClient::moveOtherUser(const char* userName, int xpos, int ypos)
 			User* otherUser = this->usersInfo->at(i);
 			otherUser->setXpos(xpos);
 			otherUser->setYpos(ypos);
+			otherUser->setSeeDirection(seeDirection);
 			otherUser->setAction(ACTION_MAP_MOVE);
 			return;
 		}
@@ -320,6 +496,16 @@ bool GameClient::getPopupLoginFail()
 	return this->popupLoginFail;
 }
 
+void GameClient::setIsRequestLoginFinish(bool value)
+{
+	this->isRequestLoginFinish = value;
+}
+
+bool GameClient::getIsRequestLoginFinish()
+{
+	return this->isRequestLoginFinish;
+}
+
 void GameClient::setIsGetObjectInfo(bool value)
 {
 	this->isGetObjectInfo = value;
@@ -410,6 +596,16 @@ bool GameClient::getIsMapMoveFinish()
 	return this->isMapMoveFinish;
 }
 
+void GameClient::setLogout(bool value)
+{
+	this->logout = value;
+}
+
+bool GameClient::getLogout()
+{
+	return this->logout;
+}
+
 void GameClient::addLog(string message)
 {
 	log->push_back(message);
@@ -452,7 +648,7 @@ void GameClient::openClient(const char* addr, int port)
 		ErrorHandling("connect() error!");
 #elif __linux__
 	hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	if(hSocket == -1)
+	if (hSocket == -1)
 		ErrorHandling("socket() error");
 
 	memset(&servAddr, 0, sizeof(servAddr));
@@ -460,7 +656,7 @@ void GameClient::openClient(const char* addr, int port)
 	servAddr.sin_addr.s_addr = inet_addr(addr);
 	servAddr.sin_port = port;
 
-	if(connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
+	if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
 		ErrorHandling("connect() error!");
 #endif
 }
@@ -526,6 +722,9 @@ int GameClient::recvRequest(int* code, char* data)
 void GameClient::requestLogin(const char * userName)
 {
 	sendRequest(REQUEST_LOGIN, userName, strlen(userName) + 1);
+
+	while (this->isRequestLoginFinish != true);
+	this->isRequestLoginFinish = false;
 }
 
 void GameClient::getUserInfo(const char* userName)
@@ -553,13 +752,14 @@ void GameClient::chatting(const char* chattingInfo)
 	isChattingFinish = false;
 }
 
-void GameClient::requestMapMove(int xpos, int ypos, const char* field)
+void GameClient::requestMapMove(int xpos, int ypos, const char* field, int seeDirection)
 {
 	char message[BUF_SIZE];
 	User sendUserInfo = mainUser;
 
 	sendUserInfo.setXpos(xpos);
 	sendUserInfo.setYpos(ypos);
+	sendUserInfo.setSeeDirection(seeDirection);
 
 	if (!strcmp(mainUser.getField(), field))
 	{

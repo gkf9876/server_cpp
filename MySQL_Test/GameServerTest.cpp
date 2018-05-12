@@ -15,7 +15,7 @@ GameServerTest::GameServerTest()
 		this->assert[i]->setApplicationContext(context[i]);
 	}
 
-	for(int i=0; i<10; i++)
+	for (int i = 0; i<10; i++)
 	{
 		char imsi[1024];
 		this->user[i].setSock(0);
@@ -265,7 +265,7 @@ void GameServerTest::run()
 	user[8].setField(user[7].getField());
 	user[9].setField(user[7].getField());
 
-	for(int i=0; i<10; i++)
+	for (int i = 0; i<10; i++)
 	{
 		userDao->add(user[i]);
 	}
@@ -491,15 +491,16 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN->client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(0)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(0).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(0)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(0).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -512,47 +513,47 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(10, 11, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 11, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(10, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 12, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(11, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(11, 12, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 29);
 		gameServerTest->getAssert(0)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 28);
 		gameServerTest->getAssert(0)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 27);
 		gameServerTest->getAssert(0)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 26);
 		gameServerTest->getAssert(0)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(20, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(20, 1, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 0);
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(20, 2, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(20, 2, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 3);
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(20, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(20, 3, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(1, 0);
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(20, 10, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(20, 10, gameClient->getMainUser().getField(), 26);
 		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 0);
@@ -577,11 +578,11 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 
 		gameClient->requestLogout();
 
-	#ifdef _WIN32
+#ifdef _WIN32
 		WaitForSingleObject(recvThread, INFINITE);
-	#elif __linux__
+#elif __linux__
 		pthread_join(recvThread, NULL);
-	#endif
+#endif
 
 	}
 	catch (const runtime_error& error)
@@ -600,174 +601,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc0(void* arg)
 void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
-
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(0);
 
-	try
-	{
-		while(logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch(code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
-
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 0 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
@@ -803,15 +640,16 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(1)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(1).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(1)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(1).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -824,43 +662,43 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(20, 11, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(20, 11, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(1)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(20, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(20, 12, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(1)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(21, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(21, 12, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(1)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 29);
 		gameServerTest->getAssert(1)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 28);
 		gameServerTest->getAssert(1)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 27);
 		gameServerTest->getAssert(1)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 26);
 		gameServerTest->getAssert(1)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(3, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(3, 1, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(1)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 0);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(13, 2, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(13, 2, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(1)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 1);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(3, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(3, 3, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(1)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 2);
@@ -898,172 +736,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc1(void* arg)
 void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(1);
-	try
-	{
-		while (logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch (code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
 
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 1 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
@@ -1099,15 +775,16 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(2)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(2).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(2)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(2).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -1120,43 +797,43 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(12, 11, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(12, 11, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(2)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(12, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(12, 12, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(2)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(13, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(13, 12, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(2)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 29);
 		gameServerTest->getAssert(2)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 28);
 		gameServerTest->getAssert(2)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 27);
 		gameServerTest->getAssert(2)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 26);
 		gameServerTest->getAssert(2)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(5, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(5, 1, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(2)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 0);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(5, 2, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(5, 2, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(2)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 1);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(5, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(5, 3, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(2)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 2);
@@ -1193,173 +870,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc2(void* arg)
 void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(2);
 
-	try
-	{
-		while (logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch (code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
-
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 2 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
@@ -1395,15 +909,16 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(3)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(3).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(3)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(3).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -1416,43 +931,43 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(1, 11, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(1, 11, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(3)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(1, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(1, 12, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(3)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(2, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(2, 12, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(3)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 29);
 		gameServerTest->getAssert(3)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 28);
 		gameServerTest->getAssert(3)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 27);
 		gameServerTest->getAssert(3)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 26);
 		gameServerTest->getAssert(3)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(3)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 0);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(10, 2, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 2, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(3)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 1);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(10, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 3, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(3)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 2);
@@ -1490,173 +1005,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc3(void* arg)
 void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(3);
 
-	try
-	{
-		while (logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch (code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
-
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 3 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
@@ -1692,15 +1044,16 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(4)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(4).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(4)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(4).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -1713,43 +1066,43 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(4)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(4)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(11, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(11, 1, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(4)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 29);
 		gameServerTest->getAssert(4)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 28);
 		gameServerTest->getAssert(4)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 27);
 		gameServerTest->getAssert(4)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 26);
 		gameServerTest->getAssert(4)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(11, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(11, 1, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(4)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 0);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(11, 2, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(11, 2, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(4)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 1);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(11, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(11, 3, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(4)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 2);
@@ -1787,173 +1140,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc4(void* arg)
 void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(4);
 
-	try
-	{
-		while (logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch (code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
-
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 4 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
@@ -1989,15 +1179,16 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(5)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(5).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(5)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(5).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -2010,43 +1201,43 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(10, 5, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 5, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(5)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(10, 6, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 6, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(5)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(11, 6, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(11, 6, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(5)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 29);
 		gameServerTest->getAssert(5)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 28);
 		gameServerTest->getAssert(5)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 27);
 		gameServerTest->getAssert(5)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 26);
 		gameServerTest->getAssert(5)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(18, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(18, 1, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(5)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 0);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(18, 2, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(18, 2, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(5)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 1);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(18, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(18, 3, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(5)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 2);
@@ -2084,173 +1275,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc5(void* arg)
 void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(5);
 
-	try
-	{
-		while (logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch (code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
-
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 5 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
@@ -2286,15 +1314,16 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(6)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(6).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(6)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(6).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -2307,43 +1336,43 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(10, 2, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 2, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(6)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(10, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(10, 3, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(6)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(11, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(11, 3, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(6)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 29);
 		gameServerTest->getAssert(6)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 28);
 		gameServerTest->getAssert(6)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 27);
 		gameServerTest->getAssert(6)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 26);
 		gameServerTest->getAssert(6)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(201, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(201, 1, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(6)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 0);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(201, 2, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(201, 2, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(6)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 1);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(201, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(201, 3, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(6)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 2);
@@ -2381,173 +1410,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc6(void* arg)
 void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(6);
 
-	try
-	{
-		while (logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch (code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
-
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 6 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
@@ -2583,15 +1449,16 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(7)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(7).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(7)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(7).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -2604,43 +1471,43 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(5, 5, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(5, 5, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(7)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(5, 6, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(5, 6, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(7)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(6, 6, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(6, 6, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(7)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 29);
 		gameServerTest->getAssert(7)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 28);
 		gameServerTest->getAssert(7)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 27);
 		gameServerTest->getAssert(7)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 26);
 		gameServerTest->getAssert(7)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(40, 1, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(40, 1, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(7)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 3);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(40, 2, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(40, 2, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(7)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 4);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(40, 3, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(40, 3, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(7)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 1);
@@ -2678,173 +1545,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc7(void* arg)
 void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(7);
 
-	try
-	{
-		while (logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch (code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
-
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 7 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
@@ -2872,23 +1576,24 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 		GameClient* gameClient = gameServerTest->getGameClient(8);
 		gameClient->openClient("127.0.0.1", 9190);
 
-	#ifdef _WIN32
+#ifdef _WIN32
 		recvThread = (HANDLE)_beginthreadex(NULL, 0, ClientRecvThreadFunc8, arg, 0, NULL);
-	#elif __linux__
+#elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc8, arg);
-	#endif
+#endif
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(8)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(8).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(8)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(8).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -2901,62 +1606,62 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(2, 8, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(2, 8, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(8)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(2, 9, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(2, 9, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(8)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(3, 9, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(3, 9, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(8)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 29);
 		gameServerTest->getAssert(8)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 28);
 		gameServerTest->getAssert(8)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 27);
 		gameServerTest->getAssert(8)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 26);
 		gameServerTest->getAssert(8)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(50, 5, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(50, 5, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(8)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 2);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(50, 6, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(50, 6, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(8)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 1);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(50, 7, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(50, 7, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(8)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 4);
 
 		gameClient->requestGetItem();
 
-	#ifdef _WIN32
+#ifdef _WIN32
 		Sleep(2000);
-	#elif __linux__
+#elif __linux__
 		sleep(2);
-	#endif
+#endif
 
 		gameClient->requestLogout();
 
-	#ifdef _WIN32
+#ifdef _WIN32
 		WaitForSingleObject(recvThread, INFINITE);
-	#elif __linux__
+#elif __linux__
 		pthread_join(recvThread, NULL);
-	#endif
+#endif
 
 	}
 	catch (const runtime_error& error)
@@ -2975,173 +1680,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc8(void* arg)
 void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(8);
 
-	try
-	{
-		while (logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch (code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
-
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 8 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
@@ -3177,15 +1719,16 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
+		gameServerTest->getAssert(9)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(9).getName());
-
-		while (gameClient->getIsLogin() != true);
+		gameServerTest->getAssert(9)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(9).getName());
 
 		while (gameClient->getIsGetUserInfo() != true);
+		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -3198,43 +1741,43 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient);
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
-		gameClient->requestMapMove(101, 11, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(101, 11, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(9)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(101, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(101, 12, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(9)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(102, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(102, 12, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(9)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_POTAL->client");
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx", 29);
 		gameServerTest->getAssert(9)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 28);
 		gameServerTest->getAssert(9)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx");
+		gameClient->requestMapMove(111, 122, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx", 27);
 		gameServerTest->getAssert(9)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx");
+		gameClient->requestMapMove(51, 22, "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx", 26);
 		gameServerTest->getAssert(9)->checkSameDatabaseMapUserInfoLog(gameClient, gameServerTest->getGameClientList());
 
-		gameClient->requestMapMove(20, 11, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(20, 11, gameClient->getMainUser().getField(), 29);
 		gameServerTest->getAssert(9)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 0);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(20, 12, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(20, 12, gameClient->getMainUser().getField(), 28);
 		gameServerTest->getAssert(9)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(0, 4);
 
 		gameClient->requestGetItem();
 
-		gameClient->requestMapMove(20, 13, gameClient->getMainUser().getField());
+		gameClient->requestMapMove(20, 13, gameClient->getMainUser().getField(), 27);
 		gameServerTest->getAssert(9)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 		gameClient->requestThrowItem(1, 0);
@@ -3272,173 +1815,10 @@ unsigned WINAPI GameServerTest::ClientRecvThreadFunc9(void* arg)
 void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 #endif
 {
-	char message[1024];
-	int code;
-	bool logout = false;
 	GameServerTest* gameServerTest = (GameServerTest*)arg;
 	GameClient* gameClient = gameServerTest->getGameClient(9);
 
-	try
-	{
-		while (logout != true)
-		{
-			gameClient->recvRequest(&code, message);
-			switch (code)
-			{
-			case REQUEST_USER_INFO:
-				{
-					User user;
-					memcpy(&user, message, sizeof(User));
-					gameClient->setMainUser(user);
-					gameClient->setIsGetUserInfo(true);
-				}
-				break;
-			case REQUEST_LOGIN:
-				if (!strcmp(message, "login okey"))
-					gameClient->setIsLogin(true);
-				else
-				{
-					gameClient->setIsLogin(false);
-					gameClient->setPopupLoginFail(true);
-				}
-				break;
-			case CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					gameClient->addChattingInfo(chatting);
-				}
-				break;
-			case OTHER_USER_MAP_MOVE:
-				{
-					User* user = new User();
-					memcpy(user, message, sizeof(User));
-
-					if (user->getAction() == ACTION_MAP_IN)
-						gameClient->addUsersInfo(user);
-					else if (user->getAction() == ACTION_MAP_OUT)
-					{
-						gameClient->removeUsersInfo(user->getName());
-						delete user;
-					}
-					else if (user->getAction() == ACTION_MAP_MOVE)
-					{
-						gameClient->moveOtherUser(user->getName(), user->getXpos(), user->getYpos());
-						delete user;
-					}
-				}
-				break;
-			case DELETE_FIELD_ITEM:
-				{
-					MapInfo itemInfo;
-					memcpy(&itemInfo, message, sizeof(MapInfo));
-
-					gameClient->removeItemInfo(itemInfo.getIdx());
-				}
-				break;
-			case REQUEST_FIELD_OBJECT_INFO:
-				{
-					MapInfo* objectInfo = new MapInfo();
-					memcpy(objectInfo, message, sizeof(MapInfo));
-
-					gameClient->addObjectInfo(objectInfo);
-				}
-				break;
-			case REQUEST_FIELD_MONSTER_INFO:
-				{
-					MapInfo* monsterInfo = new MapInfo();
-					memcpy(monsterInfo, message, sizeof(MapInfo));
-
-					gameClient->addMonsterInfo(monsterInfo);
-				}
-				break;
-			case REQUEST_INVENTORY_ITEM_INFO:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_FIELD_ITEM_INFO:
-				{
-					MapInfo* itemInfo = new MapInfo();
-					memcpy(itemInfo, message, sizeof(MapInfo));
-
-					gameClient->addItemInfo(itemInfo);
-				}
-				break;
-			case REQUEST_EAT_ITEM:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->addInventoryInfo(inventoryInfo);
-				}
-				break;
-			case REQUEST_LOGOUT:
-				if (!strcmp(message, "logout okey"))
-				{
-					gameClient->closeClient();
-					logout = true;
-				}
-				break;
-			case REQUEST_MAP_MOVE:
-				{
-					User userInfo;
-					memcpy(&userInfo, message, sizeof(User));
-					gameClient->setMainUser(userInfo);
-
-					if (userInfo.getAction() == ACTION_MAP_MOVE)
-					{
-
-					}
-					else if (userInfo.getAction() == ACTION_MAP_POTAL)
-					{
-						gameClient->clearUsersInfo();
-						gameClient->clearObjectInfo();
-						gameClient->clearMonsterInfo();
-						gameClient->clearItemInfo();
-					}
-				}
-				break;
-			case REQUEST_MAP_POTAL_FINISH:
-				if (!strcmp(message, "map_potal_finish"))
-				{
-					gameClient->setMainUserAction(ACTION_MAP_IN);
-					gameClient->setIsMapPotalFinish(true);
-				}
-				break;
-			case REQUEST_THROW_ITEM_FINISH:
-				{
-					InventoryInfo* inventoryInfo = new InventoryInfo();
-					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
-
-					gameClient->setIsThrowItemFinish(true);
-					gameClient->removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
-				}
-				break;
-			case REQUEST_GET_ITEM_FINISH:
-				if (!strcmp(message, "get_item_finish"))
-					gameClient->setIsGetItemFinish(true);
-				break;
-			case REQUEST_CHATTING_FINISH:
-				if (!strcmp(message, "chatting_finish"))
-					gameClient->setIsChattingFinish(true);
-				break;
-			case REQUEST_MAP_MOVE_FINISH:
-				if (!strcmp(message, "map_move_finish"))
-					gameClient->setIsMapMoveFinish(true);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	catch (const runtime_error& error)
-	{
-		std::cout << "\tClient 9 : " << error.what() << std::endl;
-	}
+	gameClient->recvRun();
 
 #ifdef _WIN32
 	return 0;
