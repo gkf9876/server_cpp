@@ -200,6 +200,9 @@ void GameServer::accept_win()
 								printf("recv requestLogout : %s\n", buffer);
 							}
 							break;
+						case UPDATE_USER_INFO:
+							updateUserInfo(reads.fd_array[i], buffer);
+							break;
 						default:
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
@@ -360,6 +363,9 @@ void GameServer::accept_linux()
 						close(ep_events[i].data.fd);
 					}
 					break;
+					case UPDATE_USER_INFO:
+						updateUserInfo(ep_events[i].data.fd, buffer);
+						break;
 					default:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
@@ -466,9 +472,19 @@ void GameServer::updateLogin(int sock, const char* name)
 
 	try
 	{
-		userService->updateLogin(sock, name);
 		loginUser = userService->getUserInfo(name);
-		sendRequest(sock, REQUEST_LOGIN, "login okey", strlen("login okey") + 1);
+
+		if (loginUser.getLogin() == 0)
+		{
+			userService->updateLogin(sock, name);
+			loginUser = userService->getUserInfo(name);
+			sendRequest(sock, REQUEST_LOGIN, "login okey", strlen("login okey") + 1);
+		}
+		else
+		{
+			sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail") + 1);
+			return;
+		}
 
 		loginUserList = userService->getFieldLoginUserAll(loginUser.getField());
 
@@ -820,6 +836,41 @@ void GameServer::userGetMapItem(int sock, const char* userInfo)
 	}
 	catch (const runtime_error& error)
 	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+#ifdef _WIN32
+void GameServer::updateUserInfo(SOCKET sock, const char* userInfo)
+#elif __linux__
+void GameServer::updateUserInfo(int sock, const char* userInfo)
+#endif
+{
+	char message[BUF_SIZE];
+	list<User> fieldUserList;
+	list<User>::iterator iter;
+	User user;
+
+	try
+	{
+		memcpy(&user, userInfo, sizeof(User));
+
+		fieldUserList = userService->getFieldLoginUserAll(user.getField());
+		userService->updateUserInfo(user);
+
+		for (iter = fieldUserList.begin(); iter != fieldUserList.end(); iter++)
+		{
+			if (iter->getSock() == sock)
+				continue;
+
+			sendRequest(iter->getSock(), UPDATE_USER_INFO, userInfo, sizeof(User));
+		}
+
+		sendRequest(sock, UPDATE_USER_INFO_FINISH, "update_user_finish", strlen("update_user_finish") + 1);
+	}
+	catch (const runtime_error& error)
+	{
+		sendRequest(sock, REQUEST_MAP_MOVE, "update_user_fail", strlen("update_user_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }

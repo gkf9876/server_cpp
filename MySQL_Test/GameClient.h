@@ -50,6 +50,8 @@
 #define REQUEST_GET_ITEM_FINISH			24
 #define REQUEST_CHATTING_FINISH			25
 #define REQUEST_MAP_MOVE_FINISH			26
+#define UPDATE_USER_INFO				27
+#define UPDATE_USER_INFO_FINISH			28
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 
@@ -87,6 +89,7 @@ private:
 	bool isGetItemFinish = false;
 	bool isChattingFinish = false;
 	bool isMapMoveFinish = false;
+	bool isUpdateUserInfoFinish = false;
 
 	vector<string> * log = NULL;
 
@@ -108,6 +111,7 @@ public:
 	void moveOtherUser(const char* userName, int xpos, int ypos, int seeDirection);
 	User getUsersInfo(const char* name);
 	void clearUsersInfo();
+	void updateUserInfo(User user);
 
 	void addObjectInfo(MapInfo* object);
 	int sizeObjectInfo();
@@ -163,6 +167,8 @@ public:
 	bool getIsChattingFinish();
 	void setIsMapMoveFinish(bool value);
 	bool getIsMapMoveFinish();
+	void setIsUpdateUserInfoFinish(bool value);
+	bool getIsUpdateUserInfoFinish();
 
 	void setLogout(bool value);
 	bool getLogout();
@@ -191,6 +197,8 @@ public:
 
 	void requestThrowItem(int xpos, int ypos);
 	void requestGetItem();
+
+	void requestUpdateUserInfo();
 };
 
 #endif

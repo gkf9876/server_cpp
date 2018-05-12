@@ -65,8 +65,8 @@ void GameClient::recvRun()
 			case REQUEST_LOGIN:
 				if (!strcmp(message, "login okey"))
 				{
-					setIsLogin(true);
-					setIsRequestLoginFinish(true);
+					isLogin = true;
+					isRequestLoginFinish = true;
 				}
 				else
 				{
@@ -88,7 +88,7 @@ void GameClient::recvRun()
 				memcpy(user, message, sizeof(User));
 
 				if (user->getAction() == ACTION_MAP_IN)
-					addUsersInfo(user);
+					this->usersInfo->push_back(user);
 				else if (user->getAction() == ACTION_MAP_OUT)
 				{
 					removeUsersInfo(user->getName());
@@ -114,7 +114,7 @@ void GameClient::recvRun()
 				MapInfo* objectInfo = new MapInfo();
 				memcpy(objectInfo, message, sizeof(MapInfo));
 
-				addObjectInfo(objectInfo);
+				this->objectInfo->push_back(objectInfo);
 			}
 			break;
 			case REQUEST_FIELD_MONSTER_INFO:
@@ -122,7 +122,7 @@ void GameClient::recvRun()
 				MapInfo* monsterInfo = new MapInfo();
 				memcpy(monsterInfo, message, sizeof(MapInfo));
 
-				addMonsterInfo(monsterInfo);
+				this->monsterInfo->push_back(monsterInfo);
 			}
 			break;
 			case REQUEST_INVENTORY_ITEM_INFO:
@@ -130,7 +130,7 @@ void GameClient::recvRun()
 				InventoryInfo* inventoryInfo = new InventoryInfo();
 				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
 
-				addInventoryInfo(inventoryInfo);
+				this->inventory_items_Info[inventoryInfo->getXpos()][inventoryInfo->getYpos()] = inventoryInfo;
 			}
 			break;
 			case REQUEST_FIELD_ITEM_INFO:
@@ -138,7 +138,7 @@ void GameClient::recvRun()
 				MapInfo* itemInfo = new MapInfo();
 				memcpy(itemInfo, message, sizeof(MapInfo));
 
-				addItemInfo(itemInfo);
+				this->itemInfo->push_back(itemInfo);
 			}
 			break;
 			case REQUEST_EAT_ITEM:
@@ -146,7 +146,7 @@ void GameClient::recvRun()
 				InventoryInfo* inventoryInfo = new InventoryInfo();
 				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
 
-				addInventoryInfo(inventoryInfo);
+				this->inventory_items_Info[inventoryInfo->getXpos()][inventoryInfo->getYpos()] = inventoryInfo;
 			}
 			break;
 			case REQUEST_LOGOUT:
@@ -160,7 +160,7 @@ void GameClient::recvRun()
 			{
 				User userInfo;
 				memcpy(&userInfo, message, sizeof(User));
-				setMainUser(userInfo);
+				mainUser = userInfo;
 
 				if (userInfo.getAction() == ACTION_MAP_MOVE)
 				{
@@ -168,18 +168,18 @@ void GameClient::recvRun()
 				}
 				else if (userInfo.getAction() == ACTION_MAP_POTAL)
 				{
-					clearUsersInfo();
-					clearObjectInfo();
-					clearMonsterInfo();
-					clearItemInfo();
+					usersInfo->clear();
+					objectInfo->clear();
+					monsterInfo->clear();
+					itemInfo->clear();
 				}
 			}
 			break;
 			case REQUEST_MAP_POTAL_FINISH:
 				if (!strcmp(message, "map_potal_finish"))
 				{
-					setMainUserAction(ACTION_MAP_IN);
-					setIsMapPotalFinish(true);
+					mainUser.setAction(ACTION_MAP_IN);
+					isMapPotalFinish = true;
 				}
 				break;
 			case REQUEST_THROW_ITEM_FINISH:
@@ -187,21 +187,33 @@ void GameClient::recvRun()
 				InventoryInfo* inventoryInfo = new InventoryInfo();
 				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
 
-				setIsThrowItemFinish(true);
+				isThrowItemFinish = true;
 				removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
 			}
 			break;
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
-					setIsGetItemFinish(true);
+					isGetItemFinish = true;
 				break;
 			case REQUEST_CHATTING_FINISH:
 				if (!strcmp(message, "chatting_finish"))
-					setIsChattingFinish(true);
+					isChattingFinish = true;
 				break;
 			case REQUEST_MAP_MOVE_FINISH:
 				if (!strcmp(message, "map_move_finish"))
-					setIsMapMoveFinish(true);
+					isMapMoveFinish = true;
+				break;
+			case UPDATE_USER_INFO:
+			{
+				User userInfo;
+				memcpy(&userInfo, message, sizeof(User));
+
+				updateUserInfo(userInfo);
+			}
+			break;
+			case UPDATE_USER_INFO_FINISH:
+				if (!strcmp(message, "update_user_finish"))
+					isUpdateUserInfoFinish = true;
 				break;
 			default:
 				break;
@@ -210,7 +222,7 @@ void GameClient::recvRun()
 	}
 	catch (const runtime_error& error)
 	{
-		std::cout << "\tClient 0 : " << error.what() << std::endl;
+		std::cout << "\tClient : " << error.what() << std::endl;
 	}
 }
 
@@ -297,6 +309,29 @@ User GameClient::getUsersInfo(const char* name)
 void GameClient::clearUsersInfo()
 {
 	this->usersInfo->clear();
+}
+
+void GameClient::updateUserInfo(User user)
+{
+	for (int i = 0; i < this->usersInfo->size(); i++)
+	{
+		if (!strcmp(this->usersInfo->at(i)->getName(), user.getName()))
+		{
+			this->usersInfo->at(i)->setSock(user.getSock());
+			this->usersInfo->at(i)->setName(user.getName());
+			this->usersInfo->at(i)->setPassword(user.getPassword());
+			this->usersInfo->at(i)->setXpos(user.getXpos());
+			this->usersInfo->at(i)->setYpos(user.getYpos());
+			this->usersInfo->at(i)->setField(user.getField());
+			this->usersInfo->at(i)->setSeeDirection(user.getSeeDirection());
+			this->usersInfo->at(i)->setAction(user.getAction());
+			this->usersInfo->at(i)->setLogin(user.getLogin());
+			this->usersInfo->at(i)->setLastLogin(user.getLastLogin());
+			this->usersInfo->at(i)->setLastLogout(user.getLastLogout());
+			this->usersInfo->at(i)->setJoinDate(user.getJoinDate());
+			return;
+		}
+	}
 }
 
 void GameClient::addObjectInfo(MapInfo* object)
@@ -596,6 +631,16 @@ bool GameClient::getIsMapMoveFinish()
 	return this->isMapMoveFinish;
 }
 
+void GameClient::setIsUpdateUserInfoFinish(bool value)
+{
+	this->isUpdateUserInfoFinish = value;
+}
+
+bool GameClient::getIsUpdateUserInfoFinish()
+{
+	return this->isUpdateUserInfoFinish;
+}
+
 void GameClient::setLogout(bool value)
 {
 	this->logout = value;
@@ -804,4 +849,15 @@ void GameClient::requestGetItem()
 
 	while (isGetItemFinish != true);
 	isGetItemFinish = false;
+}
+
+void GameClient::requestUpdateUserInfo()
+{
+	char message[BUF_SIZE];
+	memcpy(message, &mainUser, sizeof(User));
+
+	sendRequest(UPDATE_USER_INFO, message, sizeof(User));
+
+	while (isUpdateUserInfoFinish != true);
+	isUpdateUserInfoFinish = false;
 }

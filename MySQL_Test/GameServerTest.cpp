@@ -494,6 +494,8 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 		gameServerTest->getAssert(0)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 		gameClient->requestLogin(gameServerTest->getUser(0).getName());
 		gameServerTest->getAssert(0)->assertThatLog(gameClient, 1, gameClient->getIsLogin());
+		gameClient->requestLogin(gameServerTest->getUser(0).getName());
+		gameServerTest->getAssert(0)->assertThatLog(gameClient, 0, gameClient->getIsLogin());
 
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
@@ -569,6 +571,33 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 		{
 			gameClient->requestGetItem();
 		}
+
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(4);
+		user.setXpos(4);
+		user.setYpos(4);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(5);
+		user.setXpos(5);
+		user.setYpos(5);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(6);
+		user.setXpos(6);
+		user.setYpos(6);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 #ifdef _WIN32
 		Sleep(2000);
@@ -705,6 +734,33 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 
 		gameClient->requestGetItem();
 
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(7);
+		user.setXpos(7);
+		user.setYpos(7);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(1)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(8);
+		user.setXpos(8);
+		user.setYpos(8);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(1)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(9);
+		user.setXpos(9);
+		user.setYpos(9);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(1)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
 #ifdef _WIN32
 		Sleep(2000);
 #elif __linux__
@@ -840,6 +896,33 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 
 		gameClient->requestGetItem();
 
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(0);
+		user.setXpos(0);
+		user.setYpos(0);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(2)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(123);
+		user.setXpos(123);
+		user.setYpos(123);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(2)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(456);
+		user.setXpos(456);
+		user.setYpos(456);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(2)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
 #ifdef _WIN32
 		Sleep(2000);
 #elif __linux__
@@ -974,6 +1057,32 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 
 		gameClient->requestGetItem();
 
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(111);
+		user.setXpos(111);
+		user.setYpos(111);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(3)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(222);
+		user.setXpos(222);
+		user.setYpos(222);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(3)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(333);
+		user.setXpos(333);
+		user.setYpos(333);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(3)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 #ifdef _WIN32
 		Sleep(2000);
 #elif __linux__
@@ -1108,6 +1217,33 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 		gameClient->requestThrowItem(0, 2);
 
 		gameClient->requestGetItem();
+
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(444);
+		user.setXpos(444);
+		user.setYpos(444);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(4)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(555);
+		user.setXpos(555);
+		user.setYpos(555);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(4)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(666);
+		user.setXpos(666);
+		user.setYpos(666);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(4)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 #ifdef _WIN32
 		Sleep(2000);
@@ -1244,6 +1380,33 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 
 		gameClient->requestGetItem();
 
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(777);
+		user.setXpos(777);
+		user.setYpos(777);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(5)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(888);
+		user.setXpos(888);
+		user.setYpos(888);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(5)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(999);
+		user.setXpos(999);
+		user.setYpos(999);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(5)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
 #ifdef _WIN32
 		Sleep(2000);
 #elif __linux__
@@ -1378,6 +1541,33 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 		gameClient->requestThrowItem(0, 2);
 
 		gameClient->requestGetItem();
+
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(11);
+		user.setXpos(11);
+		user.setYpos(11);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(6)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(22);
+		user.setXpos(22);
+		user.setYpos(22);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(6)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(33);
+		user.setXpos(33);
+		user.setYpos(33);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(6)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 #ifdef _WIN32
 		Sleep(2000);
@@ -1514,6 +1704,33 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 
 		gameClient->requestGetItem();
 
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(44);
+		user.setXpos(44);
+		user.setYpos(44);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(7)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(55);
+		user.setXpos(55);
+		user.setYpos(55);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(7)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(66);
+		user.setXpos(66);
+		user.setYpos(66);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(7)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
 #ifdef _WIN32
 		Sleep(2000);
 #elif __linux__
@@ -1649,6 +1866,33 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 
 		gameClient->requestGetItem();
 
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(77);
+		user.setXpos(77);
+		user.setYpos(77);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(8)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(88);
+		user.setXpos(88);
+		user.setYpos(88);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(8)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(99);
+		user.setXpos(99);
+		user.setYpos(99);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(8)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
 #ifdef _WIN32
 		Sleep(2000);
 #elif __linux__
@@ -1783,6 +2027,33 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 		gameClient->requestThrowItem(1, 0);
 
 		gameClient->requestGetItem();
+
+		gameClient->addLog("GameServerTest: UPDATE_USER_INFO");
+
+		User user = gameClient->getMainUser();
+		user.setAction(1);
+		user.setXpos(1);
+		user.setYpos(1);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(9)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(2);
+		user.setXpos(2);
+		user.setYpos(2);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(9)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
+
+		user.setAction(3);
+		user.setXpos(3);
+		user.setYpos(3);
+
+		gameClient->setMainUser(user);
+		gameClient->requestUpdateUserInfo();
+		gameServerTest->getAssert(9)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
 #ifdef _WIN32
 		Sleep(2000);
