@@ -26,6 +26,7 @@ public:
 	void run();
 
 	void addAndGet();
+	void getLatestChatting();
 };
 
 #endif

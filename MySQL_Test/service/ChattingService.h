@@ -15,6 +15,7 @@ public:
 	void setChattingDao(ChattingDao* chattingDao);
 
 	void add(Chatting chatting);
+	Chatting getLatestChatting(const char* userName, const char* field);
 };
 
 #endif

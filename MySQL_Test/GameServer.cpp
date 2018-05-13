@@ -587,6 +587,7 @@ void GameServer::chatting(int sock, const char* chatting)
 	list<User>::iterator iter;
 	User chattingUser;
 	Chatting chattingInfo;
+	Chatting sendChattingInfo;
 
 	try
 	{
@@ -596,9 +597,12 @@ void GameServer::chatting(int sock, const char* chatting)
 		memcpy(&chattingInfo, chatting, sizeof(Chatting));
 		chattingService->add(chattingInfo);
 
+		sendChattingInfo = chattingService->getLatestChatting(chattingInfo.getName(), chattingInfo.getField());
+		memcpy(message, &sendChattingInfo, sizeof(Chatting));
+
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			sendRequest(iter->getSock(), CHATTING_PROCESS, chatting, sizeof(Chatting));
+			sendRequest(iter->getSock(), CHATTING_PROCESS, message, sizeof(Chatting));
 		}
 
 		sendRequest(sock, REQUEST_CHATTING_FINISH, "chatting_finish", strlen("chatting_finish") + 1);

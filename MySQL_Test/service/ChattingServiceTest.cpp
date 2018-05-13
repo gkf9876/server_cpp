@@ -61,6 +61,7 @@ void ChattingServiceTest::run()
 	try
 	{
 		addAndGet();
+		getLatestChatting();
 	}
 	catch (const runtime_error& error)
 	{
@@ -83,4 +84,27 @@ void ChattingServiceTest::addAndGet()
 
 	Chatting chattingget2 = chattingDao->get(chatting2->getIdx());
 	checkSameChatting(chattingget2, *chatting2);
+}
+
+void ChattingServiceTest::getLatestChatting()
+{
+	std::cout << "ChattingServiceTest : getLatestChatting()" << std::endl;
+	chattingDao->deleteAll();
+	assertThat(chattingDao->getCount(), 0);
+
+	chattingDao->add(*chatting1);
+	assertThat(chattingDao->getCount(), 1);
+	checkSameChatting(chattingService->getLatestChatting(chatting1->getName(), chatting1->getField()), *chatting1);
+
+	chattingDao->add(*chatting2);
+	assertThat(chattingDao->getCount(), 2);
+	checkSameChatting(chattingService->getLatestChatting(chatting2->getName(), chatting2->getField()), *chatting2);
+
+	chattingDao->add(*chatting1);
+	assertThat(chattingDao->getCount(), 3);
+	checkSameChatting(chattingService->getLatestChatting(chatting1->getName(), chatting1->getField()), *chatting1);
+
+	chattingDao->add(*chatting2);
+	assertThat(chattingDao->getCount(), 4);
+	checkSameChatting(chattingService->getLatestChatting(chatting2->getName(), chatting2->getField()), *chatting2);
 }
