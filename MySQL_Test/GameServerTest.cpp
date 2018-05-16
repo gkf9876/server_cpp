@@ -10,7 +10,7 @@ GameServerTest::GameServerTest()
 	{
 		this->gameClient[i] = new GameClient();
 
-		this->context[i] = new ApplicationContext();
+		this->context[i] = new TestApplicationContext();
 		this->assert[i] = new Assert();
 		this->assert[i]->setApplicationContext(context[i]);
 	}
@@ -255,21 +255,6 @@ void GameServerTest::run()
 	userDao->deleteAll();
 	chattingDao->deleteAll();
 
-	user[1].setField(user[0].getField());
-	user[2].setField(user[0].getField());
-
-	user[4].setField(user[3].getField());
-	user[5].setField(user[3].getField());
-	user[6].setField(user[3].getField());
-
-	user[8].setField(user[7].getField());
-	user[9].setField(user[7].getField());
-
-	for (int i = 0; i<10; i++)
-	{
-		//userDao->add(user[i]);
-	}
-
 	mapDao->deleteAll();
 	mapDao->add(*map1);
 	mapDao->add(*map2);
@@ -507,13 +492,13 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(10, 11, gameClient->getMainUser().getField(), 29);
@@ -684,13 +669,13 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(20, 11, gameClient->getMainUser().getField(), 29);
@@ -847,13 +832,13 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(12, 11, gameClient->getMainUser().getField(), 29);
@@ -1009,13 +994,13 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(1, 11, gameClient->getMainUser().getField(), 29);
@@ -1171,13 +1156,13 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(4)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(10, 1, gameClient->getMainUser().getField(), 29);
@@ -1334,13 +1319,13 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(10, 5, gameClient->getMainUser().getField(), 29);
@@ -1497,13 +1482,13 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(6)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(10, 2, gameClient->getMainUser().getField(), 29);
@@ -1660,13 +1645,13 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(5, 5, gameClient->getMainUser().getField(), 29);
@@ -1823,13 +1808,13 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(2, 8, gameClient->getMainUser().getField(), 29);
@@ -1986,13 +1971,13 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
-		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World2");
-		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->chatting("Hello World3");
-		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient);
+		gameServerTest->getAssert(9)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getChattingInfo(gameClient->sizeChattingInfo() - 1));
 
 		gameClient->addLog("GameServerTest: USER_MOVE_UPDATE, ACTION_MAP_MOVE->client");
 		gameClient->requestMapMove(101, 11, gameClient->getMainUser().getField(), 29);

@@ -81,6 +81,8 @@ void Assert::checkSameUserLog(GameClient* gameClient, User user1, User user2)
 
 void Assert::checkSameChatLog(GameClient* gameClient, Chatting chat1, Chatting chat2)
 {
+	assertThatLog(gameClient, chat1.getIdx(), chat2.getIdx());
+	assertThatLog(gameClient, chat1.getInputdate(), chat2.getInputdate());
 	assertThatLog(gameClient, chat1.getName(), chat2.getName());
 	assertThatLog(gameClient, chat1.getContent(), chat2.getContent());
 	assertThatLog(gameClient, chat1.getField(), chat2.getField());
@@ -111,25 +113,23 @@ void Assert::checkSameInventoryInfoLog(GameClient* gameClient, InventoryInfo inv
 	assertThatLog(gameClient, inventoryInfo1.getCount(), inventoryInfo2.getCount());
 }
 
-void Assert::checkSameDatabaseChattingListLog(GameClient* gameClient)
+void Assert::checkSameDatabaseChattingListLog(GameClient* targetGameClient, vector<GameClient*> gameClientList, Chatting chatting)
 {
-	int chattingSize;
-	User mainUser = gameClient->getMainUser();
+	list<GameClient*>::iterator iter;
+	User mainUser = targetGameClient->getMainUser();
 
-	list<Chatting> fieldChattingList = this->chattingDao->getFieldChatting(mainUser.getField());
-	list<Chatting>::iterator iter = fieldChattingList.begin();
-	assertThatLog(gameClient, fieldChattingList.size(), gameClient->sizeChattingInfo());
+	checkSameChatLog(targetGameClient, targetGameClient->getChattingInfo(targetGameClient->sizeChattingInfo() - 1), chatting);
 
-	if (gameClient->sizeChattingInfo() > fieldChattingList.size())
-		chattingSize = fieldChattingList.size();
-	else
-		chattingSize = gameClient->sizeChattingInfo();
-
-	for (int i=0; i<gameClient->sizeChattingInfo(); i++)
+	for (int i = 0; i<gameClientList.size(); i++)
 	{
-		Chatting dbFieldChatting = *iter;
-		checkSameChatLog(gameClient, gameClient->getChattingInfo(i), dbFieldChatting);
-		iter++;
+		GameClient* otherUserClient = gameClientList.at(i);
+		User otherUser = otherUserClient->getMainUser();
+
+		if (!strcmp(otherUser.getName(), mainUser.getName()))
+			continue;
+
+		if (!strcmp(otherUser.getField(), mainUser.getField()))
+			checkSameChatLog(targetGameClient, otherUserClient->getChattingInfo(otherUserClient->sizeChattingInfo() - 1), chatting);
 	}
 }
 

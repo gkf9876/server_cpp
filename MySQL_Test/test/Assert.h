@@ -50,7 +50,7 @@ public:
 	void checkSameMapInfoLog(GameClient* gameClient, MapInfo mapInfo1, MapInfo mapInfo2);
 	void checkSameInventoryInfoLog(GameClient* gameClient, InventoryInfo inventoryInfo1, InventoryInfo inventoryInfo2);
 
-	void checkSameDatabaseChattingListLog(GameClient* gameClient);
+	void checkSameDatabaseChattingListLog(GameClient* targetGameClient, vector<GameClient*> gameClientList, Chatting chatting);
 	void checkSameDatabaseUserListLog(GameClient* targetGameClient, vector<GameClient*> gameClientList);
 	void checkSameDatabaseMapUserInfoLog(GameClient* targetGameClient, vector<GameClient*> gameClientList);
 

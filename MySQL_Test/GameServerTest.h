@@ -12,7 +12,7 @@
 
 #include "GameServer.h"
 #include "GameClient.h"
-#include "factory/ApplicationContext.h"
+#include "factory/TestApplicationContext.h"
 #include "test/Assert.h"
 
 #define GAME_CLIENT_COUNT	10
