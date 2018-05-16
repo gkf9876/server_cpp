@@ -101,6 +101,12 @@ void GameClient::recvRun()
 				}
 			}
 			break;
+			case REQUEST_JOIN:
+				if (!strcmp(message, "join_user_success"))
+					isJoinUserSeccess = true;
+				else
+					isJoinUserSeccess = false;
+				break;
 			case DELETE_FIELD_ITEM:
 			{
 				MapInfo itemInfo;
@@ -214,6 +220,10 @@ void GameClient::recvRun()
 			case UPDATE_USER_INFO_FINISH:
 				if (!strcmp(message, "update_user_finish"))
 					isUpdateUserInfoFinish = true;
+				break;
+			case REQUEST_JOIN_FINISH:
+				if (!strcmp(message, "join_user_finish"))
+					isjoinUserFinish = true;
 				break;
 			default:
 				break;
@@ -421,6 +431,18 @@ int GameClient::sizeChattingInfo()
 Chatting GameClient::getChattingInfo(int idx)
 {
 	return *(this->chattingInfo->at(idx));
+}
+
+vector<Chatting> GameClient::getChattingInfo()
+{
+	vector<Chatting> chattingInfo;
+
+	for (int i = 0; i < this->chattingInfo->size(); i++)
+	{
+		chattingInfo.push_back(*this->chattingInfo->at(i));
+	}
+
+	return chattingInfo;
 }
 
 void GameClient::addInventoryInfo(InventoryInfo* inventoryInfo)
@@ -639,6 +661,16 @@ void GameClient::setIsUpdateUserInfoFinish(bool value)
 bool GameClient::getIsUpdateUserInfoFinish()
 {
 	return this->isUpdateUserInfoFinish;
+}
+
+void GameClient::setIsJoinUserSeccess(bool value)
+{
+	this->isJoinUserSeccess = value;
+}
+
+bool GameClient::getIsJoinUserSeccess()
+{
+	return this->isJoinUserSeccess;
 }
 
 void GameClient::setLogout(bool value)
@@ -860,4 +892,15 @@ void GameClient::requestUpdateUserInfo()
 
 	while (isUpdateUserInfoFinish != true);
 	isUpdateUserInfoFinish = false;
+}
+
+void GameClient::requestJoinUser(User userInfo)
+{
+	char message[BUF_SIZE];
+	memcpy(message, &userInfo, sizeof(User));
+
+	sendRequest(REQUEST_JOIN, message, sizeof(User));
+
+	while (isjoinUserFinish != true);
+	isjoinUserFinish = false;
 }

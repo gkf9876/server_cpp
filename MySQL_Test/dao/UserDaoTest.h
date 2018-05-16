@@ -35,6 +35,7 @@ public:
 	void updateLogin();
 	void getLoginUserAll();
 	void getFieldLoginUserAll();
+	void getAllUser();
 };
 
 #endif

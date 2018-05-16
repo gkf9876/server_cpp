@@ -71,6 +71,7 @@ void UserDaoTest::run()
 		updateLogin();
 		getLoginUserAll();
 		getFieldLoginUserAll();
+		getAllUser();
 	}
 	catch (const runtime_error& error)
 	{
@@ -101,9 +102,6 @@ void UserDaoTest::checkSameUser(User user1, User user2)
 	assertThat(user1.getSeeDirection(), user2.getSeeDirection());
 	assertThat(user1.getAction(), user2.getAction());
 	assertThat(user1.getLogin(), user2.getLogin());
-	assertThat(user1.getLastLogin(), user2.getLastLogin());
-	assertThat(user1.getLastLogout(), user2.getLastLogout());
-	assertThat(user1.getJoinDate(), user2.getJoinDate());
 }
 
 void UserDaoTest::addAndGet1()
@@ -349,11 +347,58 @@ void UserDaoTest::getFieldLoginUserAll()
 
 	user2->setLogin(0);
 	user2->setField("abc");
-	userDao->updateLogout(user2->getName());
+	userDao->update(*user2);
 
 	fieldLoginUserList = userDao->getFieldLoginUserAll(user1->getField());
 	iter = fieldLoginUserList.begin();
 	checkSameUser(*iter, *user1);
+
+	iter++;
+	checkSameUser(*iter, *user3);
+}
+
+void UserDaoTest::getAllUser()
+{
+	std::cout << "UserDaoTest : getAllUser()" << std::endl;
+
+	userDao->deleteAll();
+	assertThat(userDao->getCount(user1->getField()), 0);
+
+	user1->setLogin(1);
+	userDao->add(*user1);
+	assertThat(userDao->getCount(user1->getField()), 1);
+
+	user2->setLogin(1);
+	user2->setField(user1->getField());
+	userDao->add(*user2);
+	assertThat(userDao->getCount(user1->getField()), 2);
+
+	user3->setLogin(1);
+	user3->setField(user1->getField());
+	userDao->add(*user3);
+	assertThat(userDao->getCount(user1->getField()), 3);
+
+	list<User> fieldLoginUserList = userDao->getAllUser();
+	list<User>::iterator iter;
+	iter = fieldLoginUserList.begin();
+	checkSameUser(*iter, *user1);
+
+	iter++;
+	checkSameUser(*iter, *user2);
+
+	iter++;
+	checkSameUser(*iter, *user3);
+
+	user2->setLogin(0);
+	user2->setField("abc");
+	userDao->update(*user2);
+
+	fieldLoginUserList = userDao->getAllUser();
+	iter = fieldLoginUserList.begin();
+	checkSameUser(*iter, *user1);
+
+	iter++;
+	checkSameUser(*iter, *user2);
 
 	iter++;
 	checkSameUser(*iter, *user3);

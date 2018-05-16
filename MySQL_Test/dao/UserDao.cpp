@@ -31,9 +31,9 @@ void UserDao::add(User user)
 	sprintf(&query[strlen(query)], "'%d', ", user.getSeeDirection());
 	sprintf(&query[strlen(query)], "'%d', ", user.getAction());
 	sprintf(&query[strlen(query)], "'%d', ", user.getLogin());
-	sprintf(&query[strlen(query)], "'%s', ", user.getLastLogin());
-	sprintf(&query[strlen(query)], "'%s', ", user.getLastLogout());
-	sprintf(&query[strlen(query)], "'%s') ", user.getJoinDate());
+	sprintf(&query[strlen(query)], "sysdate(), ");
+	sprintf(&query[strlen(query)], "sysdate(), ");
+	sprintf(&query[strlen(query)], "sysdate()) ");
 
 	query_stat = mysql_query(&connection, query);
 
@@ -335,6 +335,51 @@ list<User> UserDao::getFieldLoginUserAll(const char* field)
 	MYSQL_ROW sql_row;
 
 	sprintf(query, "select * from user_list where login='1' and field='%s'", field);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+	{
+		printf("query : %s\n", query);
+		throw runtime_error(mysql_error(&connection));
+	}
+
+	sql_result = mysql_store_result(&connection);
+
+	User user;
+	list<User> userList;
+
+	while ((sql_row = mysql_fetch_row(sql_result)) != NULL)
+	{
+		user.setSock(atoi(sql_row[0]));
+		user.setName(sql_row[1]);
+		user.setPassword(sql_row[2]);
+		user.setXpos(atoi(sql_row[3]));
+		user.setYpos(atoi(sql_row[4]));
+		user.setField(sql_row[5]);
+		user.setSeeDirection(atoi(sql_row[6]));
+		user.setAction(atoi(sql_row[7]));
+		user.setLogin(atoi(sql_row[8]));
+		user.setLastLogin(sql_row[9]);
+		user.setLastLogout(sql_row[10]);
+		user.setJoinDate(sql_row[11]);
+		userList.push_back(user);
+	}
+
+	mysql_free_result(sql_result);
+
+	return userList;
+}
+
+list<User> UserDao::getAllUser()
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+	MYSQL_RES* sql_result;
+	MYSQL_ROW sql_row;
+
+	sprintf(query, "select * from user_list");
 
 	query_stat = mysql_query(&connection, query);
 

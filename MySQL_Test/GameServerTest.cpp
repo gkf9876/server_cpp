@@ -267,7 +267,7 @@ void GameServerTest::run()
 
 	for (int i = 0; i<10; i++)
 	{
-		userDao->add(user[i]);
+		//userDao->add(user[i]);
 	}
 
 	mapDao->deleteAll();
@@ -488,6 +488,7 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc0, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(0));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN->client");
 		gameClient->requestLogin("unknown_id");
@@ -666,6 +667,7 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc1, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(1));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
@@ -828,6 +830,7 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc2, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(2));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
@@ -989,6 +992,7 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc3, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(3));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
@@ -1150,6 +1154,7 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc4, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(4));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
@@ -1312,6 +1317,7 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc5, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(5));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
@@ -1474,6 +1480,7 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc6, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(6));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
@@ -1636,6 +1643,7 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc7, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(7));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
@@ -1798,6 +1806,7 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc8, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(8));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");
@@ -1960,6 +1969,7 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 #elif __linux__
 		pthread_create(&recvThread, NULL, ClientRecvThreadFunc9, arg);
 #endif
+		gameClient->requestJoinUser(gameServerTest->getUser(9));
 
 		gameClient->addLog("GameServerTest: REQUEST_LOGIN -> client");
 		gameClient->requestLogin("unknown_id");

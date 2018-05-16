@@ -52,6 +52,7 @@
 #define REQUEST_MAP_MOVE_FINISH			26
 #define UPDATE_USER_INFO				27
 #define UPDATE_USER_INFO_FINISH			28
+#define REQUEST_JOIN_FINISH				29
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define CUR_PATH						"/home/gkf9876/server/Resources/"
@@ -121,6 +122,7 @@ public:
 	void userGetMapItem(SOCKET sock, const char* userInfo);
 
 	void updateUserInfo(SOCKET sock, const char* userInfo);
+	void insertUserInfo(SOCKET sock, const char* userInfo);
 
 #elif __linux__
 	void accept_linux();
@@ -142,6 +144,7 @@ public:
 	void userGetMapItem(int sock, const char* userInfo);
 
 	void updateUserInfo(int sock, const char* userInfo);
+	void insertUserInfo(int sock, const char* userInfo);
 
 #endif
 

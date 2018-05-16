@@ -72,3 +72,19 @@ void UserService::addInventoryItem(InventoryInfo inventoryInfo)
 {
 	inventoryInfoDao->add(inventoryInfo);
 }
+
+bool UserService::insertUserInfo(User userInfo)
+{
+	list<User> allUser = userDao->getAllUser();
+	list<User>::iterator iter;
+
+	for (iter = allUser.begin(); iter != allUser.end(); iter++)
+	{
+		if (!strcmp(iter->getName(), userInfo.getName()))
+			return false;
+	}
+
+	if(iter == allUser.end())
+		userDao->add(userInfo);
+	return true;
+}

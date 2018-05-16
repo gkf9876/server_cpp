@@ -30,6 +30,7 @@ public:
 	void updateLogin(int sock, const char* name);
 	list<User> getLoginUserAll();
 	list<User> getFieldLoginUserAll(const char* field);
+	list<User> getAllUser();
 };
 
 #endif

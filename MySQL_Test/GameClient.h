@@ -52,6 +52,7 @@
 #define REQUEST_MAP_MOVE_FINISH			26
 #define UPDATE_USER_INFO				27
 #define UPDATE_USER_INFO_FINISH			28
+#define REQUEST_JOIN_FINISH				29
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 
@@ -90,6 +91,8 @@ private:
 	bool isChattingFinish = false;
 	bool isMapMoveFinish = false;
 	bool isUpdateUserInfoFinish = false;
+	bool isjoinUserFinish = false;
+	bool isJoinUserSeccess = false;
 
 	vector<string> * log = NULL;
 
@@ -132,6 +135,7 @@ public:
 	void addChattingInfo(Chatting* chatting);
 	int sizeChattingInfo();
 	Chatting getChattingInfo(int idx);
+	vector<Chatting> getChattingInfo();
 
 	void addInventoryInfo(InventoryInfo* inventoryInfo);
 	int sizeInventoryInfo();
@@ -169,6 +173,8 @@ public:
 	bool getIsMapMoveFinish();
 	void setIsUpdateUserInfoFinish(bool value);
 	bool getIsUpdateUserInfoFinish();
+	void setIsJoinUserSeccess(bool value);
+	bool getIsJoinUserSeccess();
 
 	void setLogout(bool value);
 	bool getLogout();
@@ -199,6 +205,7 @@ public:
 	void requestGetItem();
 
 	void requestUpdateUserInfo();
+	void requestJoinUser(User userInfo);
 };
 
 #endif

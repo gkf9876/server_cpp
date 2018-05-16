@@ -111,9 +111,6 @@ void UserServiceTest::checkSameUser(User user1, User user2)
 	assertThat(user1.getSeeDirection(), user2.getSeeDirection());
 	assertThat(user1.getAction(), user2.getAction());
 	assertThat(user1.getLogin(), user2.getLogin());
-	assertThat(user1.getLastLogin(), user2.getLastLogin());
-	assertThat(user1.getLastLogout(), user2.getLastLogout());
-	assertThat(user1.getJoinDate(), user2.getJoinDate());
 }
 
 void UserServiceTest::checkSameInventoryInfo(InventoryInfo inventoryInfo1, InventoryInfo inventoryInfo2)
@@ -140,6 +137,7 @@ void UserServiceTest::run()
 		getUserInventoryInfo();
 		updateUserInfo();
 		deleteInventoryItem();
+		insertUserInfo();
 	}
 	catch (const runtime_error& error)
 	{
@@ -390,4 +388,28 @@ void UserServiceTest::deleteInventoryItem()
 		userService->deleteInventoryItem("gkf1234", item[i].getXpos(), item[i].getYpos());
 		assertThat(inventoryInfoDao->getCount(), 10);
 	}
+}
+
+void UserServiceTest::insertUserInfo()
+{
+	std::cout << "UserServiceTest : insertUserInfo()" << std::endl;
+
+	userDao->deleteAll();
+	assertThat(userDao->getAllUser().size(), 0);
+
+	assertThat(userService->insertUserInfo(*user1), true);
+	assertThat(userDao->getAllUser().size(), 1);
+	checkSameUser(userService->getUserInfo(user1->getName()), *user1);
+
+	assertThat(userService->insertUserInfo(*user2), true);
+	assertThat(userDao->getAllUser().size(), 2);
+	checkSameUser(userService->getUserInfo(user2->getName()), *user2);
+
+	assertThat(userService->insertUserInfo(*user1), false);
+	assertThat(userDao->getAllUser().size(), 2);
+	checkSameUser(userService->getUserInfo(user1->getName()), *user1);
+
+	assertThat(userService->insertUserInfo(*user2), false);
+	assertThat(userDao->getAllUser().size(), 2);
+	checkSameUser(userService->getUserInfo(user2->getName()), *user2);
 }

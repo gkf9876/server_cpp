@@ -155,7 +155,7 @@ void GameServer::accept_win()
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
 						case REQUEST_JOIN:
-							sendRequest(reads.fd_array[i], code, buffer, size);
+							insertUserInfo(reads.fd_array[i], buffer);
 							break;
 						case UPDATE_LOGIN_TIME:
 							sendRequest(reads.fd_array[i], code, buffer, size);
@@ -319,7 +319,7 @@ void GameServer::accept_linux()
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
 					case REQUEST_JOIN:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
+						insertUserInfo(ep_events[i].data.fd, buffer);
 						break;
 					case UPDATE_LOGIN_TIME:
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
@@ -875,6 +875,45 @@ void GameServer::updateUserInfo(int sock, const char* userInfo)
 	catch (const runtime_error& error)
 	{
 		sendRequest(sock, REQUEST_MAP_MOVE, "update_user_fail", strlen("update_user_fail") + 1);
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+#ifdef _WIN32
+void GameServer::insertUserInfo(SOCKET sock, const char* userInfo)
+#elif __linux__
+void GameServer::insertUserInfo(int sock, const char* userInfo)
+#endif
+{
+	char message[BUF_SIZE];
+	User user;
+
+	try
+	{
+		memcpy(&user, userInfo, sizeof(User));
+
+		user.setSock(0);
+		user.setPassword("5678");
+		user.setXpos(23);
+		user.setYpos(11);
+		user.setField("TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx");
+		user.setSeeDirection(29);
+		user.setAction(ACTION_MAP_MOVE_END);
+		user.setLogin(0);
+		user.setLastLogin("2018-03-17 10:42:57");
+		user.setLastLogout("2018-03-17 10:43:00");
+		user.setJoinDate("2018-01-01 10:00:00");
+
+		if(userService->insertUserInfo(user) == true)
+			sendRequest(sock, REQUEST_JOIN, "join_user_success", strlen("join_user_success") + 1);
+		else
+			sendRequest(sock, REQUEST_JOIN, "join_user_fail", strlen("join_user_fail") + 1);
+
+		sendRequest(sock, REQUEST_JOIN_FINISH, "join_user_finish", strlen("join_user_finish") + 1);
+	}
+	catch (const runtime_error& error)
+	{
+		sendRequest(sock, REQUEST_JOIN_FINISH, "join_user_fail", strlen("join_user_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
