@@ -76,12 +76,12 @@ void GameClient::recvRun()
 				}
 				break;
 			case CHATTING_PROCESS:
-			{
-				Chatting* chatting = new Chatting();
-				memcpy(chatting, message, sizeof(Chatting));
-				addChattingInfo(chatting);
-			}
-			break;
+				{
+					Chatting chatting;
+					memcpy(&chatting, message, sizeof(Chatting));
+					this->mainChatting = chatting;
+				}
+				break;
 			case OTHER_USER_MAP_MOVE:
 			{
 				User* user = new User();
@@ -225,6 +225,13 @@ void GameClient::recvRun()
 				if (!strcmp(message, "join_user_finish"))
 					isjoinUserFinish = true;
 				break;
+			case OTHER_USER_CHATTING_PROCESS:
+				{
+					Chatting* chatting = new Chatting();
+					memcpy(chatting, message, sizeof(Chatting));
+					addChattingInfo(chatting);
+				}
+				break;
 			default:
 				break;
 			}
@@ -254,6 +261,16 @@ void GameClient::setMainUserAction(int value)
 int GameClient::getMainUserAction()
 {
 	return mainUser.getAction();
+}
+
+void GameClient::setMainChatting(Chatting chatting)
+{
+	this->mainChatting = chatting;
+}
+
+Chatting GameClient::getMainChatting()
+{
+	return this->mainChatting;
 }
 
 void GameClient::addUsersInfo(User* user)

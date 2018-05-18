@@ -53,6 +53,7 @@
 #define UPDATE_USER_INFO				27
 #define UPDATE_USER_INFO_FINISH			28
 #define REQUEST_JOIN_FINISH				29
+#define OTHER_USER_CHATTING_PROCESS		30
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define CUR_PATH						"/home/gkf9876/server/Resources/"

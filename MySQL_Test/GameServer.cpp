@@ -600,9 +600,14 @@ void GameServer::chatting(int sock, const char* chatting)
 		sendChattingInfo = chattingService->getLatestChatting(chattingInfo.getName(), chattingInfo.getField());
 		memcpy(message, &sendChattingInfo, sizeof(Chatting));
 
+		sendRequest(sock, CHATTING_PROCESS, message, sizeof(Chatting));
+
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			sendRequest(iter->getSock(), CHATTING_PROCESS, message, sizeof(Chatting));
+			if (iter->getSock() == sock)
+				continue;
+
+			sendRequest(iter->getSock(), OTHER_USER_CHATTING_PROCESS, message, sizeof(Chatting));
 		}
 
 		sendRequest(sock, REQUEST_CHATTING_FINISH, "chatting_finish", strlen("chatting_finish") + 1);

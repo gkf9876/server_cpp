@@ -118,7 +118,7 @@ void Assert::checkSameDatabaseChattingListLog(GameClient* targetGameClient, vect
 	list<GameClient*>::iterator iter;
 	User mainUser = targetGameClient->getMainUser();
 
-	checkSameChatLog(targetGameClient, targetGameClient->getChattingInfo(targetGameClient->sizeChattingInfo() - 1), chatting);
+	checkSameChatLog(targetGameClient, targetGameClient->getMainChatting(), chatting);
 
 	for (int i = 0; i<gameClientList.size(); i++)
 	{
@@ -129,7 +129,27 @@ void Assert::checkSameDatabaseChattingListLog(GameClient* targetGameClient, vect
 			continue;
 
 		if (!strcmp(otherUser.getField(), mainUser.getField()))
-			checkSameChatLog(targetGameClient, otherUserClient->getChattingInfo(otherUserClient->sizeChattingInfo() - 1), chatting);
+		{
+			vector<Chatting> imsiChatting = otherUserClient->getChattingInfo();
+
+			for (int j = 0; j < imsiChatting.size(); j++)
+			{
+				if (imsiChatting.at(j).getIdx() == chatting.getIdx())
+				{
+					checkSameChatLog(targetGameClient, imsiChatting.at(j), chatting);
+					break;
+				}
+
+				if (j == imsiChatting.size() - 1)
+				{
+					targetGameClient->addLog("\tchatting no exist");
+
+					char message[1024];
+					sprintf(message, "\tidx(%d), name(%s), content(%s)", chatting.getIdx(), chatting.getName(), chatting.getContent());
+					targetGameClient->addLog(message);
+				}
+			}
+		}
 	}
 }
 

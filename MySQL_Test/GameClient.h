@@ -53,6 +53,7 @@
 #define UPDATE_USER_INFO				27
 #define UPDATE_USER_INFO_FINISH			28
 #define REQUEST_JOIN_FINISH				29
+#define OTHER_USER_CHATTING_PROCESS		30
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 
@@ -68,6 +69,7 @@ private:
 	struct sockaddr_in servAddr;
 #endif
 	User mainUser;
+	Chatting mainChatting;
 	vector<User*> * usersInfo = NULL;								//현재 맵의 다른 유저들
 	vector<MapInfo*> * objectInfo = NULL;							//현재 맵의 오브젝트
 	vector<MapInfo*> * monsterInfo = NULL;							//현재 맵의 몬스터
@@ -106,6 +108,9 @@ public:
 	User getMainUser();
 	void setMainUserAction(int value);
 	int getMainUserAction();
+
+	void setMainChatting(Chatting chatting);
+	Chatting getMainChatting();
 
 	void addUsersInfo(User* user);
 	void removeUsersInfo(const char* userName);
