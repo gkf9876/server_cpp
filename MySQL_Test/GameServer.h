@@ -56,6 +56,7 @@
 #define OTHER_USER_CHATTING_PROCESS		30
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
+#define TEST							555
 #define CUR_PATH						"/home/gkf9876/server/Resources/"
 //#define CUR_PATH						"/home/pi/server/Resources/"
 
@@ -109,7 +110,7 @@ public:
 	void sends(SOCKET sock, const char* data, int size);
 	int recvs(SOCKET sock, char* data, int size);
 
-	void sendRequest(SOCKET sock, int code, const char* data, int size);
+	int sendRequest(SOCKET sock, int code, const char* data, int size);
 	int recvRequest(SOCKET sock, int* code, char* data);
 
 	void getUserInfo(SOCKET sock, const char* name);
@@ -125,13 +126,14 @@ public:
 	void updateUserInfo(SOCKET sock, const char* userInfo);
 	void insertUserInfo(SOCKET sock, const char* userInfo);
 
+	void closeClient(SOCKET sock);
 #elif __linux__
 	void accept_linux();
 
 	void sends(int sock, const char* data, int size);
 	int recvs(int sock, char* data, int size);
 
-	void sendRequest(int sock, int code, const char* data, int size);
+	int sendRequest(int sock, int code, const char* data, int size);
 	int recvRequest(int sock, int* code, char* data);
 
 	void getUserInfo(int sock, const char* name);
@@ -147,6 +149,7 @@ public:
 	void updateUserInfo(int sock, const char* userInfo);
 	void insertUserInfo(int sock, const char* userInfo);
 
+	void closeClient(int sock);
 #endif
 
 	void regenMonster();

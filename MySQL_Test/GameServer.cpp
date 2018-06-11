@@ -126,13 +126,7 @@ void GameServer::accept_win()
 				strLen = recvRequest(reads.fd_array[i], &code, buffer);
 				size = strLen - 8;
 				if (strLen == 0)
-				{
-					updateLogout(cpyReads.fd_array[i]);
-					printf("closed client : %d\n", cpyReads.fd_array[i]);
-
-					FD_CLR(reads.fd_array[i], &reads);
-					closesocket(cpyReads.fd_array[i]);
-				}
+					closeClient(cpyReads.fd_array[i]);
 				else
 				{
 					try
@@ -191,14 +185,7 @@ void GameServer::accept_win()
 							sendRequest(reads.fd_array[i], code, buffer, size);
 							break;
 						case REQUEST_LOGOUT:
-							{
-								updateLogout(cpyReads.fd_array[i]);
-								printf("closed client : %d\n", cpyReads.fd_array[i]);
-
-								FD_CLR(reads.fd_array[i], &reads);
-								closesocket(cpyReads.fd_array[i]);
-								printf("recv requestLogout : %s\n", buffer);
-							}
+							closeClient(cpyReads.fd_array[i]);
 							break;
 						case UPDATE_USER_INFO:
 							updateUserInfo(reads.fd_array[i], buffer);
@@ -228,7 +215,7 @@ int GameServer::recvs(SOCKET sock, char* data, int size)
 	return recv(sock, data, size, 0);
 }
 
-void GameServer::sendRequest(SOCKET sock, int code, const char* data, int size)
+int GameServer::sendRequest(SOCKET sock, int code, const char* data, int size)
 {
 	int writeLen;
 	char* buffer = new char[size + 8];
@@ -237,8 +224,10 @@ void GameServer::sendRequest(SOCKET sock, int code, const char* data, int size)
 	memcpy(&buffer[4], &code, sizeof(int));
 	memcpy(&buffer[8], data, size);
 
-	send(sock, buffer, size + 8, 0);
+	writeLen = send(sock, buffer, size + 8, 0);
+
 	delete buffer;
+	return writeLen;
 }
 
 int GameServer::recvRequest(SOCKET sock, int* code, char* data)
@@ -292,13 +281,7 @@ void GameServer::accept_linux()
 				strLen = recvRequest(ep_events[i].data.fd, &code, buffer);
 				size = strLen - 8;
 				if (strLen == 0)
-				{
-					updateLogout(ep_events[i].data.fd);
-					clientCount--;
-
-					epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
-					close(ep_events[i].data.fd);
-				}
+					closeClient(ep_events[i].data.fd);
 				else
 				{
 					switch (code)
@@ -355,14 +338,8 @@ void GameServer::accept_linux()
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
 					case REQUEST_LOGOUT:
-					{
-						updateLogout(ep_events[i].data.fd);
-						clientCount--;
-
-						epoll_ctl(epfd, EPOLL_CTL_DEL, ep_events[i].data.fd, NULL);
-						close(ep_events[i].data.fd);
-					}
-					break;
+						closeClient(ep_events[i].data.fd);
+						break;
 					case UPDATE_USER_INFO:
 						updateUserInfo(ep_events[i].data.fd, buffer);
 						break;
@@ -390,7 +367,7 @@ int GameServer::recvs(int sock, char* data, int size)
 	return read(sock, data, size);
 }
 
-void GameServer::sendRequest(int sock, int code, const char* data, int size)
+int GameServer::sendRequest(int sock, int code, const char* data, int size)
 {
 	int writeLen;
 	char* buffer = new char[size + 8];
@@ -399,8 +376,11 @@ void GameServer::sendRequest(int sock, int code, const char* data, int size)
 	memcpy(&buffer[4], &code, sizeof(int));
 	memcpy(&buffer[8], data, size);
 
-	write(sock, buffer, size + 8);
+	writeLen = write(sock, buffer, size + 8);
+	//printf("send size(%d), code(%d), data(%s)\n", size, code, data);
 	delete buffer;
+
+	return writeLen;
 }
 
 int GameServer::recvRequest(int sock, int* code, char* data)
@@ -439,10 +419,11 @@ void GameServer::getUserInfo(int sock, const char* name)
 		memcpy(message, &getUser, sizeof(User));
 
 		sendRequest(sock, REQUEST_USER_INFO, message, sizeof(User));
+		//printf("send code(%d), UserInfo(%s), size(%d)\n", REQUEST_USER_INFO, getUser.getName(), sizeof(User));
 	}
 	catch (const runtime_error& error)
 	{
-		sendRequest(sock, REQUEST_ERROR, error.what(), strlen(error.what()) + 1);
+		sendRequest(sock, REQUEST_USER_INFO, "unknown_id_send_fail", strlen("unknown_id_send_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -470,6 +451,8 @@ void GameServer::updateLogin(int sock, const char* name)
 	list<MapInfo> itemList;
 	list<MapInfo>::iterator itemIter;
 
+	int code;
+
 	try
 	{
 		loginUser = userService->getUserInfo(name);
@@ -486,6 +469,8 @@ void GameServer::updateLogin(int sock, const char* name)
 			return;
 		}
 
+		sendRequest(sock, TEST, "Hello World0", strlen("Hello World0") + 1);
+
 		loginUserList = userService->getFieldLoginUserAll(loginUser.getField());
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
@@ -501,6 +486,8 @@ void GameServer::updateLogin(int sock, const char* name)
 			sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 		}
 
+		sendRequest(sock, TEST, "Hello World1", strlen("Hello World1") + 1);
+
 		mapMonsterList = mapManageService->getFieldMonster(loginUser.getField());
 
 		for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
@@ -508,6 +495,8 @@ void GameServer::updateLogin(int sock, const char* name)
 			memcpy(message, &(*monsterIter), sizeof(MapInfo));
 			sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
 		}
+
+		sendRequest(sock, TEST, "Hello World2", strlen("Hello World2") + 1);
 
 		mapObjectList = mapManageService->getFieldObject(loginUser.getField());
 
@@ -517,6 +506,8 @@ void GameServer::updateLogin(int sock, const char* name)
 			sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
 		}
 
+		sendRequest(sock, TEST, "Hello World3", strlen("Hello World3") + 1);
+
 		inventoryList = userService->getUserInventoryInfo(loginUser.getName());
 
 		for (inventoryIter = inventoryList.begin(); inventoryIter != inventoryList.end(); inventoryIter++)
@@ -525,6 +516,8 @@ void GameServer::updateLogin(int sock, const char* name)
 			sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
 		}
 
+		sendRequest(sock, TEST, "Hello World4", strlen("Hello World4") + 1);
+
 		itemList = mapManageService->getFieldItem(loginUser.getField());
 
 		for (itemIter = itemList.begin(); itemIter != itemList.end(); itemIter++)
@@ -532,6 +525,8 @@ void GameServer::updateLogin(int sock, const char* name)
 			memcpy(message, &(*itemIter), sizeof(MapInfo));
 			sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
 		}
+
+		sendRequest(sock, TEST, "Hello World5", strlen("Hello World5") + 1);
 	}
 	catch (const runtime_error& error)
 	{
@@ -921,6 +916,27 @@ void GameServer::insertUserInfo(int sock, const char* userInfo)
 		sendRequest(sock, REQUEST_JOIN_FINISH, "join_user_fail", strlen("join_user_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
+}
+
+#ifdef _WIN32
+void GameServer::closeClient(SOCKET sock)
+#elif __linux__
+void GameServer::closeClient(int sock)
+#endif
+{
+#ifdef _WIN32
+	updateLogout(sock);
+	printf("closed client : %d\n", sock);
+
+	FD_CLR(sock);
+	closesocket(sock);
+#elif __linux__
+	updateLogout(sock);
+	clientCount--;
+
+	epoll_ctl(epfd, EPOLL_CTL_DEL, sock, NULL);
+	close(sock);
+#endif
 }
 
 void GameServer::regenMonster()

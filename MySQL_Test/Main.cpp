@@ -71,30 +71,31 @@ int main()
 
 	delete testContext;
 
-//	ApplicationContext* context = new ApplicationContext();
-//	GameServer * gameServer = context->gameServer();
-//
-//	try
-//	{
-//		gameServer->openServer(9190);
-//
-//		while (1)
-//		{
-//#ifdef _WIN32
-//			gameServer->accept_win();
-//#elif __linux__
-//			gameServer->accept_linux();
-//#endif
-//		}
-//
-//		gameServer->closeServer();
-//		delete gameServer;
-//		delete context;
-//	}
-//	catch (const runtime_error& error)
-//	{
-//		std::cout << error.what() << std::endl;
-//	}
+	ApplicationContext* context = new ApplicationContext();
+	GameServer * gameServer = context->gameServer();
+
+	try
+	{
+		gameServer->openServer(9190);
+
+		while (1)
+		{
+			printf("gameServer->accept_linux()\n");
+#ifdef _WIN32
+			gameServer->accept_win();
+#elif __linux__
+			gameServer->accept_linux();
+#endif
+		}
+
+		gameServer->closeServer();
+		delete gameServer;
+		delete context;
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << error.what() << std::endl;
+	}
 
 	return 0;
 }

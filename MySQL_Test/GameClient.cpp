@@ -1,4 +1,4 @@
-﻿#include "GameClient.h"
+#include "GameClient.h"
 
 GameClient::GameClient()
 {
@@ -55,12 +55,15 @@ void GameClient::recvRun()
 			switch (code)
 			{
 			case REQUEST_USER_INFO:
-			{
-				User user;
-				memcpy(&user, message, sizeof(User));
-				setMainUser(user);
-				isGetUserInfo = true;
-			}
+				if(!strcmp(message, "unknown_id_send_fail"))
+					isGetUserInfo = true;
+				else
+				{
+					User user;
+					memcpy(&user, message, sizeof(User));
+					setMainUser(user);
+					isGetUserInfo = true;
+				}
 			break;
 			case REQUEST_LOGIN:
 				if (!strcmp(message, "login okey"))
@@ -77,9 +80,13 @@ void GameClient::recvRun()
 				break;
 			case CHATTING_PROCESS:
 				{
-					Chatting chatting;
-					memcpy(&chatting, message, sizeof(Chatting));
-					this->mainChatting = chatting;
+					Chatting mainChatting;
+					memcpy(&mainChatting, message, sizeof(Chatting));
+					this->mainChatting = mainChatting;
+
+					Chatting* chatting = new Chatting();
+					memcpy(chatting, &mainChatting, sizeof(Chatting));
+					addChattingInfo(chatting);
 				}
 				break;
 			case OTHER_USER_MAP_MOVE:
@@ -232,6 +239,8 @@ void GameClient::recvRun()
 					addChattingInfo(chatting);
 				}
 				break;
+            case TEST:
+                break;
 			default:
 				break;
 			}
@@ -752,6 +761,18 @@ void GameClient::openClient(const char* addr, int port)
 
 	if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
 		ErrorHandling("connect() error!");
+#elif __APPLE__
+    hSocket = socket(PF_INET, SOCK_STREAM, 0);
+    if (hSocket == -1)
+        ErrorHandling("socket() error");
+    
+    memset(&servAddr, 0, sizeof(servAddr));
+    servAddr.sin_family = AF_INET;
+    servAddr.sin_addr.s_addr = inet_addr(addr);
+    servAddr.sin_port = port;
+    
+    if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
+        ErrorHandling("connect() error!");
 #endif
 }
 
@@ -762,6 +783,8 @@ void GameClient::closeClient()
 	WSACleanup();
 #elif __linux__
 	close(hSocket);
+#elif __APPLE__
+    close(hSocket);
 #endif
 }
 
@@ -771,6 +794,8 @@ void GameClient::sendc(const char* data, int size)
 	send(hSocket, data, size, 0);
 #elif __linux__
 	write(hSocket, data, size);
+#elif __APPLE__
+    write(hSocket, data, size);
 #endif
 }
 
@@ -780,6 +805,8 @@ int GameClient::recvc(char* data, int size)
 	return recv(hSocket, data, size, 0);
 #elif __linux__
 	return read(hSocket, data, size);
+#elif __APPLE__
+    return read(hSocket, data, size);
 #endif
 }
 
@@ -807,7 +834,7 @@ int GameClient::recvRequest(int* code, char* data)
 
 	readLen += recvc(buffer, 4);
 	memcpy(code, buffer, sizeof(int));
-
+    
 	readLen += recvc(data, size);
 
 	return readLen;
@@ -824,6 +851,9 @@ void GameClient::requestLogin(const char * userName)
 void GameClient::getUserInfo(const char* userName)
 {
 	sendRequest(REQUEST_USER_INFO, userName, strlen(userName) + 1);
+
+    while (isGetUserInfo != true);
+    isGetUserInfo = false;
 }
 
 void GameClient::requestLogout()

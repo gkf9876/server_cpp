@@ -1,4 +1,4 @@
-﻿#ifndef __GAME_CLIENT_H__
+#ifndef __GAME_CLIENT_H__
 #define __GAME_CLIENT_H__
 
 #include <iostream>
@@ -9,6 +9,10 @@
 #ifdef _WIN32
 #include <Winsock2.h>
 #elif __linux__
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#elif __APPLE__
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -56,6 +60,7 @@
 #define OTHER_USER_CHATTING_PROCESS		30
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
+#define TEST                            555
 
 class GameClient
 {
@@ -67,6 +72,9 @@ private:
 #elif __linux__
 	int hSocket;
 	struct sockaddr_in servAddr;
+#elif __APPLE__
+    int hSocket;
+    struct sockaddr_in servAddr;
 #endif
 	User mainUser;
 	Chatting mainChatting;

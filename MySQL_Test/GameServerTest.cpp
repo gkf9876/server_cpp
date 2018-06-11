@@ -487,9 +487,6 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(0).getName());
 
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
-
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
 		gameServerTest->getAssert(0)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getMainChatting());
@@ -664,9 +661,6 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(1).getName());
 
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
-
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
 		gameServerTest->getAssert(1)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getMainChatting());
@@ -827,9 +821,6 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(2).getName());
 
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
-
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
 		gameServerTest->getAssert(2)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getMainChatting());
@@ -989,9 +980,6 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(3).getName());
 
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
-
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
 		gameServerTest->getAssert(3)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getMainChatting());
@@ -1150,9 +1138,6 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(4).getName());
-
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -1314,9 +1299,6 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(5).getName());
 
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
-
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
 		gameServerTest->getAssert(5)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getMainChatting());
@@ -1476,9 +1458,6 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(6).getName());
-
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
@@ -1640,9 +1619,6 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(7).getName());
 
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
-
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
 		gameServerTest->getAssert(7)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getMainChatting());
@@ -1803,9 +1779,6 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(8).getName());
 
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
-
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
 		gameServerTest->getAssert(8)->checkSameDatabaseChattingListLog(gameClient, gameServerTest->getGameClientList(), gameClient->getMainChatting());
@@ -1965,9 +1938,6 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 		gameClient->addLog("GameServerTest: REQUEST_USER_INFO->client");
 		gameClient->getUserInfo("unknown_id");
 		gameClient->getUserInfo(gameServerTest->getUser(9).getName());
-
-		while (gameClient->getIsGetUserInfo() != true);
-		gameClient->setIsGetUserInfo(false);
 
 		gameClient->addLog("GameServerTest: CHATTING_PROCESS->client");
 		gameClient->chatting("Hello World1");
