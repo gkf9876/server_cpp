@@ -80,7 +80,6 @@ int main()
 
 		while (1)
 		{
-			printf("gameServer->accept_linux()\n");
 #ifdef _WIN32
 			gameServer->accept_win();
 #elif __linux__

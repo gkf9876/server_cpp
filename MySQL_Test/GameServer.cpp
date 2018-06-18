@@ -377,7 +377,6 @@ int GameServer::sendRequest(int sock, int code, const char* data, int size)
 	memcpy(&buffer[8], data, size);
 
 	writeLen = write(sock, buffer, size + 8);
-	//printf("send size(%d), code(%d), data(%s)\n", size, code, data);
 	delete buffer;
 
 	return writeLen;
@@ -469,8 +468,6 @@ void GameServer::updateLogin(int sock, const char* name)
 			return;
 		}
 
-		sendRequest(sock, TEST, "Hello World0", strlen("Hello World0") + 1);
-
 		loginUserList = userService->getFieldLoginUserAll(loginUser.getField());
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
@@ -486,8 +483,6 @@ void GameServer::updateLogin(int sock, const char* name)
 			sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 		}
 
-		sendRequest(sock, TEST, "Hello World1", strlen("Hello World1") + 1);
-
 		mapMonsterList = mapManageService->getFieldMonster(loginUser.getField());
 
 		for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
@@ -495,8 +490,6 @@ void GameServer::updateLogin(int sock, const char* name)
 			memcpy(message, &(*monsterIter), sizeof(MapInfo));
 			sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
 		}
-
-		sendRequest(sock, TEST, "Hello World2", strlen("Hello World2") + 1);
 
 		mapObjectList = mapManageService->getFieldObject(loginUser.getField());
 
@@ -506,8 +499,6 @@ void GameServer::updateLogin(int sock, const char* name)
 			sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
 		}
 
-		sendRequest(sock, TEST, "Hello World3", strlen("Hello World3") + 1);
-
 		inventoryList = userService->getUserInventoryInfo(loginUser.getName());
 
 		for (inventoryIter = inventoryList.begin(); inventoryIter != inventoryList.end(); inventoryIter++)
@@ -516,8 +507,6 @@ void GameServer::updateLogin(int sock, const char* name)
 			sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
 		}
 
-		sendRequest(sock, TEST, "Hello World4", strlen("Hello World4") + 1);
-
 		itemList = mapManageService->getFieldItem(loginUser.getField());
 
 		for (itemIter = itemList.begin(); itemIter != itemList.end(); itemIter++)
@@ -525,8 +514,6 @@ void GameServer::updateLogin(int sock, const char* name)
 			memcpy(message, &(*itemIter), sizeof(MapInfo));
 			sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
 		}
-
-		sendRequest(sock, TEST, "Hello World5", strlen("Hello World5") + 1);
 	}
 	catch (const runtime_error& error)
 	{
