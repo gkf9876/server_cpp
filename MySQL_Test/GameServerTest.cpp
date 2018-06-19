@@ -582,6 +582,10 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 		gameClient->requestUpdateUserInfo();
 		gameServerTest->getAssert(0)->checkSameDatabaseUserListLog(gameClient, gameServerTest->getGameClientList());
 
+		gameClient->requestMoveItem(0, 0, 2, 4);
+		gameClient->requestThrowItem(2, 4);
+		gameClient->requestGetItem();
+
 #ifdef _WIN32
 		Sleep(2000);
 #elif __linux__

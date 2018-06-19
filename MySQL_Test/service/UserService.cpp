@@ -88,3 +88,11 @@ bool UserService::insertUserInfo(User userInfo)
 		userDao->add(userInfo);
 	return true;
 }
+
+void UserService::moveInventoryItem(InventoryInfo inventoryInfo, int xpos, int ypos)
+{
+	inventoryInfo.setXpos(xpos);
+	inventoryInfo.setYpos(ypos);
+
+	inventoryInfoDao->update(inventoryInfo);
+}

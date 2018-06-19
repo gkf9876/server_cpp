@@ -1,4 +1,4 @@
-#include "GameClient.h"
+﻿#include "GameClient.h"
 
 GameClient::GameClient()
 {
@@ -55,7 +55,7 @@ void GameClient::recvRun()
 			switch (code)
 			{
 			case REQUEST_USER_INFO:
-				if(!strcmp(message, "unknown_id_send_fail"))
+				if (!strcmp(message, "unknown_id_send_fail"))
 					isGetUserInfo = true;
 				else
 				{
@@ -64,7 +64,7 @@ void GameClient::recvRun()
 					setMainUser(user);
 					isGetUserInfo = true;
 				}
-			break;
+				break;
 			case REQUEST_LOGIN:
 				if (!strcmp(message, "login okey"))
 				{
@@ -79,16 +79,16 @@ void GameClient::recvRun()
 				}
 				break;
 			case CHATTING_PROCESS:
-				{
-					Chatting mainChatting;
-					memcpy(&mainChatting, message, sizeof(Chatting));
-					this->mainChatting = mainChatting;
+			{
+				Chatting mainChatting;
+				memcpy(&mainChatting, message, sizeof(Chatting));
+				this->mainChatting = mainChatting;
 
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, &mainChatting, sizeof(Chatting));
-					addChattingInfo(chatting);
-				}
-				break;
+				Chatting* chatting = new Chatting();
+				memcpy(chatting, &mainChatting, sizeof(Chatting));
+				addChattingInfo(chatting);
+			}
+			break;
 			case OTHER_USER_MAP_MOVE:
 			{
 				User* user = new User();
@@ -230,17 +230,17 @@ void GameClient::recvRun()
 				break;
 			case REQUEST_JOIN_FINISH:
 				if (!strcmp(message, "join_user_finish"))
-					isjoinUserFinish = true;
+					isJoinUserFinish = true;
 				break;
 			case OTHER_USER_CHATTING_PROCESS:
-				{
-					Chatting* chatting = new Chatting();
-					memcpy(chatting, message, sizeof(Chatting));
-					addChattingInfo(chatting);
-				}
+			{
+				Chatting* chatting = new Chatting();
+				memcpy(chatting, message, sizeof(Chatting));
+				addChattingInfo(chatting);
+			}
+			break;
+			case TEST:
 				break;
-            case TEST:
-                break;
 			default:
 				break;
 			}
@@ -659,6 +659,16 @@ bool GameClient::getIsGetItemFinish()
 	return this->isGetItemFinish;
 }
 
+void GameClient::setIsMoveItemFinish(bool value)
+{
+	this->isMoveItemFinish = value;
+}
+
+bool GameClient::getIsMoveItemFinish()
+{
+	return this->isMoveItemFinish;
+}
+
 void GameClient::setIsChattingFinish(bool value)
 {
 	this->isChattingFinish = value;
@@ -687,6 +697,16 @@ void GameClient::setIsUpdateUserInfoFinish(bool value)
 bool GameClient::getIsUpdateUserInfoFinish()
 {
 	return this->isUpdateUserInfoFinish;
+}
+
+void GameClient::setIsJoinUserFinish(bool value)
+{
+	this->isJoinUserFinish = value;
+}
+
+bool GameClient::getIsJoinUserFinish()
+{
+	return this->isJoinUserFinish;
 }
 
 void GameClient::setIsJoinUserSeccess(bool value)
@@ -762,17 +782,17 @@ void GameClient::openClient(const char* addr, int port)
 	if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
 		ErrorHandling("connect() error!");
 #elif __APPLE__
-    hSocket = socket(PF_INET, SOCK_STREAM, 0);
-    if (hSocket == -1)
-        ErrorHandling("socket() error");
-    
-    memset(&servAddr, 0, sizeof(servAddr));
-    servAddr.sin_family = AF_INET;
-    servAddr.sin_addr.s_addr = inet_addr(addr);
-    servAddr.sin_port = port;
-    
-    if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
-        ErrorHandling("connect() error!");
+	hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	if (hSocket == -1)
+		ErrorHandling("socket() error");
+
+	memset(&servAddr, 0, sizeof(servAddr));
+	servAddr.sin_family = AF_INET;
+	servAddr.sin_addr.s_addr = inet_addr(addr);
+	servAddr.sin_port = port;
+
+	if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
+		ErrorHandling("connect() error!");
 #endif
 }
 
@@ -784,7 +804,7 @@ void GameClient::closeClient()
 #elif __linux__
 	close(hSocket);
 #elif __APPLE__
-    close(hSocket);
+	close(hSocket);
 #endif
 }
 
@@ -795,7 +815,7 @@ void GameClient::sendc(const char* data, int size)
 #elif __linux__
 	write(hSocket, data, size);
 #elif __APPLE__
-    write(hSocket, data, size);
+	write(hSocket, data, size);
 #endif
 }
 
@@ -806,7 +826,7 @@ int GameClient::recvc(char* data, int size)
 #elif __linux__
 	return read(hSocket, data, size);
 #elif __APPLE__
-    return read(hSocket, data, size);
+	return read(hSocket, data, size);
 #endif
 }
 
@@ -834,7 +854,7 @@ int GameClient::recvRequest(int* code, char* data)
 
 	readLen += recvc(buffer, 4);
 	memcpy(code, buffer, sizeof(int));
-    
+
 	readLen += recvc(data, size);
 
 	return readLen;
@@ -852,8 +872,8 @@ void GameClient::getUserInfo(const char* userName)
 {
 	sendRequest(REQUEST_USER_INFO, userName, strlen(userName) + 1);
 
-    while (isGetUserInfo != true);
-    isGetUserInfo = false;
+	while (isGetUserInfo != true);
+	isGetUserInfo = false;
 }
 
 void GameClient::requestLogout()
@@ -924,10 +944,24 @@ void GameClient::requestGetItem()
 	char message[BUF_SIZE];
 	memcpy(message, &mainUser, sizeof(User));
 
-	sendRequest(REQUEST_EAT_ITEM, message, sizeof(InventoryInfo));
+	sendRequest(REQUEST_EAT_ITEM, message, sizeof(User));
 
 	while (isGetItemFinish != true);
 	isGetItemFinish = false;
+}
+
+void GameClient::requestMoveItem(int xpos, int ypos, int to_xpos, int to_ypos)
+{
+	char message[BUF_SIZE];
+
+	inventory_items_Info[xpos][ypos]->setXpos(to_xpos);
+	inventory_items_Info[xpos][ypos]->setYpos(to_ypos);
+	memcpy(message, inventory_items_Info[xpos][ypos], sizeof(InventoryInfo));
+
+	sendRequest(MOVE_INVENTORY_ITEM, message, sizeof(InventoryInfo));
+
+	while (isMoveItemFinish != true);
+	isMoveItemFinish = false;
 }
 
 void GameClient::requestUpdateUserInfo()
@@ -948,6 +982,6 @@ void GameClient::requestJoinUser(User userInfo)
 
 	sendRequest(REQUEST_JOIN, message, sizeof(User));
 
-	while (isjoinUserFinish != true);
-	isjoinUserFinish = false;
+	while (isJoinUserFinish != true);
+	isJoinUserFinish = false;
 }

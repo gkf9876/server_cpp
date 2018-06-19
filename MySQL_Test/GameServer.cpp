@@ -326,7 +326,7 @@ void GameServer::accept_linux()
 						sendRequest(ep_events[i].data.fd, code, buffer, size);
 						break;
 					case MOVE_INVENTORY_ITEM:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
+						moveInventoryInfo(ep_events[i].data.fd, buffer);
 						break;
 					case REQUEST_THROW_ITEM:
 						createThrowItemOnMap(ep_events[i].data.fd, buffer);
@@ -505,7 +505,9 @@ void GameServer::updateLogin(int sock, const char* name)
 		{
 			memcpy(message, &(*inventoryIter), sizeof(InventoryInfo));
 			sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
+			printf("REQUEST_INVENTORY_ITEM_INFO, name(%s), pos(%d, %d)\n", inventoryIter->getItemName(), inventoryIter->getXpos(), inventoryIter->getYpos());
 		}
+		printf("\n");
 
 		itemList = mapManageService->getFieldItem(loginUser.getField());
 
@@ -824,6 +826,67 @@ void GameServer::userGetMapItem(int sock, const char* userInfo)
 		}
 
 		sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+#ifdef _WIN32
+void GameServer::moveInventoryInfo(SOCKET sock, const char* inventoryInfo)
+#elif __linux__
+void GameServer::moveInventoryInfo(int sock, const char* inventoryInfo)
+#endif
+{
+	char message[BUF_SIZE];
+	User user;
+	InventoryInfo inventoryItemInfo;
+	InventoryInfo* imsiInventoryItemInfo = NULL;
+	InventoryInfo* targetInventoryItemInfo = NULL;
+	list<InventoryInfo> inventoryItemList;
+	list<InventoryInfo>::iterator inventoryItemListIter;
+
+	try
+	{
+		user = userService->getUserInfo(sock);
+		inventoryItemList = userService->getUserInventoryInfo(user.getName());
+
+		memcpy(&inventoryItemInfo, inventoryInfo, sizeof(InventoryInfo));
+
+		for (inventoryItemListIter = inventoryItemList.begin(); inventoryItemListIter != inventoryItemList.end(); inventoryItemListIter++)
+		{
+			if (inventoryItemInfo.getXpos() == inventoryItemListIter->getXpos() && inventoryItemInfo.getYpos() == inventoryItemListIter->getYpos())
+			{
+				imsiInventoryItemInfo = &(*inventoryItemListIter);
+			}
+
+			if (inventoryItemInfo.getIdx() == inventoryItemListIter->getIdx())
+			{
+				targetInventoryItemInfo = &(*inventoryItemListIter);
+			}
+		}
+
+		if (imsiInventoryItemInfo == NULL)
+		{
+			userService->moveInventoryItem(inventoryItemInfo, inventoryItemInfo.getXpos(), inventoryItemInfo.getYpos());
+
+			sendRequest(sock, MOVE_INVENTORY_ITEM, inventoryInfo, sizeof(InventoryInfo));
+		}
+		else
+		{
+			userService->moveInventoryItem(inventoryItemInfo, inventoryItemInfo.getXpos(), inventoryItemInfo.getYpos());
+			userService->moveInventoryItem(*imsiInventoryItemInfo, targetInventoryItemInfo->getXpos(), targetInventoryItemInfo->getYpos());
+
+			imsiInventoryItemInfo->setXpos(targetInventoryItemInfo->getXpos());
+			imsiInventoryItemInfo->setYpos(targetInventoryItemInfo->getYpos());
+
+			memcpy(message, imsiInventoryItemInfo, sizeof(InventoryInfo));
+			sendRequest(sock, MOVE_INVENTORY_ITEM, message, sizeof(InventoryInfo));
+			sendRequest(sock, MOVE_INVENTORY_ITEM, inventoryInfo, sizeof(InventoryInfo));
+		}
+
+		sendRequest(sock, MOVE_INVENTORY_ITEM_FINISH, "move_inventory_item_finish", strlen("move_inventory_item_finish") + 1);
 	}
 	catch (const runtime_error& error)
 	{

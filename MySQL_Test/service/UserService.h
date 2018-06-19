@@ -32,6 +32,7 @@ public:
 	void deleteInventoryItem(const char* name, int xpos, int ypos);
 	void addInventoryItem(InventoryInfo inventoryInfo);
 	bool insertUserInfo(User userInfo);
+	void moveInventoryItem(InventoryInfo inventoryInfo, int xpos, int ypos);
 };
 
 #endif

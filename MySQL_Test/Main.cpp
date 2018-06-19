@@ -78,6 +78,8 @@ int main()
 	{
 		gameServer->openServer(9190);
 
+		std::cout << "--------------- Server start!! ---------------" << std::endl;
+
 		while (1)
 		{
 #ifdef _WIN32

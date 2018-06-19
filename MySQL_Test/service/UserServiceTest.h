@@ -39,6 +39,7 @@ public:
 	void updateUserInfo();
 	void deleteInventoryItem();
 	void insertUserInfo();
+	void moveInventoryItem();
 };
 
 #endif

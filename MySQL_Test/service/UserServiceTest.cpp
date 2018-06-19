@@ -138,6 +138,7 @@ void UserServiceTest::run()
 		updateUserInfo();
 		deleteInventoryItem();
 		insertUserInfo();
+		moveInventoryItem();
 	}
 	catch (const runtime_error& error)
 	{
@@ -412,4 +413,41 @@ void UserServiceTest::insertUserInfo()
 	assertThat(userService->insertUserInfo(*user2), false);
 	assertThat(userDao->getAllUser().size(), 2);
 	checkSameUser(userService->getUserInfo(user2->getName()), *user2);
+}
+
+void UserServiceTest::moveInventoryItem()
+{
+	std::cout << "UserServiceTest : moveInventoryItem()" << std::endl;
+
+	inventoryInfoDao->deleteAll();
+	assertThat(inventoryInfoDao->getCount(), 0);
+	assertThat(inventoryInfoDao->getUserInventoryList("gkf1234").size(), 0);
+
+	for (int i = 0; i < 20; i++)
+	{
+		inventoryInfoDao->add(item[i]);
+		assertThat(inventoryInfoDao->getCount(), i + 1);
+	}
+
+	item[2].setXpos(100);
+	item[2].setYpos(200);
+	userService->moveInventoryItem(item[2], 100, 200);
+
+	item[4].setXpos(200);
+	item[4].setYpos(400);
+	userService->moveInventoryItem(item[4], 200, 400);
+
+	item[6].setXpos(400);
+	item[6].setYpos(800);
+	userService->moveInventoryItem(item[6], 400, 800);
+
+	list<InventoryInfo> inventoryList = inventoryInfoDao->getUserInventoryList("gkf1234");
+	list<InventoryInfo>::iterator iter;
+	iter = inventoryList.begin();
+
+	for (int i = 0; i < 10; i++)
+	{
+		checkSameInventoryInfo(*iter, item[i]);
+		iter++;
+	}
 }

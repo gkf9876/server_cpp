@@ -1,4 +1,4 @@
-#ifndef __GAME_CLIENT_H__
+﻿#ifndef __GAME_CLIENT_H__
 #define __GAME_CLIENT_H__
 
 #include <iostream>
@@ -73,8 +73,8 @@ private:
 	int hSocket;
 	struct sockaddr_in servAddr;
 #elif __APPLE__
-    int hSocket;
-    struct sockaddr_in servAddr;
+	int hSocket;
+	struct sockaddr_in servAddr;
 #endif
 	User mainUser;
 	Chatting mainChatting;
@@ -98,10 +98,11 @@ private:
 	bool isMapPotalFinish = false;
 	bool isThrowItemFinish = false;
 	bool isGetItemFinish = false;
+	bool isMoveItemFinish = false;
 	bool isChattingFinish = false;
 	bool isMapMoveFinish = false;
 	bool isUpdateUserInfoFinish = false;
-	bool isjoinUserFinish = false;
+	bool isJoinUserFinish = false;
 	bool isJoinUserSeccess = false;
 
 	vector<string> * log = NULL;
@@ -180,12 +181,16 @@ public:
 	bool getIsThrowItemFinish();
 	void setIsGetItemFinish(bool value);
 	bool getIsGetItemFinish();
+	void setIsMoveItemFinish(bool value);
+	bool getIsMoveItemFinish();
 	void setIsChattingFinish(bool value);
 	bool getIsChattingFinish();
 	void setIsMapMoveFinish(bool value);
 	bool getIsMapMoveFinish();
 	void setIsUpdateUserInfoFinish(bool value);
 	bool getIsUpdateUserInfoFinish();
+	void setIsJoinUserFinish(bool value);
+	bool getIsJoinUserFinish();
 	void setIsJoinUserSeccess(bool value);
 	bool getIsJoinUserSeccess();
 
@@ -216,6 +221,7 @@ public:
 
 	void requestThrowItem(int xpos, int ypos);
 	void requestGetItem();
+	void requestMoveItem(int xpos, int ypos, int to_xpos, int to_ypos);
 
 	void requestUpdateUserInfo();
 	void requestJoinUser(User userInfo);

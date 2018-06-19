@@ -54,6 +54,7 @@
 #define UPDATE_USER_INFO_FINISH			28
 #define REQUEST_JOIN_FINISH				29
 #define OTHER_USER_CHATTING_PROCESS		30
+#define MOVE_INVENTORY_ITEM_FINISH		31
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define TEST							555
@@ -122,11 +123,13 @@ public:
 
 	void createThrowItemOnMap(SOCKET sock, const char* mapInfo);
 	void userGetMapItem(SOCKET sock, const char* userInfo);
+	void moveInventoryInfo(SOCKET sock, const char* inventoryInfo);
 
 	void updateUserInfo(SOCKET sock, const char* userInfo);
 	void insertUserInfo(SOCKET sock, const char* userInfo);
 
 	void closeClient(SOCKET sock);
+
 #elif __linux__
 	void accept_linux();
 
@@ -145,11 +148,13 @@ public:
 
 	void createThrowItemOnMap(int sock, const char* mapInfo);
 	void userGetMapItem(int sock, const char* userInfo);
+	void moveInventoryInfo(int sock, const char* inventoryInfo);
 
 	void updateUserInfo(int sock, const char* userInfo);
 	void insertUserInfo(int sock, const char* userInfo);
 
 	void closeClient(int sock);
+
 #endif
 
 	void regenMonster();
