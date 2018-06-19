@@ -239,6 +239,33 @@ void GameClient::recvRun()
 				addChattingInfo(chatting);
 			}
 			break;
+			case MOVE_INVENTORY_ITEM:
+				{
+					int xpos, ypos;
+					InventoryInfo* inventoryInfo = new InventoryInfo();
+					memcpy(inventoryInfo, message, sizeof(InventoryInfo));
+
+					for (int i = 0; i < 3; i++)
+					{
+						for (int j = 0; j < 5; j++)
+						{
+							if (inventory_items_Info[i][j] != NULL
+								&& !strcmp(inventoryInfo->getItemName(), inventory_items_Info[i][j]->getItemName())
+								&& !strcmp(inventoryInfo->getUserName(), inventory_items_Info[i][j]->getUserName()))
+							{
+								xpos = i;
+								ypos = j;
+							}
+						}
+					}
+
+					moveInventoryInfo(xpos, ypos, inventoryInfo->getXpos(), inventoryInfo->getYpos());
+				}
+				break;
+			case MOVE_INVENTORY_ITEM_FINISH:
+				if (!strcmp(message, "move_inventory_item_finish"))
+					isMoveItemFinish = true;
+				break;
 			case TEST:
 				break;
 			default:
@@ -547,6 +574,13 @@ void GameClient::removeInventoryInfo(int xpos, int ypos)
 		delete inventory_items_Info[xpos][ypos];
 		inventory_items_Info[xpos][ypos] = NULL;
 	}
+}
+
+void GameClient::moveInventoryInfo(int xpos, int ypos, int to_xpos, int to_ypos)
+{
+	InventoryInfo* temp = inventory_items_Info[xpos][ypos];
+	inventory_items_Info[xpos][ypos] = inventory_items_Info[to_xpos][to_ypos];
+	inventory_items_Info[to_xpos][to_ypos] = temp;
 }
 
 void GameClient::setIsLogin(bool value)

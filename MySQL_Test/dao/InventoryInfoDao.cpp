@@ -140,8 +140,6 @@ void InventoryInfoDao::update(InventoryInfo inventoryInfo)
 	sprintf(query, "update ");
 	sprintf(&query[strlen(query)], "inventory_info ");
 	sprintf(&query[strlen(query)], "set ");
-	sprintf(&query[strlen(query)], "idx = '%d', ", inventoryInfo.getIdx());
-	sprintf(&query[strlen(query)], "userName = '%s', ", inventoryInfo.getUserName());
 	sprintf(&query[strlen(query)], "type = '%s', ", inventoryInfo.getType());
 	sprintf(&query[strlen(query)], "xpos = '%d', ", inventoryInfo.getXpos());
 	sprintf(&query[strlen(query)], "ypos = '%d', ", inventoryInfo.getYpos());
@@ -149,6 +147,7 @@ void InventoryInfoDao::update(InventoryInfo inventoryInfo)
 	sprintf(&query[strlen(query)], "count = '%d' ", inventoryInfo.getCount());
 	sprintf(&query[strlen(query)], "WHERE ");
 	sprintf(&query[strlen(query)], "itemName = '%s'", inventoryInfo.getItemName());
+	sprintf(&query[strlen(query)], " and userName = '%s'", inventoryInfo.getUserName());
 
 	query_stat = mysql_query(&connection, query);
 

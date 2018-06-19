@@ -58,6 +58,7 @@
 #define UPDATE_USER_INFO_FINISH			28
 #define REQUEST_JOIN_FINISH				29
 #define OTHER_USER_CHATTING_PROCESS		30
+#define MOVE_INVENTORY_ITEM_FINISH		31
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define TEST                            555
@@ -156,6 +157,7 @@ public:
 	InventoryInfo* getInventoryInfo(int xpos, int ypos);
 	void getItem(MapInfo mapInfo);
 	void removeInventoryInfo(int xpos, int ypos);
+	void moveInventoryInfo(int xpos, int ypos, int to_xpos, int to_ypos);
 
 	void setIsLogin(bool value);
 	bool getIsLogin();

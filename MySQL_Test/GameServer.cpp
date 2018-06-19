@@ -885,7 +885,6 @@ void GameServer::moveInventoryInfo(int sock, const char* inventoryInfo)
 			sendRequest(sock, MOVE_INVENTORY_ITEM, message, sizeof(InventoryInfo));
 			sendRequest(sock, MOVE_INVENTORY_ITEM, inventoryInfo, sizeof(InventoryInfo));
 		}
-
 		sendRequest(sock, MOVE_INVENTORY_ITEM_FINISH, "move_inventory_item_finish", strlen("move_inventory_item_finish") + 1);
 	}
 	catch (const runtime_error& error)
