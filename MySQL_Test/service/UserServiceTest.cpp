@@ -429,17 +429,17 @@ void UserServiceTest::moveInventoryItem()
 		assertThat(inventoryInfoDao->getCount(), i + 1);
 	}
 
-	item[2].setXpos(100);
-	item[2].setYpos(200);
-	userService->moveInventoryItem(item[2], 100, 200);
+	item[7].setXpos(100);
+	item[7].setYpos(200);
+	userService->moveInventoryItem(item[7], 100, 200);
 
-	item[4].setXpos(200);
-	item[4].setYpos(400);
-	userService->moveInventoryItem(item[4], 200, 400);
+	item[8].setXpos(200);
+	item[8].setYpos(400);
+	userService->moveInventoryItem(item[8], 200, 400);
 
-	item[6].setXpos(400);
-	item[6].setYpos(800);
-	userService->moveInventoryItem(item[6], 400, 800);
+	item[9].setXpos(400);
+	item[9].setYpos(800);
+	userService->moveInventoryItem(item[9], 400, 800);
 
 	list<InventoryInfo> inventoryList = inventoryInfoDao->getUserInventoryList("gkf1234");
 	list<InventoryInfo>::iterator iter;
