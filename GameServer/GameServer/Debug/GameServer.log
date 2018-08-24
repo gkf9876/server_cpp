@@ -1,0 +1,102 @@
+﻿  ChattingDao.cpp
+  ChattingDaoTest.cpp
+  InventoryInfoDao.cpp
+  InventoryInfoDaoTest.cpp
+  MapDao.cpp
+  MapDaoTest.cpp
+  MapInfoDao.cpp
+  MapInfoDaoTest.cpp
+d:\users\user\desktop\gameserver\gameserver\gameserver\dao\mapinfodaotest.cpp(255): warning C4101: 'message' :참조되지 않은 지역 변수입니다.
+  MonsterDao.cpp
+  MonsterDaoTest.cpp
+  ServerInfoDao.cpp
+  UserDao.cpp
+  UserDaoTest.cpp
+  DataSource.cpp
+  Chatting.cpp
+  InventoryInfo.cpp
+  Map.cpp
+  MapInfo.cpp
+  Monster.cpp
+  ServerInfo.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  User.cpp
+  ApplicationContext.cpp
+  TestApplicationContext.cpp
+  Main.cpp
+  코드를 생성하고 있습니다...
+d:\users\user\desktop\gameserver\gameserver\gameserver\factory\testapplicationcontext.cpp(192): warning C4715: 'TestApplicationContext::gameServer': 모든 제어 경로에서 값을 반환하지는 않습니다.
+d:\users\user\desktop\gameserver\gameserver\gameserver\factory\applicationcontext.cpp(192): warning C4715: 'ApplicationContext::gameServer': 모든 제어 경로에서 값을 반환하지는 않습니다.
+MonsterDao.obj : error LNK2001: _mysql_error@4 외부 기호를 확인할 수 없습니다.
+UserDao.obj : error LNK2001: _mysql_error@4 외부 기호를 확인할 수 없습니다.
+DataSource.obj : error LNK2001: _mysql_error@4 외부 기호를 확인할 수 없습니다.
+ChattingDao.obj : error LNK2001: _mysql_error@4 외부 기호를 확인할 수 없습니다.
+InventoryInfoDao.obj : error LNK2001: _mysql_error@4 외부 기호를 확인할 수 없습니다.
+MapDao.obj : error LNK2001: _mysql_error@4 외부 기호를 확인할 수 없습니다.
+MapInfoDao.obj : error LNK2001: _mysql_error@4 외부 기호를 확인할 수 없습니다.
+MonsterDao.obj : error LNK2001: _mysql_query@8 외부 기호를 확인할 수 없습니다.
+UserDao.obj : error LNK2001: _mysql_query@8 외부 기호를 확인할 수 없습니다.
+ChattingDao.obj : error LNK2001: _mysql_query@8 외부 기호를 확인할 수 없습니다.
+InventoryInfoDao.obj : error LNK2001: _mysql_query@8 외부 기호를 확인할 수 없습니다.
+MapDao.obj : error LNK2001: _mysql_query@8 외부 기호를 확인할 수 없습니다.
+MapInfoDao.obj : error LNK2001: _mysql_query@8 외부 기호를 확인할 수 없습니다.
+MonsterDao.obj : error LNK2001: _mysql_store_result@4 외부 기호를 확인할 수 없습니다.
+UserDao.obj : error LNK2001: _mysql_store_result@4 외부 기호를 확인할 수 없습니다.
+ChattingDao.obj : error LNK2001: _mysql_store_result@4 외부 기호를 확인할 수 없습니다.
+InventoryInfoDao.obj : error LNK2001: _mysql_store_result@4 외부 기호를 확인할 수 없습니다.
+MapDao.obj : error LNK2001: _mysql_store_result@4 외부 기호를 확인할 수 없습니다.
+MapInfoDao.obj : error LNK2001: _mysql_store_result@4 외부 기호를 확인할 수 없습니다.
+MonsterDao.obj : error LNK2001: _mysql_free_result@4 외부 기호를 확인할 수 없습니다.
+UserDao.obj : error LNK2001: _mysql_free_result@4 외부 기호를 확인할 수 없습니다.
+ChattingDao.obj : error LNK2001: _mysql_free_result@4 외부 기호를 확인할 수 없습니다.
+InventoryInfoDao.obj : error LNK2001: _mysql_free_result@4 외부 기호를 확인할 수 없습니다.
+MapDao.obj : error LNK2001: _mysql_free_result@4 외부 기호를 확인할 수 없습니다.
+MapInfoDao.obj : error LNK2001: _mysql_free_result@4 외부 기호를 확인할 수 없습니다.
+MonsterDao.obj : error LNK2001: _mysql_fetch_row@4 외부 기호를 확인할 수 없습니다.
+UserDao.obj : error LNK2001: _mysql_fetch_row@4 외부 기호를 확인할 수 없습니다.
+ChattingDao.obj : error LNK2001: _mysql_fetch_row@4 외부 기호를 확인할 수 없습니다.
+InventoryInfoDao.obj : error LNK2001: _mysql_fetch_row@4 외부 기호를 확인할 수 없습니다.
+MapDao.obj : error LNK2001: _mysql_fetch_row@4 외부 기호를 확인할 수 없습니다.
+MapInfoDao.obj : error LNK2001: _mysql_fetch_row@4 외부 기호를 확인할 수 없습니다.
+DataSource.obj : error LNK2019: _mysql_init@4 외부 기호(참조 위치: "public: __thiscall DataSource::DataSource(char const *,char const *,char const *,char const *)" (??0DataSource@@QAE@PBD000@Z) 함수)에서 확인하지 못했습니다.
+DataSource.obj : error LNK2019: _mysql_real_connect@32 외부 기호(참조 위치: "public: __thiscall DataSource::DataSource(char const *,char const *,char const *,char const *)" (??0DataSource@@QAE@PBD000@Z) 함수)에서 확인하지 못했습니다.
+DataSource.obj : error LNK2019: _mysql_close@4 외부 기호(참조 위치: "public: __thiscall DataSource::~DataSource(void)" (??1DataSource@@QAE@XZ) 함수)에서 확인하지 못했습니다.
+DataSource.obj : error LNK2019: _mysql_options@12 외부 기호(참조 위치: "public: __thiscall DataSource::DataSource(char const *,char const *,char const *,char const *)" (??0DataSource@@QAE@PBD000@Z) 함수)에서 확인하지 못했습니다.
+ApplicationContext.obj : error LNK2019: "public: __thiscall ChattingService::ChattingService(void)" (??0ChattingService@@QAE@XZ) 외부 기호(참조 위치: "public: virtual class ChattingService * __thiscall ApplicationContext::chattingService(void)" (?chattingService@ApplicationContext@@UAEPAVChattingService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: __thiscall ChattingService::ChattingService(void)" (??0ChattingService@@QAE@XZ) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: __thiscall ChattingService::~ChattingService(void)" (??1ChattingService@@QAE@XZ) 외부 기호(참조 위치: "public: void * __thiscall ChattingService::`scalar deleting destructor'(unsigned int)" (??_GChattingService@@QAEPAXI@Z) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: __thiscall ChattingService::~ChattingService(void)" (??1ChattingService@@QAE@XZ) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall ChattingService::setChattingDao(class ChattingDao *)" (?setChattingDao@ChattingService@@QAEXPAVChattingDao@@@Z) 외부 기호(참조 위치: "public: virtual class ChattingService * __thiscall ApplicationContext::chattingService(void)" (?chattingService@ApplicationContext@@UAEPAVChattingService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall ChattingService::setChattingDao(class ChattingDao *)" (?setChattingDao@ChattingService@@QAEXPAVChattingDao@@@Z) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: __thiscall MapManageService::MapManageService(void)" (??0MapManageService@@QAE@XZ) 외부 기호(참조 위치: "public: virtual class MapManageService * __thiscall ApplicationContext::mapManageService(void)" (?mapManageService@ApplicationContext@@UAEPAVMapManageService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: __thiscall MapManageService::MapManageService(void)" (??0MapManageService@@QAE@XZ) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: __thiscall MapManageService::~MapManageService(void)" (??1MapManageService@@QAE@XZ) 외부 기호(참조 위치: "public: void * __thiscall MapManageService::`scalar deleting destructor'(unsigned int)" (??_GMapManageService@@QAEPAXI@Z) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: __thiscall MapManageService::~MapManageService(void)" (??1MapManageService@@QAE@XZ) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall MapManageService::setMapDao(class MapDao *)" (?setMapDao@MapManageService@@QAEXPAVMapDao@@@Z) 외부 기호(참조 위치: "public: virtual class MapManageService * __thiscall ApplicationContext::mapManageService(void)" (?mapManageService@ApplicationContext@@UAEPAVMapManageService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall MapManageService::setMapDao(class MapDao *)" (?setMapDao@MapManageService@@QAEXPAVMapDao@@@Z) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall MapManageService::setMapInfoDao(class MapInfoDao *)" (?setMapInfoDao@MapManageService@@QAEXPAVMapInfoDao@@@Z) 외부 기호(참조 위치: "public: virtual class MapManageService * __thiscall ApplicationContext::mapManageService(void)" (?mapManageService@ApplicationContext@@UAEPAVMapManageService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall MapManageService::setMapInfoDao(class MapInfoDao *)" (?setMapInfoDao@MapManageService@@QAEXPAVMapInfoDao@@@Z) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall MapManageService::setMonsterDao(class MonsterDao *)" (?setMonsterDao@MapManageService@@QAEXPAVMonsterDao@@@Z) 외부 기호(참조 위치: "public: virtual class MapManageService * __thiscall ApplicationContext::mapManageService(void)" (?mapManageService@ApplicationContext@@UAEPAVMapManageService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall MapManageService::setMonsterDao(class MonsterDao *)" (?setMonsterDao@MapManageService@@QAEXPAVMonsterDao@@@Z) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall MapManageService::setDataSource(class DataSource *)" (?setDataSource@MapManageService@@QAEXPAVDataSource@@@Z) 외부 기호(참조 위치: "public: virtual class MapManageService * __thiscall ApplicationContext::mapManageService(void)" (?mapManageService@ApplicationContext@@UAEPAVMapManageService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall MapManageService::setDataSource(class DataSource *)" (?setDataSource@MapManageService@@QAEXPAVDataSource@@@Z) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: __thiscall UserService::UserService(void)" (??0UserService@@QAE@XZ) 외부 기호(참조 위치: "public: virtual class UserService * __thiscall ApplicationContext::userService(void)" (?userService@ApplicationContext@@UAEPAVUserService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: __thiscall UserService::UserService(void)" (??0UserService@@QAE@XZ) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: __thiscall UserService::~UserService(void)" (??1UserService@@QAE@XZ) 외부 기호(참조 위치: "public: void * __thiscall UserService::`scalar deleting destructor'(unsigned int)" (??_GUserService@@QAEPAXI@Z) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: __thiscall UserService::~UserService(void)" (??1UserService@@QAE@XZ) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall UserService::setUserDao(class UserDao *)" (?setUserDao@UserService@@QAEXPAVUserDao@@@Z) 외부 기호(참조 위치: "public: virtual class UserService * __thiscall ApplicationContext::userService(void)" (?userService@ApplicationContext@@UAEPAVUserService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall UserService::setUserDao(class UserDao *)" (?setUserDao@UserService@@QAEXPAVUserDao@@@Z) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall UserService::setInventoryInfoDao(class InventoryInfoDao *)" (?setInventoryInfoDao@UserService@@QAEXPAVInventoryInfoDao@@@Z) 외부 기호(참조 위치: "public: virtual class UserService * __thiscall ApplicationContext::userService(void)" (?userService@ApplicationContext@@UAEPAVUserService@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall UserService::setInventoryInfoDao(class InventoryInfoDao *)" (?setInventoryInfoDao@UserService@@QAEXPAVInventoryInfoDao@@@Z) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: __thiscall GameServer::GameServer(void)" (??0GameServer@@QAE@XZ) 외부 기호(참조 위치: "public: virtual class GameServer * __thiscall ApplicationContext::gameServer(void)" (?gameServer@ApplicationContext@@UAEPAVGameServer@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: __thiscall GameServer::GameServer(void)" (??0GameServer@@QAE@XZ) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: __thiscall GameServer::~GameServer(void)" (??1GameServer@@QAE@XZ) 외부 기호(참조 위치: "public: void * __thiscall GameServer::`scalar deleting destructor'(unsigned int)" (??_GGameServer@@QAEPAXI@Z) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: __thiscall GameServer::~GameServer(void)" (??1GameServer@@QAE@XZ) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall GameServer::setUserService(class UserService *)" (?setUserService@GameServer@@QAEXPAVUserService@@@Z) 외부 기호(참조 위치: "public: virtual class GameServer * __thiscall ApplicationContext::gameServer(void)" (?gameServer@ApplicationContext@@UAEPAVGameServer@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall GameServer::setUserService(class UserService *)" (?setUserService@GameServer@@QAEXPAVUserService@@@Z) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall GameServer::setChattingService(class ChattingService *)" (?setChattingService@GameServer@@QAEXPAVChattingService@@@Z) 외부 기호(참조 위치: "public: virtual class GameServer * __thiscall ApplicationContext::gameServer(void)" (?gameServer@ApplicationContext@@UAEPAVGameServer@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall GameServer::setChattingService(class ChattingService *)" (?setChattingService@GameServer@@QAEXPAVChattingService@@@Z) 외부 기호를 확인할 수 없습니다.
+ApplicationContext.obj : error LNK2019: "public: void __thiscall GameServer::setMapManageService(class MapManageService *)" (?setMapManageService@GameServer@@QAEXPAVMapManageService@@@Z) 외부 기호(참조 위치: "public: virtual class GameServer * __thiscall ApplicationContext::gameServer(void)" (?gameServer@ApplicationContext@@UAEPAVGameServer@@XZ) 함수)에서 확인하지 못했습니다.
+TestApplicationContext.obj : error LNK2001: "public: void __thiscall GameServer::setMapManageService(class MapManageService *)" (?setMapManageService@GameServer@@QAEXPAVMapManageService@@@Z) 외부 기호를 확인할 수 없습니다.
+D:\Users\USER\Desktop\GameServer\GameServer\Debug\GameServer.exe : fatal error LNK1120: 27개의 확인할 수 없는 외부 참조입니다.

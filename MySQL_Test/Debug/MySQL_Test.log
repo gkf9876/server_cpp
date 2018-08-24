@@ -1,4 +1,0 @@
-﻿UserDao.obj : error LNK2019: _mysql_error@4 외부 기호(참조 위치: "public: void __thiscall UserDao::update(class User *)" (?update@UserDao@@QAEXPAVUser@@@Z) 함수)에서 확인하지 못했습니다.
-UserDao.obj : error LNK2019: _mysql_query@8 외부 기호(참조 위치: "public: void __thiscall UserDao::update(class User *)" (?update@UserDao@@QAEXPAVUser@@@Z) 함수)에서 확인하지 못했습니다.
-C:\Program Files\MySQL\MySQL Server 5.7\lib\libmysql.lib : warning LNK4272: 'x64' 라이브러리 컴퓨터 종류가 'x86' 대상 컴퓨터 종류와 충돌합니다.
-D:\Users\dw\Desktop\MySQL_Test\Debug\MySQL_Test.exe : fatal error LNK1120: 2개의 확인할 수 없는 외부 참조입니다.
