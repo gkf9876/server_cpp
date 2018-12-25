@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 버추얼박스 우분투2
-Source Server Version : 50505
-Source Host           : 192.168.56.102:3306
+Source Server         : vmware ubuntu 18.10
+Source Server Version : 50724
+Source Host           : 192.168.132.128:3306
 Source Database       : test
 
 Target Server Type    : MYSQL
-Target Server Version : 50505
+Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2018-05-03 18:25:31
+Date: 2018-12-26 00:18:38
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,36 +30,36 @@ CREATE TABLE `chatting` (
 -- ----------------------------
 -- Records of chatting
 -- ----------------------------
-INSERT INTO `chatting` VALUES ('1', '2018-05-03 17:09:48', 'abcd8', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx');
-INSERT INTO `chatting` VALUES ('2', '2018-05-03 17:09:48', 'abcd9', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx');
-INSERT INTO `chatting` VALUES ('3', '2018-05-03 17:09:48', 'abcd7', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx');
-INSERT INTO `chatting` VALUES ('4', '2018-05-03 17:09:48', 'abcd4', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('5', '2018-05-03 17:09:48', 'abcd6', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('6', '2018-05-03 17:09:48', 'abcd3', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('7', '2018-05-03 17:09:48', 'abcd1', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
-INSERT INTO `chatting` VALUES ('8', '2018-05-03 17:09:48', 'abcd5', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('9', '2018-05-03 17:09:48', 'abcd9', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx');
-INSERT INTO `chatting` VALUES ('10', '2018-05-03 17:09:48', 'abcd0', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
-INSERT INTO `chatting` VALUES ('11', '2018-05-03 17:09:48', 'abcd8', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx');
-INSERT INTO `chatting` VALUES ('12', '2018-05-03 17:09:48', 'abcd2', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
-INSERT INTO `chatting` VALUES ('13', '2018-05-03 17:09:48', 'abcd7', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx');
-INSERT INTO `chatting` VALUES ('14', '2018-05-03 17:09:48', 'abcd1', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
-INSERT INTO `chatting` VALUES ('15', '2018-05-03 17:09:48', 'abcd5', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('16', '2018-05-03 17:09:48', 'abcd4', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('17', '2018-05-03 17:09:48', 'abcd0', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
-INSERT INTO `chatting` VALUES ('18', '2018-05-03 17:09:48', 'abcd8', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx');
-INSERT INTO `chatting` VALUES ('19', '2018-05-03 17:09:48', 'abcd7', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx');
-INSERT INTO `chatting` VALUES ('20', '2018-05-03 17:09:48', 'abcd2', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
-INSERT INTO `chatting` VALUES ('21', '2018-05-03 17:09:48', 'abcd3', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('22', '2018-05-03 17:09:48', 'abcd6', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('23', '2018-05-03 17:09:48', 'abcd1', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
-INSERT INTO `chatting` VALUES ('24', '2018-05-03 17:09:48', 'abcd4', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('25', '2018-05-03 17:09:48', 'abcd9', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx');
-INSERT INTO `chatting` VALUES ('26', '2018-05-03 17:09:48', 'abcd5', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('27', '2018-05-03 17:09:48', 'abcd6', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
-INSERT INTO `chatting` VALUES ('28', '2018-05-03 17:09:48', 'abcd2', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
-INSERT INTO `chatting` VALUES ('29', '2018-05-03 17:09:48', 'abcd0', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
-INSERT INTO `chatting` VALUES ('30', '2018-05-03 17:09:48', 'abcd3', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
+INSERT INTO `chatting` VALUES ('1', '2018-12-25 07:17:15', 'abcd8', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('2', '2018-12-25 07:17:15', 'abcd5', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('3', '2018-12-25 07:17:15', 'abcd8', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('4', '2018-12-25 07:17:15', 'abcd5', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('5', '2018-12-25 07:17:15', 'abcd3', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('6', '2018-12-25 07:17:15', 'abcd6', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('7', '2018-12-25 07:17:15', 'abcd8', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('8', '2018-12-25 07:17:15', 'abcd1', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('9', '2018-12-25 07:17:15', 'abcd9', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('10', '2018-12-25 07:17:15', 'abcd7', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('11', '2018-12-25 07:17:15', 'abcd4', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('12', '2018-12-25 07:17:15', 'abcd0', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('13', '2018-12-25 07:17:15', 'abcd2', 'Hello World1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('14', '2018-12-25 07:17:15', 'abcd1', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('15', '2018-12-25 07:17:15', 'abcd5', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('16', '2018-12-25 07:17:15', 'abcd3', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('17', '2018-12-25 07:17:15', 'abcd6', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('18', '2018-12-25 07:17:15', 'abcd9', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('19', '2018-12-25 07:17:15', 'abcd0', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('20', '2018-12-25 07:17:15', 'abcd7', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('21', '2018-12-25 07:17:15', 'abcd1', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('22', '2018-12-25 07:17:15', 'abcd4', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('23', '2018-12-25 07:17:15', 'abcd2', 'Hello World2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('24', '2018-12-25 07:17:16', 'abcd3', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('25', '2018-12-25 07:17:16', 'abcd6', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('26', '2018-12-25 07:17:16', 'abcd7', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('27', '2018-12-25 07:17:16', 'abcd9', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('28', '2018-12-25 07:17:16', 'abcd4', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('29', '2018-12-25 07:17:16', 'abcd2', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
+INSERT INTO `chatting` VALUES ('30', '2018-12-25 07:17:16', 'abcd0', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
 
 -- ----------------------------
 -- Table structure for `inventory_info`
@@ -67,15 +67,15 @@ INSERT INTO `chatting` VALUES ('30', '2018-05-03 17:09:48', 'abcd3', 'Hello Worl
 DROP TABLE IF EXISTS `inventory_info`;
 CREATE TABLE `inventory_info` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
-  `itemName` varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT 'nameless',
-  `userName` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
-  `type` varchar(20) CHARACTER SET utf8 DEFAULT '',
+  `itemName` varchar(50) NOT NULL DEFAULT 'nameless',
+  `userName` varchar(50) DEFAULT NULL,
+  `type` varchar(20) DEFAULT '',
   `xpos` int(11) DEFAULT NULL,
   `ypos` int(11) DEFAULT NULL,
-  `file_dir` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `file_dir` varchar(100) DEFAULT NULL,
   `count` int(11) DEFAULT '0',
   PRIMARY KEY (`idx`,`itemName`)
-) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of inventory_info
@@ -125,34 +125,33 @@ INSERT INTO `inventory_info` VALUES ('75', '토마토_2', 'abcd9', 'ITEM', '0', 
 INSERT INTO `inventory_info` VALUES ('76', '토마토_3', 'abcd9', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
 INSERT INTO `inventory_info` VALUES ('79', '토마토_6', 'abcd9', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
 INSERT INTO `inventory_info` VALUES ('80', '토마토_7', 'abcd9', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('81', '토마토_0', 'abcd4', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('83', '토마토_3', 'abcd7', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
+INSERT INTO `inventory_info` VALUES ('81', '토마토_0', 'abcd1', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
+INSERT INTO `inventory_info` VALUES ('82', '토마토_2', 'abcd8', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
+INSERT INTO `inventory_info` VALUES ('83', '토마토_0', 'abcd3', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
 INSERT INTO `inventory_info` VALUES ('84', '토마토_0', 'abcd5', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('85', '토마토_2', 'abcd8', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('86', '토마토_0', 'abcd6', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('87', '토마토_0', 'abcd1', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('88', '토마토_0', 'abcd3', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('89', '토마토_0', 'abcd9', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
+INSERT INTO `inventory_info` VALUES ('85', '토마토_0', 'abcd4', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
+INSERT INTO `inventory_info` VALUES ('86', '토마토_0', 'abcd9', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
+INSERT INTO `inventory_info` VALUES ('87', '토마토_3', 'abcd7', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
+INSERT INTO `inventory_info` VALUES ('89', '토마토_0', 'abcd6', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
 INSERT INTO `inventory_info` VALUES ('90', '토마토_0', 'abcd2', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('91', '토마토_1', 'abcd4', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('92', '토마토_1', 'abcd8', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('93', '토마토_1', 'abcd5', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('94', '토마토_4', 'abcd7', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('96', '토마토_2', 'abcd4', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('97', '토마토_1', 'abcd6', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('98', '토마토_1', 'abcd1', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('99', '토마토_2', 'abcd5', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('100', '토마토_4', 'abcd9', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('101', '토마토_1', 'abcd3', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('103', '토마토_1', 'abcd2', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('104', '토마토_4', 'abcd8', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('105', '토마토_1', 'abcd7', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('106', '토마토_2', 'abcd6', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('107', '토마토_2', 'abcd2', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('108', '토마토_5', 'abcd9', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('109', '토마토_2', 'abcd1', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('110', '토마토_2', 'abcd3', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('111', '토마토_7', 'abcd0', 'ITEM', '0', '0', 'Resources/items/토마토_7.jpg', '8');
+INSERT INTO `inventory_info` VALUES ('91', '토마토_1', 'abcd1', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
+INSERT INTO `inventory_info` VALUES ('92', '토마토_4', 'abcd9', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
+INSERT INTO `inventory_info` VALUES ('93', '토마토_1', 'abcd8', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
+INSERT INTO `inventory_info` VALUES ('94', '토마토_1', 'abcd5', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
+INSERT INTO `inventory_info` VALUES ('95', '토마토_1', 'abcd3', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
+INSERT INTO `inventory_info` VALUES ('97', '토마토_4', 'abcd7', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
+INSERT INTO `inventory_info` VALUES ('98', '토마토_1', 'abcd4', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
+INSERT INTO `inventory_info` VALUES ('99', '토마토_1', 'abcd2', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
+INSERT INTO `inventory_info` VALUES ('100', '토마토_1', 'abcd6', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
+INSERT INTO `inventory_info` VALUES ('101', '토마토_2', 'abcd1', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
+INSERT INTO `inventory_info` VALUES ('102', '토마토_5', 'abcd9', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
+INSERT INTO `inventory_info` VALUES ('103', '토마토_4', 'abcd8', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
+INSERT INTO `inventory_info` VALUES ('104', '토마토_2', 'abcd3', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
+INSERT INTO `inventory_info` VALUES ('105', '토마토_2', 'abcd5', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
+INSERT INTO `inventory_info` VALUES ('106', '토마토_2', 'abcd4', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
+INSERT INTO `inventory_info` VALUES ('107', '토마토_1', 'abcd7', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
+INSERT INTO `inventory_info` VALUES ('109', '토마토_2', 'abcd2', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
+INSERT INTO `inventory_info` VALUES ('110', '토마토_2', 'abcd6', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
 INSERT INTO `inventory_info` VALUES ('112', '토마토_6', 'abcd0', 'ITEM', '0', '1', 'Resources/items/토마토_6.jpg', '7');
 INSERT INTO `inventory_info` VALUES ('113', '토마토_5', 'abcd0', 'ITEM', '0', '2', 'Resources/items/토마토_5.jpg', '6');
 INSERT INTO `inventory_info` VALUES ('114', '토마토_4', 'abcd0', 'ITEM', '0', '3', 'Resources/items/토마토_4.jpg', '5');
@@ -160,6 +159,24 @@ INSERT INTO `inventory_info` VALUES ('115', '토마토_3', 'abcd0', 'ITEM', '0',
 INSERT INTO `inventory_info` VALUES ('116', '토마토_2', 'abcd0', 'ITEM', '1', '0', 'Resources/items/토마토_2.jpg', '3');
 INSERT INTO `inventory_info` VALUES ('117', '토마토_1', 'abcd0', 'ITEM', '1', '1', 'Resources/items/토마토_1.jpg', '2');
 INSERT INTO `inventory_info` VALUES ('118', '토마토_0', 'abcd0', 'ITEM', '1', '2', 'Resources/items/토마토_0.jpg', '1');
+INSERT INTO `inventory_info` VALUES ('119', '토마토_7', 'abcd0', 'ITEM', '0', '0', 'Resources/items/토마토_7.jpg', '8');
+
+-- ----------------------------
+-- Table structure for `loading_screen`
+-- ----------------------------
+DROP TABLE IF EXISTS `loading_screen`;
+CREATE TABLE `loading_screen` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `file_path` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`idx`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of loading_screen
+-- ----------------------------
+INSERT INTO `loading_screen` VALUES ('3', 'GKF1234', '1234');
+INSERT INTO `loading_screen` VALUES ('4', 'GKF5678', '5678');
 
 -- ----------------------------
 -- Table structure for `map_info`
@@ -178,7 +195,7 @@ CREATE TABLE `map_info` (
   `count` int(11) DEFAULT '1',
   `hp` int(11) DEFAULT NULL,
   PRIMARY KEY (`idx`,`field`)
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of map_info
@@ -299,15 +316,15 @@ INSERT INTO `map_info` VALUES ('109', 'TileMaps/KonyangUniv.Daejeon/JukhunDigita
 DROP TABLE IF EXISTS `map_list`;
 CREATE TABLE `map_list` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
-  `field` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `monster1` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `monster2` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `monster3` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `field` varchar(100) NOT NULL,
+  `monster1` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `monster2` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `monster3` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `monster1_count` int(11) DEFAULT NULL,
   `monster2_count` int(11) DEFAULT NULL,
   `monster3_count` int(11) DEFAULT NULL,
   PRIMARY KEY (`idx`,`field`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of map_list
@@ -380,13 +397,13 @@ CREATE TABLE `user_list` (
 -- ----------------------------
 -- Records of user_list
 -- ----------------------------
-INSERT INTO `user_list` VALUES ('0', 'abcd0', 'abc0', '20', '10', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx', '29', '1', '0', '2018-05-03 17:09:48', '2018-05-03 17:09:52', '2018-01-01 00:00:00');
-INSERT INTO `user_list` VALUES ('0', 'abcd1', 'abc1', '3', '3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx', '30', '1', '0', '2018-05-03 17:09:48', '2018-05-03 17:09:51', '2018-01-01 00:00:01');
-INSERT INTO `user_list` VALUES ('0', 'abcd2', 'abc2', '5', '3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx', '31', '1', '0', '2018-05-03 17:09:48', '2018-05-03 17:09:51', '2018-01-01 00:00:02');
-INSERT INTO `user_list` VALUES ('0', 'abcd3', 'abc3', '10', '3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx', '32', '1', '0', '2018-05-03 17:09:48', '2018-05-03 17:09:51', '2018-01-01 00:00:03');
-INSERT INTO `user_list` VALUES ('0', 'abcd4', 'abc4', '11', '3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx', '33', '1', '0', '2018-05-03 17:09:48', '2018-05-03 17:09:51', '2018-01-01 00:00:04');
-INSERT INTO `user_list` VALUES ('0', 'abcd5', 'abc5', '18', '3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx', '34', '1', '0', '2018-05-03 17:09:47', '2018-05-03 17:09:51', '2018-01-01 00:00:05');
-INSERT INTO `user_list` VALUES ('0', 'abcd6', 'abc6', '201', '3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx', '35', '1', '0', '2018-05-03 17:09:47', '2018-05-03 17:09:51', '2018-01-01 00:00:06');
-INSERT INTO `user_list` VALUES ('0', 'abcd7', 'abc7', '40', '3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx', '36', '1', '0', '2018-05-03 17:09:47', '2018-05-03 17:09:51', '2018-01-01 00:00:07');
-INSERT INTO `user_list` VALUES ('0', 'abcd8', 'abc8', '50', '7', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx', '37', '1', '0', '2018-05-03 17:09:47', '2018-05-03 17:09:51', '2018-01-01 00:00:08');
-INSERT INTO `user_list` VALUES ('0', 'abcd9', 'abc9', '20', '13', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx', '38', '1', '0', '2018-05-03 17:09:47', '2018-05-03 17:09:51', '2018-01-01 00:00:09');
+INSERT INTO `user_list` VALUES ('0', 'abcd0', '5678', '6', '6', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx', '26', '6', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');
+INSERT INTO `user_list` VALUES ('0', 'abcd1', '5678', '9', '9', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx', '27', '9', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');
+INSERT INTO `user_list` VALUES ('0', 'abcd2', '5678', '456', '456', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx', '27', '456', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');
+INSERT INTO `user_list` VALUES ('0', 'abcd3', '5678', '333', '333', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx', '27', '333', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');
+INSERT INTO `user_list` VALUES ('0', 'abcd4', '5678', '666', '666', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx', '27', '666', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');
+INSERT INTO `user_list` VALUES ('0', 'abcd5', '5678', '999', '999', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx', '27', '999', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');
+INSERT INTO `user_list` VALUES ('0', 'abcd6', '5678', '33', '33', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx', '27', '33', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');
+INSERT INTO `user_list` VALUES ('0', 'abcd7', '5678', '66', '66', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx', '27', '66', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');
+INSERT INTO `user_list` VALUES ('0', 'abcd8', '5678', '99', '99', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx', '27', '99', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');
+INSERT INTO `user_list` VALUES ('0', 'abcd9', '5678', '3', '3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx', '27', '3', '0', '2018-12-25 07:17:15', '2018-12-25 07:17:19', '2018-12-25 07:17:15');

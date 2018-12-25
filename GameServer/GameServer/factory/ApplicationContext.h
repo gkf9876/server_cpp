@@ -10,10 +10,12 @@
 #include "../dao/MonsterDao.h"
 #include "../dao/ServerInfoDao.h"
 #include "../dao/UserDao.h"
+#include "../dao/LoadingScreenDao.h"
 
 #include "../service/ChattingService.h"
 #include "../service/MapManageService.h"
 #include "../service/UserService.h"
+#include "../service/LoadingScreenService.h"
 
 #include "../GameServer.h"
 
@@ -27,10 +29,12 @@ private:
 	MonsterDao* monsterDaoInstance = NULL;
 	ServerInfoDao* serverInfoDaoInstance = NULL;
 	UserDao* userDaoInstance = NULL;
+	LoadingScreenDao* loadingScreenDaoInstance = NULL;
 
 	ChattingService* chattingServiceInstance = NULL;
 	MapManageService* mapManageServiceInstance = NULL;
 	UserService* userServiceInstance = NULL;
+	LoadingScreenService* loadingScreenServiceInstance = NULL;
 
 	GameServer* gameServerInstance = NULL;
 
@@ -49,10 +53,12 @@ public:
 	MonsterDao* monsterDao();
 	ServerInfoDao* serverInfoDao();
 	UserDao* userDao();
+	LoadingScreenDao* loadingScreenDao();
 
 	ChattingService* chattingService();
 	MapManageService* mapManageService();
 	UserService* userService();
+	LoadingScreenService* loadingScreenService();
 
 	GameServer* gameServer();
 };

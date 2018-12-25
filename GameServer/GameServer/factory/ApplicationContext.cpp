@@ -30,6 +30,9 @@ ApplicationContext::~ApplicationContext()
 	if (userDaoInstance != NULL)
 		delete this->userDaoInstance;
 
+	if (loadingScreenDaoInstance != NULL)
+		delete this->loadingScreenDaoInstance;
+
 	if (chattingServiceInstance != NULL)
 		delete this->chattingServiceInstance;
 
@@ -38,6 +41,9 @@ ApplicationContext::~ApplicationContext()
 
 	if (userServiceInstance != NULL)
 		delete this->userServiceInstance;
+
+	if (loadingScreenServiceInstance != NULL)
+		delete this->loadingScreenServiceInstance;
 
 	if (gameServerInstance != NULL)
 		delete this->gameServerInstance;
@@ -138,6 +144,18 @@ UserDao* ApplicationContext::userDao()
 	}
 }
 
+LoadingScreenDao * ApplicationContext::loadingScreenDao()
+{
+	if (this->loadingScreenDaoInstance != NULL)
+		return this->loadingScreenDaoInstance;
+	else
+	{
+		this->loadingScreenDaoInstance = new LoadingScreenDao();
+		this->loadingScreenDaoInstance->setDataSource(dataSource());
+		return this->loadingScreenDaoInstance;
+	}
+}
+
 ChattingService* ApplicationContext::chattingService()
 {
 	if (this->chattingServiceInstance != NULL)
@@ -178,6 +196,18 @@ UserService* ApplicationContext::userService()
 	}
 }
 
+LoadingScreenService * ApplicationContext::loadingScreenService()
+{
+	if (this->loadingScreenServiceInstance != NULL)
+		return this->loadingScreenServiceInstance;
+	else
+	{
+		this->loadingScreenServiceInstance = new LoadingScreenService();
+		this->loadingScreenServiceInstance->setLoadingScreenDao(loadingScreenDao());
+		return this->loadingScreenServiceInstance;
+	}
+}
+
 GameServer* ApplicationContext::gameServer()
 {
 	if (this->gameServerInstance != NULL)
@@ -188,5 +218,6 @@ GameServer* ApplicationContext::gameServer()
 		this->gameServerInstance->setUserService(userService());
 		this->gameServerInstance->setChattingService(chattingService());
 		this->gameServerInstance->setMapManageService(mapManageService());
+		return this->gameServerInstance;
 	}
 }

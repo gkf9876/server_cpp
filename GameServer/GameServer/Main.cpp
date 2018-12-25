@@ -10,10 +10,12 @@
 #include "dao/MapDaoTest.h"
 #include "dao/MapInfoDaoTest.h"
 #include "dao/MonsterDaoTest.h"
+#include "dao/LoadingScreenDaoTest.h"
 
 #include "service/MapManageServiceTest.h"
 #include "service/UserServiceTest.h"
 #include "service/ChattingServiceTest.h"
+#include "service/LoadingScreenServiceTest.h"
 
 int main()
 {
@@ -48,7 +50,12 @@ int main()
 	monsterDaoTest->setApplicationContext(testContext);
 	monsterDaoTest->run();
 	delete monsterDaoTest;
-	
+
+	LoadingScreenDaoTest * loadingScreenDaoTest = new LoadingScreenDaoTest();
+	loadingScreenDaoTest->setApplicationContext(testContext);
+	loadingScreenDaoTest->run();
+	delete loadingScreenDaoTest;
+
 	MapManageServiceTest* mapManageServiceTest = new MapManageServiceTest();
 	mapManageServiceTest->setApplicationContext(testContext);
 	mapManageServiceTest->run();
@@ -63,42 +70,45 @@ int main()
 	chattingServiceTest->setApplicationContext(testContext);
 	chattingServiceTest->run();
 	delete chattingServiceTest;
-	
-//	GameServerTest * gameServerTest = new GameServerTest();
-//	gameServerTest->setApplicationContext(testContext);
-//	gameServerTest->run();
-//	delete gameServerTest;
-//
+
+	LoadingScreenServiceTest* loadingScreenServiceTest = new LoadingScreenServiceTest();
+	loadingScreenServiceTest->setApplicationContext(testContext);
+	loadingScreenServiceTest->run();
+	delete loadingScreenServiceTest;
+
+	GameServerTest * gameServerTest = new GameServerTest();
+	gameServerTest->setApplicationContext(testContext);
+	gameServerTest->run();
+	delete gameServerTest;
+
 	delete testContext;
 
-	while (1) {};
-//
-//	ApplicationContext* context = new ApplicationContext();
-//	GameServer * gameServer = context->gameServer();
-//
-//	try
-//	{
-//		gameServer->openServer(9190);
-//
-//		std::cout << "--------------- Server start!! ---------------" << std::endl;
-//
-//		while (1)
-//		{
-//#ifdef _WIN32
-//			gameServer->accept_win();
-//#elif __linux__
-//			gameServer->accept_linux();
-//#endif
-//		}
-//
-//		gameServer->closeServer();
-//		delete gameServer;
-//		delete context;
-//	}
-//	catch (const runtime_error& error)
-//	{
-//		std::cout << error.what() << std::endl;
-//	}
+	ApplicationContext* context = new ApplicationContext();
+	GameServer * gameServer = context->gameServer();
+
+	try
+	{
+		gameServer->openServer(9190);
+
+		std::cout << "--------------- Server start!! ---------------" << std::endl;
+
+		while (1)
+		{
+#ifdef _WIN32
+			gameServer->accept_win();
+#elif __linux__
+			gameServer->accept_linux();
+#endif
+		}
+
+		gameServer->closeServer();
+		delete gameServer;
+		delete context;
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << error.what() << std::endl;
+	}
 
 	return 0;
 }

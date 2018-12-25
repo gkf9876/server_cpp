@@ -445,6 +445,8 @@ void* GameServerTest::ServerThreadFunc(void* arg)
 	gameServer->closeServer();
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -608,6 +610,8 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -624,6 +628,8 @@ void* GameServerTest::ClientRecvThreadFunc0(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -768,6 +774,8 @@ void* GameServerTest::ClientThreadFunc1(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -784,6 +792,8 @@ void* GameServerTest::ClientRecvThreadFunc1(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -927,6 +937,8 @@ void* GameServerTest::ClientThreadFunc2(void* arg)
 	}
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -943,6 +955,8 @@ void* GameServerTest::ClientRecvThreadFunc2(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1086,6 +1100,8 @@ void* GameServerTest::ClientThreadFunc3(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1102,6 +1118,8 @@ void* GameServerTest::ClientRecvThreadFunc3(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1246,6 +1264,8 @@ void* GameServerTest::ClientThreadFunc4(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1262,6 +1282,8 @@ void* GameServerTest::ClientRecvThreadFunc4(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1406,6 +1428,8 @@ void* GameServerTest::ClientThreadFunc5(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1422,6 +1446,8 @@ void* GameServerTest::ClientRecvThreadFunc5(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1566,6 +1592,8 @@ void* GameServerTest::ClientThreadFunc6(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1582,6 +1610,8 @@ void* GameServerTest::ClientRecvThreadFunc6(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1726,6 +1756,8 @@ void* GameServerTest::ClientThreadFunc7(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1742,6 +1774,8 @@ void* GameServerTest::ClientRecvThreadFunc7(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1886,6 +1920,8 @@ void* GameServerTest::ClientThreadFunc8(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -1902,6 +1938,8 @@ void* GameServerTest::ClientRecvThreadFunc8(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -2046,6 +2084,8 @@ void* GameServerTest::ClientThreadFunc9(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
@@ -2062,6 +2102,8 @@ void* GameServerTest::ClientRecvThreadFunc9(void* arg)
 
 #ifdef _WIN32
 	return 0;
+#elif __linux__
+	return NULL;
 #endif
 }
 
