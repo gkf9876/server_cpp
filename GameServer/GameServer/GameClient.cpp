@@ -2,6 +2,7 @@
 
 GameClient::GameClient()
 {
+	packetManager = new PacketManager();
 	mainUser.setLogin(0);
 
 	usersInfo = new vector<User*>();								//현재 맵의 다른 유저들
@@ -50,7 +51,7 @@ void GameClient::recvRun()
 	{
 		while (logout != true)
 		{
-			recvRequest(&code, message);
+			packetManager->recvRequest(&code, message);
 
 			switch (code)
 			{
@@ -110,9 +111,9 @@ void GameClient::recvRun()
 			break;
 			case REQUEST_JOIN:
 				if (!strcmp(message, "join_user_success"))
-					isJoinUserSeccess = true;
+					packetManager->setIsJoinUserSeccess(true);
 				else
-					isJoinUserSeccess = false;
+					packetManager->setIsJoinUserSeccess(false);
 				break;
 			case DELETE_FIELD_ITEM:
 			{
@@ -192,7 +193,7 @@ void GameClient::recvRun()
 				if (!strcmp(message, "map_potal_finish"))
 				{
 					mainUser.setAction(ACTION_MAP_IN);
-					isMapPotalFinish = true;
+					packetManager->setIsMapPotalFinish(true);
 				}
 				break;
 			case REQUEST_THROW_ITEM_FINISH:
@@ -200,21 +201,21 @@ void GameClient::recvRun()
 				InventoryInfo* inventoryInfo = new InventoryInfo();
 				memcpy(inventoryInfo, message, sizeof(InventoryInfo));
 
-				isThrowItemFinish = true;
+				packetManager->setIsThrowItemFinish(true);
 				removeInventoryInfo(inventoryInfo->getXpos(), inventoryInfo->getYpos());
 			}
 			break;
 			case REQUEST_GET_ITEM_FINISH:
 				if (!strcmp(message, "get_item_finish"))
-					isGetItemFinish = true;
+					packetManager->setIsGetItemFinish(true);
 				break;
 			case REQUEST_CHATTING_FINISH:
 				if (!strcmp(message, "chatting_finish"))
-					isChattingFinish = true;
+					packetManager->setIsChattingFinish(true);
 				break;
 			case REQUEST_MAP_MOVE_FINISH:
 				if (!strcmp(message, "map_move_finish"))
-					isMapMoveFinish = true;
+					packetManager->setIsMapMoveFinish(true);
 				break;
 			case UPDATE_USER_INFO:
 			{
@@ -226,11 +227,11 @@ void GameClient::recvRun()
 			break;
 			case UPDATE_USER_INFO_FINISH:
 				if (!strcmp(message, "update_user_finish"))
-					isUpdateUserInfoFinish = true;
+					packetManager->setIsUpdateUserInfoFinish(true);
 				break;
 			case REQUEST_JOIN_FINISH:
 				if (!strcmp(message, "join_user_finish"))
-					isJoinUserFinish = true;
+					packetManager->setIsJoinUserFinish(true);
 				break;
 			case OTHER_USER_CHATTING_PROCESS:
 			{
@@ -264,7 +265,7 @@ void GameClient::recvRun()
 				break;
 			case MOVE_INVENTORY_ITEM_FINISH:
 				if (!strcmp(message, "move_inventory_item_finish"))
-					isMoveItemFinish = true;
+					packetManager->setIsMoveItemFinish(true);
 				break;
 			case TEST:
 				break;
@@ -623,136 +624,6 @@ bool GameClient::getIsRequestLoginFinish()
 	return this->isRequestLoginFinish;
 }
 
-void GameClient::setIsGetObjectInfo(bool value)
-{
-	this->isGetObjectInfo = value;
-}
-
-bool GameClient::getIsGetObjectInfo()
-{
-	return this->isGetObjectInfo;
-}
-
-void GameClient::setIsGetMonsterInfo(bool value)
-{
-	this->isGetMonsterInfo = value;
-}
-
-bool GameClient::getIsGetMonsterInfo()
-{
-	return this->isGetMonsterInfo;
-}
-
-void GameClient::setIsGetItemInfo(bool value)
-{
-	this->isGetItemInfo = value;
-}
-
-bool GameClient::getIsGetItemInfo()
-{
-	return this->isGetItemInfo;
-}
-
-void GameClient::setIsGetInventoryInfo(bool value)
-{
-	this->isGetInventoryInfo = value;
-}
-
-bool GameClient::getIsGetInventoryInfo()
-{
-	return this->isGetInventoryInfo;
-}
-
-void GameClient::setIsMapPotalFinish(bool value)
-{
-	this->isMapPotalFinish = value;
-}
-
-bool GameClient::getIsMapPotalFinish()
-{
-	return this->isMapPotalFinish;
-}
-
-void GameClient::setIsThrowItemFinish(bool value)
-{
-	this->isThrowItemFinish = value;
-}
-
-bool GameClient::getIsThrowItemFinish()
-{
-	return this->isThrowItemFinish;
-}
-
-void GameClient::setIsGetItemFinish(bool value)
-{
-	this->isGetItemFinish = value;
-}
-
-bool GameClient::getIsGetItemFinish()
-{
-	return this->isGetItemFinish;
-}
-
-void GameClient::setIsMoveItemFinish(bool value)
-{
-	this->isMoveItemFinish = value;
-}
-
-bool GameClient::getIsMoveItemFinish()
-{
-	return this->isMoveItemFinish;
-}
-
-void GameClient::setIsChattingFinish(bool value)
-{
-	this->isChattingFinish = value;
-}
-
-bool GameClient::getIsChattingFinish()
-{
-	return this->isChattingFinish;
-}
-
-void GameClient::setIsMapMoveFinish(bool value)
-{
-	this->isMapMoveFinish = value;
-}
-
-bool GameClient::getIsMapMoveFinish()
-{
-	return this->isMapMoveFinish;
-}
-
-void GameClient::setIsUpdateUserInfoFinish(bool value)
-{
-	this->isUpdateUserInfoFinish = value;
-}
-
-bool GameClient::getIsUpdateUserInfoFinish()
-{
-	return this->isUpdateUserInfoFinish;
-}
-
-void GameClient::setIsJoinUserFinish(bool value)
-{
-	this->isJoinUserFinish = value;
-}
-
-bool GameClient::getIsJoinUserFinish()
-{
-	return this->isJoinUserFinish;
-}
-
-void GameClient::setIsJoinUserSeccess(bool value)
-{
-	this->isJoinUserSeccess = value;
-}
-
-bool GameClient::getIsJoinUserSeccess()
-{
-	return this->isJoinUserSeccess;
-}
-
 void GameClient::setLogout(bool value)
 {
 	this->logout = value;
@@ -779,124 +650,19 @@ void GameClient::printAllLog()
 	}
 }
 
-void GameClient::ErrorHandling(const char* message)
-{
-	fputs(message, stderr);
-	fputc('\n', stderr);
-	exit(1);
-}
-
 void GameClient::openClient(const char* addr, int port)
 {
-#ifdef _WIN32
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-		ErrorHandling("WSAStartup() error!");
-
-	hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	if (hSocket == INVALID_SOCKET)
-		ErrorHandling("socket() error");
-
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = inet_addr(addr);
-	servAddr.sin_port = port;
-
-	if (connect(hSocket, (SOCKADDR*)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
-		ErrorHandling("connect() error!");
-#elif __linux__
-	hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	if (hSocket == -1)
-		ErrorHandling("socket() error");
-
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = inet_addr(addr);
-	servAddr.sin_port = port;
-
-	if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
-		ErrorHandling("connect() error!");
-#elif __APPLE__
-	hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	if (hSocket == -1)
-		ErrorHandling("socket() error");
-
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = inet_addr(addr);
-	servAddr.sin_port = port;
-
-	if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
-		ErrorHandling("connect() error!");
-#endif
+	packetManager->openClient(addr, port);
 }
 
 void GameClient::closeClient()
 {
-#ifdef _WIN32
-	closesocket(hSocket);
-	WSACleanup();
-#elif __linux__
-	close(hSocket);
-#elif __APPLE__
-	close(hSocket);
-#endif
-}
-
-void GameClient::sendc(const char* data, int size)
-{
-#ifdef _WIN32
-	send(hSocket, data, size, 0);
-#elif __linux__
-	write(hSocket, data, size);
-#elif __APPLE__
-	write(hSocket, data, size);
-#endif
-}
-
-int GameClient::recvc(char* data, int size)
-{
-#ifdef _WIN32
-	return recv(hSocket, data, size, 0);
-#elif __linux__
-	return read(hSocket, data, size);
-#elif __APPLE__
-	return read(hSocket, data, size);
-#endif
-}
-
-void GameClient::sendRequest(int code, const char* data, int size)
-{
-	int writeLen;
-	char* buffer = new char[size + 8];
-
-	memcpy(&buffer[0], &size, sizeof(int));
-	memcpy(&buffer[4], &code, sizeof(int));
-	memcpy(&buffer[8], data, size);
-
-	sendc(buffer, size + 8);
-	free(buffer);
-}
-
-int GameClient::recvRequest(int* code, char* data)
-{
-	int size;
-	int readLen;
-	char buffer[BUF_SIZE];
-
-	readLen = recvc(buffer, 4);
-	memcpy(&size, buffer, sizeof(int));
-
-	readLen += recvc(buffer, 4);
-	memcpy(code, buffer, sizeof(int));
-
-	readLen += recvc(data, size);
-
-	return readLen;
+	packetManager->closeClient();
 }
 
 void GameClient::requestLogin(const char * userName)
 {
-	sendRequest(REQUEST_LOGIN, userName, strlen(userName) + 1);
+	packetManager->sendRequest(REQUEST_LOGIN, userName, strlen(userName) + 1);
 
 	while (this->isRequestLoginFinish != true);
 	this->isRequestLoginFinish = false;
@@ -904,7 +670,7 @@ void GameClient::requestLogin(const char * userName)
 
 void GameClient::getUserInfo(const char* userName)
 {
-	sendRequest(REQUEST_USER_INFO, userName, strlen(userName) + 1);
+	packetManager->sendRequest(REQUEST_USER_INFO, userName, strlen(userName) + 1);
 
 	while (isGetUserInfo != true);
 	isGetUserInfo = false;
@@ -912,7 +678,7 @@ void GameClient::getUserInfo(const char* userName)
 
 void GameClient::requestLogout()
 {
-	sendRequest(REQUEST_LOGOUT, mainUser.getName(), strlen(mainUser.getName()) + 1);
+	packetManager->sendRequest(REQUEST_LOGOUT, mainUser.getName(), strlen(mainUser.getName()) + 1);
 }
 
 void GameClient::chatting(const char* chattingInfo)
@@ -924,10 +690,10 @@ void GameClient::chatting(const char* chattingInfo)
 	chatting.setField(mainUser.getField());
 
 	memcpy(message, &chatting, sizeof(Chatting));
-	sendRequest(CHATTING_PROCESS, message, sizeof(Chatting));
+	packetManager->sendRequest(CHATTING_PROCESS, message, sizeof(Chatting));
 
-	while (isChattingFinish != true);
-	isChattingFinish = false;
+	while (packetManager->getIsChattingFinish() != true);
+	packetManager->setIsChattingFinish(false);
 }
 
 void GameClient::requestMapMove(int xpos, int ypos, const char* field, int seeDirection)
@@ -944,10 +710,10 @@ void GameClient::requestMapMove(int xpos, int ypos, const char* field, int seeDi
 		sendUserInfo.setAction(ACTION_MAP_MOVE);
 
 		memcpy(message, &sendUserInfo, sizeof(User));
-		sendRequest(USER_MOVE_UPDATE, message, sizeof(User));
+		packetManager->sendRequest(USER_MOVE_UPDATE, message, sizeof(User));
 
-		while (isMapMoveFinish != true);
-		isMapMoveFinish = false;
+		while (packetManager->getIsMapMoveFinish() != true);
+		packetManager->setIsMapMoveFinish(false);
 	}
 	else
 	{
@@ -955,10 +721,10 @@ void GameClient::requestMapMove(int xpos, int ypos, const char* field, int seeDi
 		sendUserInfo.setField(field);
 
 		memcpy(message, &sendUserInfo, sizeof(User));
-		sendRequest(USER_MOVE_UPDATE, message, sizeof(User));
+		packetManager->sendRequest(USER_MOVE_UPDATE, message, sizeof(User));
 
-		while (isMapPotalFinish != true);
-		isMapPotalFinish = false;
+		while (packetManager->getIsMapPotalFinish() != true);
+		packetManager->setIsMapPotalFinish(false);
 	}
 }
 
@@ -967,10 +733,10 @@ void GameClient::requestThrowItem(int xpos, int ypos)
 	char message[BUF_SIZE];
 	memcpy(message, inventory_items_Info[xpos][ypos], sizeof(InventoryInfo));
 
-	sendRequest(REQUEST_THROW_ITEM, message, sizeof(InventoryInfo));
+	packetManager->sendRequest(REQUEST_THROW_ITEM, message, sizeof(InventoryInfo));
 
-	while (isThrowItemFinish != true);
-	isThrowItemFinish = false;
+	while (packetManager->getIsThrowItemFinish() != true);
+	packetManager->setIsThrowItemFinish(false);
 }
 
 void GameClient::requestGetItem()
@@ -978,10 +744,10 @@ void GameClient::requestGetItem()
 	char message[BUF_SIZE];
 	memcpy(message, &mainUser, sizeof(User));
 
-	sendRequest(REQUEST_EAT_ITEM, message, sizeof(User));
+	packetManager->sendRequest(REQUEST_EAT_ITEM, message, sizeof(User));
 
-	while (isGetItemFinish != true);
-	isGetItemFinish = false;
+	while (packetManager->getIsGetItemFinish() != true);
+	packetManager->setIsGetItemFinish(false);
 }
 
 void GameClient::requestMoveItem(int xpos, int ypos, int to_xpos, int to_ypos)
@@ -992,10 +758,10 @@ void GameClient::requestMoveItem(int xpos, int ypos, int to_xpos, int to_ypos)
 	inventory_items_Info[xpos][ypos]->setYpos(to_ypos);
 	memcpy(message, inventory_items_Info[xpos][ypos], sizeof(InventoryInfo));
 
-	sendRequest(MOVE_INVENTORY_ITEM, message, sizeof(InventoryInfo));
+	packetManager->sendRequest(MOVE_INVENTORY_ITEM, message, sizeof(InventoryInfo));
 
-	while (isMoveItemFinish != true);
-	isMoveItemFinish = false;
+	while (packetManager->getIsMoveItemFinish() != true);
+	packetManager->setIsMoveItemFinish(false);
 }
 
 void GameClient::requestUpdateUserInfo()
@@ -1003,10 +769,10 @@ void GameClient::requestUpdateUserInfo()
 	char message[BUF_SIZE];
 	memcpy(message, &mainUser, sizeof(User));
 
-	sendRequest(UPDATE_USER_INFO, message, sizeof(User));
+	packetManager->sendRequest(UPDATE_USER_INFO, message, sizeof(User));
 
-	while (isUpdateUserInfoFinish != true);
-	isUpdateUserInfoFinish = false;
+	while (packetManager->getIsUpdateUserInfoFinish() != true);
+	packetManager->setIsUpdateUserInfoFinish(false);
 }
 
 void GameClient::requestJoinUser(User userInfo)
@@ -1014,8 +780,8 @@ void GameClient::requestJoinUser(User userInfo)
 	char message[BUF_SIZE];
 	memcpy(message, &userInfo, sizeof(User));
 
-	sendRequest(REQUEST_JOIN, message, sizeof(User));
+	packetManager->sendRequest(REQUEST_JOIN, message, sizeof(User));
 
-	while (isJoinUserFinish != true);
-	isJoinUserFinish = false;
+	while (packetManager->getIsJoinUserFinish() != true);
+	packetManager->setIsJoinUserFinish(false);
 }

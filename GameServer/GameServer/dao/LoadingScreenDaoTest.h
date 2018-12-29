@@ -25,8 +25,7 @@ public:
 	void assertThat(string value, string compValue);
 	void checkSameLoadingScreen(LoadingScreen loadingScreen1, LoadingScreen loadingScreen2);
 
-	void addAndGet1();
-	void addAndGet2();
+	void addAndGet();
 	void getLoadingScreenFailure();
 	void duplciateKey();
 	void update();

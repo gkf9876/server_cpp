@@ -19,7 +19,7 @@ void LoadingScreenDao::setIdxAutoIncrement(int value)
 	int query_stat;
 	MYSQL connection = this->dataSource->getConnection();
 
-	sprintf(query, "ALTER TABLE loading_screen AUTO_INCREMENT=%d", value);
+	sprintf(query, "ALTER TABLE loading_screen AUTO_INCREMENT=%d;", value);
 
 	query_stat = mysql_query(&connection, query);
 

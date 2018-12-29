@@ -76,10 +76,18 @@ int main()
 	loadingScreenServiceTest->run();
 	delete loadingScreenServiceTest;
 
+#ifdef _WIN32
+#elif __linux__
 	GameServerTest * gameServerTest = new GameServerTest();
 	gameServerTest->setApplicationContext(testContext);
 	gameServerTest->run();
 	delete gameServerTest;
+#elif __APPLE__
+	GameServerTest * gameServerTest = new GameServerTest();
+	gameServerTest->setApplicationContext(testContext);
+	gameServerTest->run();
+	delete gameServerTest;
+#endif
 
 	delete testContext;
 

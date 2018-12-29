@@ -34,8 +34,7 @@ void LoadingScreenDaoTest::run()
 {
 	try
 	{
-		addAndGet1();
-		addAndGet2();
+		addAndGet();
 		getLoadingScreenFailure();
 		duplciateKey();
 		update();
@@ -64,28 +63,9 @@ void LoadingScreenDaoTest::checkSameLoadingScreen(LoadingScreen loadingScreen1, 
 	assertThat(loadingScreen1.getFilePath(), loadingScreen2.getFilePath());
 }
 
-void LoadingScreenDaoTest::addAndGet1()
+void LoadingScreenDaoTest::addAndGet()
 {
 	std::cout << "LoadingScreenDaoTest : addAndGet1()" << std::endl;
-
-	loadingScreenDao->deleteAll();
-	loadingScreenDao->setIdxAutoIncrement(0);
-	assertThat(loadingScreenDao->getCount(), 0);
-
-	loadingScreenDao->add(*loadingScreen1);
-	loadingScreenDao->add(*loadingScreen2);
-	assertThat(loadingScreenDao->getCount(), 2);
-
-	LoadingScreen LoadingScreenget1 = loadingScreenDao->get(loadingScreen1->getIdx());
-	checkSameLoadingScreen(LoadingScreenget1, *loadingScreen1);
-
-	LoadingScreen LoadingScreenget2 = loadingScreenDao->get(loadingScreen2->getIdx());
-	checkSameLoadingScreen(LoadingScreenget2, *loadingScreen2);
-}
-
-void LoadingScreenDaoTest::addAndGet2()
-{
-	std::cout << "LoadingScreenDaoTest : addAndGet2()" << std::endl;
 
 	loadingScreenDao->deleteAll();
 	loadingScreenDao->setIdxAutoIncrement(0);
