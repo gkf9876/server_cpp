@@ -6,13 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <Winsock2.h>
-#elif __linux__
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#elif __APPLE__
+#elif defined(__linux__) || defined(__APPLE__)
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -56,6 +52,9 @@
 #define REQUEST_ERROR					255
 #define TEST                            555
 
+#define CUR_PATH						"/home/gkf9876/server/Resources/"
+//#define CUR_PATH						"/home/pi/server/Resources/"
+
 using namespace std;
 
 class PacketManager
@@ -66,17 +65,9 @@ private:
 	time_t currentTime;
 	time_t endTime;
 
-#ifdef _WIN32
-	WSADATA wsaData;
-	SOCKET hSocket;
-	SOCKADDR_IN servAddr;
-#elif __linux__
-	int hSocket;
-	struct sockaddr_in servAddr;
-#elif __APPLE__
-	int hSocket;
-	struct sockaddr_in servAddr;
-#endif
+
+	bool isGetUserInfo = false;
+	bool isRequestLoginFinish = false;
 
 	bool isGetObjectInfo = false;
 	bool isGetMonsterInfo = false;
@@ -92,9 +83,13 @@ private:
 	bool isJoinUserFinish = false;
 	bool isJoinUserSeccess = false;
 public:
-	void openClient(const char* addr, int port);
-	void closeClient();
 	void ErrorHandling(const char* message);
+
+	void setIsGetUserInfo(bool value);
+	bool getIsGetUserInfo();
+
+	void setIsRequestLoginFinish(bool value);
+	bool getIsRequestLoginFinish();
 
 	void setIsGetObjectInfo(bool value);
 	bool getIsGetObjectInfo();
@@ -123,10 +118,29 @@ public:
 	void setIsJoinUserSeccess(bool value);
 	bool getIsJoinUserSeccess();
 
-	void sendc(const char* data, int size);
-	int recvc(char* data, int size);
-	void sendRequest(int code, const char* data, int size);
-	int recvRequest(int* code, char* data);
+#if defined(_WIN32)
+	void sendc(SOCKET sock, const char* data, int size);
+#elif defined(__linux__) || defined(__APPLE__)
+	void sendc(int sock, const char* data, int size);
+#endif
+
+#if defined(_WIN32)
+	int recvc(SOCKET sock, char* data, int size);
+#elif defined(__linux__) || defined(__APPLE__)
+	int recvc(int sock, char* data, int size);
+#endif
+
+#if defined(_WIN32)
+	void sendRequest(SOCKET sock, int code, const char* data, int size);
+#elif defined(__linux__) || defined(__APPLE__)
+	void sendRequest(int sock, int code, const char* data, int size);
+#endif
+
+#if defined(_WIN32)
+	int recvRequest(SOCKET sock, int* code, char* data);
+#elif defined(__linux__) || defined(__APPLE__)
+	int recvRequest(int sock, int* code, char* data);
+#endif
 };
 
 #endif

@@ -435,11 +435,7 @@ void* GameServerTest::ServerThreadFunc(void* arg)
 
 	while (flag != 0)
 	{
-#ifdef _WIN32
 		gameServer->accept_win();
-#elif __linux__
-		gameServer->accept_linux();
-#endif
 	}
 
 	gameServer->closeServer();
@@ -593,7 +589,6 @@ void* GameServerTest::ClientThreadFunc0(void* arg)
 #elif __linux__
 		sleep(2);
 #endif
-
 		gameClient->requestLogout();
 
 #ifdef _WIN32

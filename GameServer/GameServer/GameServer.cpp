@@ -2,10 +2,12 @@
 
 GameServer::GameServer()
 {
+	packetManagerServer = new PacketManagerServer();
 }
 
 GameServer::~GameServer()
 {
+	delete packetManagerServer;
 }
 
 void GameServer::setUserService(UserService* userService)
@@ -23,332 +25,90 @@ void GameServer::setMapManageService(MapManageService* mapManageService)
 	this->mapManageService = mapManageService;
 }
 
-void GameServer::ErrorHandling(const char* message)
+
+int GameServer::getClientCount()
 {
-	fputs(message, stderr);
-	fputc('\n', stderr);
-	exit(1);
+	return packetManagerServer->getClientCount();
 }
 
 void GameServer::openServer(int port)
 {
-#ifdef _WIN32
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-		ErrorHandling("WSAStartup() error!");
-
-	hServSock = socket(PF_INET, SOCK_STREAM, 0);
-	if (hServSock == INVALID_SOCKET)
-		ErrorHandling("socket() error");
-
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	servAddr.sin_port = port;
-
-	if (bind(hServSock, (SOCKADDR*)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
-		ErrorHandling("bind() error");
-	if (listen(hServSock, 5) == SOCKET_ERROR)
-		ErrorHandling("listen() error");
-
-	FD_ZERO(&reads);
-	FD_SET(hServSock, &reads);
-#elif __linux__
-	hServSock = socket(PF_INET, SOCK_STREAM, 0);
-	if (hServSock == -1)
-		ErrorHandling("socket() error");
-
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	servAddr.sin_port = port;
-
-	if(bind(hServSock, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
-		ErrorHandling("bind() error");
-	if(listen(hServSock, 5) == -1)
-		ErrorHandling("listen() error");
-
-	epfd = epoll_create(EPOLL_SIZE);
-	ep_events = (struct epoll_event*)malloc(sizeof(struct epoll_event)*EPOLL_SIZE);
-
-	event.events = EPOLLIN;
-	event.data.fd = hServSock;
-	epoll_ctl(epfd, EPOLL_CTL_ADD, hServSock, &event);
-
-	clientCount = 0;
-#endif
+	packetManagerServer->openServer(port);
 }
 
 void GameServer::closeServer()
 {
-#ifdef _WIN32
-	closesocket(hServSock);
-	WSACleanup();
-#elif __linux__
-	close(hServSock);
-	close(epfd);
-#endif
-}
-
-int GameServer::getClientCount()
-{
-#ifdef _WIN32
-	return reads.fd_count;
-#elif __linux__
-	return clientCount;
-#endif
+	packetManagerServer->closeServer();
 }
 
 #ifdef _WIN32
-void GameServer::accept_win()
+
+void GameServer::run(SOCKET sock, int code, const char* buffer, int size)
 {
-	int code;
-	int size;
-
-	cpyReads = reads;
-	timeout.tv_sec = 5;
-	timeout.tv_usec = 5000;
-
-	if ((fdNum = select(0, &cpyReads, 0, 0, &timeout)) == SOCKET_ERROR)
-		return;
-
-	for (int i = 0; i < reads.fd_count; i++)
-	{
-		if (FD_ISSET(reads.fd_array[i], &cpyReads))
-		{
-			if (reads.fd_array[i] == hServSock)
-			{
-				adrSz = sizeof(clntAddr);
-				hClntSock = accept(hServSock, (SOCKADDR*)&clntAddr, &adrSz);
-				FD_SET(hClntSock, &reads);
-			}
-			else
-			{
-				strLen = recvRequest(reads.fd_array[i], &code, buffer);
-				size = strLen - 8;
-				if (strLen == 0)
-					closeClient(cpyReads.fd_array[i]);
-				else
-				{
-					try
-					{
-						switch (code)
-						{
-						case REQUEST_USER_INFO:
-							getUserInfo(reads.fd_array[i], buffer);
-							break;
-						case CHATTING_PROCESS:
-							chatting(reads.fd_array[i], buffer);
-							break;
-						case REQUEST_LOGIN:
-							updateLogin(reads.fd_array[i], buffer);
-							break;
-						case USER_MOVE_UPDATE:
-							updateMoveInfo(reads.fd_array[i], buffer);
-							break;
-						case OTHER_USER_MAP_MOVE:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case REQUEST_JOIN:
-							insertUserInfo(reads.fd_array[i], buffer);
-							break;
-						case UPDATE_LOGIN_TIME:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case REQUEST_TILED_MAP:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case REQUEST_IMAGE:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case DELETE_FIELD_ITEM:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case REQUEST_FIELD_OBJECT_INFO:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case REQUEST_FIELD_MONSTER_INFO:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case REQUEST_INVENTORY_ITEM_INFO:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case MOVE_INVENTORY_ITEM:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case REQUEST_THROW_ITEM:
-							createThrowItemOnMap(reads.fd_array[i], buffer);
-							break;
-						case REQUEST_EAT_ITEM:
-							userGetMapItem(reads.fd_array[i], buffer);
-							break;
-						case ATTACK_FILED_OBJECT:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						case REQUEST_LOGOUT:
-							closeClient(cpyReads.fd_array[i]);
-							break;
-						case UPDATE_USER_INFO:
-							updateUserInfo(reads.fd_array[i], buffer);
-							break;
-						default:
-							sendRequest(reads.fd_array[i], code, buffer, size);
-							break;
-						}
-					}
-					catch (const runtime_error& error)
-					{
-						std::cout << '\t' << error.what() << std::endl;
-					}
-				}
-			}
-		}
-	}
-}
-
-void GameServer::sends(SOCKET sock, const char* data, int size)
-{
-	send(sock, data, size, 0);
-}
-
-int GameServer::recvs(SOCKET sock, char* data, int size)
-{
-	return recv(sock, data, size, 0);
-}
-
-int GameServer::sendRequest(SOCKET sock, int code, const char* data, int size)
-{
-	int writeLen;
-	char* buffer = new char[size + 8];
-
-	memcpy(&buffer[0], &size, sizeof(int));
-	memcpy(&buffer[4], &code, sizeof(int));
-	memcpy(&buffer[8], data, size);
-
-	writeLen = send(sock, buffer, size + 8, 0);
-
-	delete buffer;
-	return writeLen;
-}
-
-int GameServer::recvRequest(SOCKET sock, int* code, char* data)
-{
-	int size;
-	int readLen1, readLen2, readLen3;
-	char buffer[BUF_SIZE];
-
-	if ((readLen1 = recv(sock, buffer, 4, 0)) == 0)
-		return 0;
-	memcpy(&size, buffer, sizeof(int));
-
-	if ((readLen2 = recv(sock, buffer, 4, 0)) == 0)
-		return 0;
-	memcpy(code, buffer, sizeof(int));
-
-	if ((readLen3 = recv(sock, data, size, 0)) == size)
-		return (readLen1 + readLen2 + readLen3);
-	else
-		return 0;
-}
-
-#elif __linux__
-void GameServer::accept_linux()
-{
-	int code;
-	int size;
-
 	try
 	{
-		event_cnt = epoll_wait(epfd, ep_events, EPOLL_SIZE, -1);
-		if (event_cnt == -1)
+		switch (code)
 		{
-			puts("epoll_wait() error");
-			return;
-		}
-
-		for (int i = 0; i < event_cnt; i++)
-		{
-			if (ep_events[i].data.fd == hServSock)
-			{
-				adr_sz = sizeof(clntAddr);
-				hClntSock = accept(hServSock, (struct sockaddr*)&clntAddr, &adr_sz);
-				event.events = EPOLLIN;
-				event.data.fd = hClntSock;
-				epoll_ctl(epfd, EPOLL_CTL_ADD, hClntSock, &event);
-				clientCount++;
-			}
-			else
-			{
-				strLen = recvRequest(ep_events[i].data.fd, &code, buffer);
-				size = strLen - 8;
-				if (strLen == 0)
-					closeClient(ep_events[i].data.fd);
-				else
-				{
-					switch (code)
-					{
-					case REQUEST_USER_INFO:
-						getUserInfo(ep_events[i].data.fd, buffer);
-						break;
-					case CHATTING_PROCESS:
-						chatting(ep_events[i].data.fd, buffer);
-						break;
-					case REQUEST_LOGIN:
-						updateLogin(ep_events[i].data.fd, buffer);
-						break;
-					case USER_MOVE_UPDATE:
-						updateMoveInfo(ep_events[i].data.fd, buffer);
-						break;
-					case OTHER_USER_MAP_MOVE:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					case REQUEST_JOIN:
-						insertUserInfo(ep_events[i].data.fd, buffer);
-						break;
-					case UPDATE_LOGIN_TIME:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					case REQUEST_TILED_MAP:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					case REQUEST_IMAGE:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					case DELETE_FIELD_ITEM:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					case REQUEST_FIELD_OBJECT_INFO:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					case REQUEST_FIELD_MONSTER_INFO:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					case REQUEST_INVENTORY_ITEM_INFO:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					case MOVE_INVENTORY_ITEM:
-						moveInventoryInfo(ep_events[i].data.fd, buffer);
-						break;
-					case REQUEST_THROW_ITEM:
-						createThrowItemOnMap(ep_events[i].data.fd, buffer);
-						break;
-					case REQUEST_EAT_ITEM:
-						userGetMapItem(ep_events[i].data.fd, buffer);
-						break;
-					case ATTACK_FILED_OBJECT:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					case REQUEST_LOGOUT:
-						closeClient(ep_events[i].data.fd);
-						break;
-					case UPDATE_USER_INFO:
-						updateUserInfo(ep_events[i].data.fd, buffer);
-						break;
-					default:
-						sendRequest(ep_events[i].data.fd, code, buffer, size);
-						break;
-					}
-				}
-			}
+		case REQUEST_USER_INFO:
+			getUserInfo(sock, buffer);
+			break;
+		case CHATTING_PROCESS:
+			chatting(sock, buffer);
+			break;
+		case REQUEST_LOGIN:
+			updateLogin(sock, buffer);
+			break;
+		case USER_MOVE_UPDATE:
+			updateMoveInfo(sock, buffer);
+			break;
+		case OTHER_USER_MAP_MOVE:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_JOIN:
+			insertUserInfo(sock, buffer);
+			break;
+		case UPDATE_LOGIN_TIME:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_TILED_MAP:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_IMAGE:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case DELETE_FIELD_ITEM:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case MOVE_INVENTORY_ITEM:
+			moveInventoryInfo(sock, buffer);
+			break;
+		case REQUEST_THROW_ITEM:
+			createThrowItemOnMap(sock, buffer);
+			break;
+		case REQUEST_EAT_ITEM:
+			userGetMapItem(sock, buffer);
+			break;
+		case ATTACK_FILED_OBJECT:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_LOGOUT:
+			closeClient(sock);
+			break;
+		case UPDATE_USER_INFO:
+			updateUserInfo(sock, buffer);
+			break;
+		default:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
 		}
 	}
 	catch (const runtime_error& error)
@@ -357,52 +117,115 @@ void GameServer::accept_linux()
 	}
 }
 
-void GameServer::sends(int sock, const char* data, int size)
+#elif __linux__
+
+void GameServer::run(int sock, int code, const char* buffer, int size)
 {
-	write(sock, data, size);
-}
-
-int GameServer::recvs(int sock, char* data, int size)
-{
-	return read(sock, data, size);
-}
-
-int GameServer::sendRequest(int sock, int code, const char* data, int size)
-{
-	int writeLen;
-	char* buffer = new char[size + 8];
-
-	memcpy(&buffer[0], &size, sizeof(int));
-	memcpy(&buffer[4], &code, sizeof(int));
-	memcpy(&buffer[8], data, size);
-
-	writeLen = write(sock, buffer, size + 8);
-	delete buffer;
-
-	return writeLen;
-}
-
-int GameServer::recvRequest(int sock, int* code, char* data)
-{
-	int size;
-	int readLen1, readLen2, readLen3;
-	char buffer[BUF_SIZE];
-
-	if ((readLen1 = read(sock, buffer, 4)) == 0)
-		return 0;
-	memcpy(&size, buffer, sizeof(int));
-
-	if ((readLen2 = read(sock, buffer, 4)) == 0)
-		return 0;
-	memcpy(code, buffer, sizeof(int));
-
-	if ((readLen3 = read(sock, data, size)) == size)
-		return (readLen1 + readLen2 + readLen3);
-	else
-		return 0;
+	try
+	{
+		switch (code)
+		{
+		case REQUEST_USER_INFO:
+			getUserInfo(sock, buffer);
+			break;
+		case CHATTING_PROCESS:
+			chatting(sock, buffer);
+			break;
+		case REQUEST_LOGIN:
+			updateLogin(sock, buffer);
+			break;
+		case USER_MOVE_UPDATE:
+			updateMoveInfo(sock, buffer);
+			break;
+		case OTHER_USER_MAP_MOVE:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_JOIN:
+			insertUserInfo(sock, buffer);
+			break;
+		case UPDATE_LOGIN_TIME:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_TILED_MAP:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_IMAGE:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case DELETE_FIELD_ITEM:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_FIELD_OBJECT_INFO:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_FIELD_MONSTER_INFO:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_INVENTORY_ITEM_INFO:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case MOVE_INVENTORY_ITEM:
+			moveInventoryInfo(sock, buffer);
+			break;
+		case REQUEST_THROW_ITEM:
+			createThrowItemOnMap(sock, buffer);
+			break;
+		case REQUEST_EAT_ITEM:
+			userGetMapItem(sock, buffer);
+			break;
+		case ATTACK_FILED_OBJECT:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		case REQUEST_LOGOUT:
+			closeClient(sock);
+			break;
+		case UPDATE_USER_INFO:
+			updateUserInfo(sock, buffer);
+			break;
+		default:
+			packetManagerServer->sendRequest(sock, code, buffer, size);
+			break;
+		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }
 
 #endif
+
+void GameServer::accept_win()
+{
+	int code;
+	int size;
+#ifdef _WIN32
+	SOCKET outputSock;
+#elif __linux__
+	int outputSock;
+#endif
+	int outputCode;
+	char outputBuffer[BUF_SIZE];
+	int outputSize;
+
+	if (packetManagerServer->readyRecv() == -1)
+		return;
+
+	for (int i = 0; i < packetManagerServer->recvSocketCount(); i++)
+	{
+		int sockType = packetManagerServer->recvSocketNum(i);
+		if (sockType == 0)
+			packetManagerServer->registClientSocket();
+		else if (sockType == 1)
+		{
+			int num;
+			if ((num = packetManagerServer->recvDataAnalysis(i, &outputSock, &outputCode, outputBuffer, &outputSize)) != -1)
+				updateLogout(num);
+			else
+				run(outputSock, outputCode, outputBuffer, outputSize);
+		}
+	}
+}
 
 #ifdef _WIN32
 void GameServer::getUserInfo(SOCKET sock, const char* name)
@@ -417,12 +240,12 @@ void GameServer::getUserInfo(int sock, const char* name)
 		User getUser = userService->getUserInfo(name);
 		memcpy(message, &getUser, sizeof(User));
 
-		sendRequest(sock, REQUEST_USER_INFO, message, sizeof(User));
+		packetManagerServer->sendRequest(sock, REQUEST_USER_INFO, message, sizeof(User));
 		//printf("send code(%d), UserInfo(%s), size(%d)\n", REQUEST_USER_INFO, getUser.getName(), sizeof(User));
 	}
 	catch (const runtime_error& error)
 	{
-		sendRequest(sock, REQUEST_USER_INFO, "unknown_id_send_fail", strlen("unknown_id_send_fail") + 1);
+		packetManagerServer->sendRequest(sock, REQUEST_USER_INFO, "unknown_id_send_fail", strlen("unknown_id_send_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -460,11 +283,11 @@ void GameServer::updateLogin(int sock, const char* name)
 		{
 			userService->updateLogin(sock, name);
 			loginUser = userService->getUserInfo(name);
-			sendRequest(sock, REQUEST_LOGIN, "login okey", strlen("login okey") + 1);
+			packetManagerServer->sendRequest(sock, REQUEST_LOGIN, "login okey", strlen("login okey") + 1);
 		}
 		else
 		{
-			sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail") + 1);
+			packetManagerServer->sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail") + 1);
 			return;
 		}
 
@@ -476,11 +299,11 @@ void GameServer::updateLogin(int sock, const char* name)
 				continue;
 
 			memcpy(message, &loginUser, sizeof(User));
-			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+			packetManagerServer->sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
 
 			iter->setAction(ACTION_MAP_IN);
 			memcpy(message, &(*iter), sizeof(User));
-			sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
+			packetManagerServer->sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 		}
 
 		mapMonsterList = mapManageService->getFieldMonster(loginUser.getField());
@@ -488,7 +311,7 @@ void GameServer::updateLogin(int sock, const char* name)
 		for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
 		{
 			memcpy(message, &(*monsterIter), sizeof(MapInfo));
-			sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
+			packetManagerServer->sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
 		}
 
 		mapObjectList = mapManageService->getFieldObject(loginUser.getField());
@@ -496,7 +319,7 @@ void GameServer::updateLogin(int sock, const char* name)
 		for (objectIter = mapObjectList.begin(); objectIter != mapObjectList.end(); objectIter++)
 		{
 			memcpy(message, &(*objectIter), sizeof(MapInfo));
-			sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
+			packetManagerServer->sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
 		}
 
 		inventoryList = userService->getUserInventoryInfo(loginUser.getName());
@@ -504,7 +327,7 @@ void GameServer::updateLogin(int sock, const char* name)
 		for (inventoryIter = inventoryList.begin(); inventoryIter != inventoryList.end(); inventoryIter++)
 		{
 			memcpy(message, &(*inventoryIter), sizeof(InventoryInfo));
-			sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
+			packetManagerServer->sendRequest(sock, REQUEST_INVENTORY_ITEM_INFO, message, sizeof(InventoryInfo));
 			printf("REQUEST_INVENTORY_ITEM_INFO, name(%s), pos(%d, %d)\n", inventoryIter->getItemName(), inventoryIter->getXpos(), inventoryIter->getYpos());
 		}
 		printf("\n");
@@ -514,12 +337,12 @@ void GameServer::updateLogin(int sock, const char* name)
 		for (itemIter = itemList.begin(); itemIter != itemList.end(); itemIter++)
 		{
 			memcpy(message, &(*itemIter), sizeof(MapInfo));
-			sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
+			packetManagerServer->sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
 		}
 	}
 	catch (const runtime_error& error)
 	{
-		sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail"));
+		packetManagerServer->sendRequest(sock, REQUEST_LOGIN, "login fail", strlen("login fail"));
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -539,7 +362,7 @@ void GameServer::updateLogout(int sock)
 	{
 		logoutUser = userService->getUserInfo(sock);
 		userService->updateLogout(logoutUser.getName());
-		sendRequest(sock, REQUEST_LOGOUT, "logout okey", strlen("logout okey") + 1);
+		packetManagerServer->sendRequest(sock, REQUEST_LOGOUT, "logout okey", strlen("logout okey") + 1);
 
 		loginUserList = userService->getFieldLoginUserAll(logoutUser.getField());
 
@@ -550,13 +373,13 @@ void GameServer::updateLogout(int sock)
 
 			logoutUser.setAction(ACTION_MAP_OUT);
 			memcpy(message, &logoutUser, sizeof(User));
-			sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+			packetManagerServer->sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
 		}
 	}
 	catch (const runtime_error& error)
 	{
 		std::cout << '\t' << error.what() << std::endl;
-		sendRequest(sock, REQUEST_LOGOUT, "logout fail", strlen("logout fail") + 1);
+		packetManagerServer->sendRequest(sock, REQUEST_LOGOUT, "logout fail", strlen("logout fail") + 1);
 	}
 }
 
@@ -584,17 +407,17 @@ void GameServer::chatting(int sock, const char* chatting)
 		sendChattingInfo = chattingService->getLatestChatting(chattingInfo.getName(), chattingInfo.getField());
 		memcpy(message, &sendChattingInfo, sizeof(Chatting));
 
-		sendRequest(sock, CHATTING_PROCESS, message, sizeof(Chatting));
+		packetManagerServer->sendRequest(sock, CHATTING_PROCESS, message, sizeof(Chatting));
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
 			if (iter->getSock() == sock)
 				continue;
 
-			sendRequest(iter->getSock(), OTHER_USER_CHATTING_PROCESS, message, sizeof(Chatting));
+			packetManagerServer->sendRequest(iter->getSock(), OTHER_USER_CHATTING_PROCESS, message, sizeof(Chatting));
 		}
 
-		sendRequest(sock, REQUEST_CHATTING_FINISH, "chatting_finish", strlen("chatting_finish") + 1);
+		packetManagerServer->sendRequest(sock, REQUEST_CHATTING_FINISH, "chatting_finish", strlen("chatting_finish") + 1);
 	}
 	catch (const runtime_error& error)
 	{
@@ -629,7 +452,7 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 
 		if (user.getAction() == ACTION_MAP_MOVE)
 		{
-			sendRequest(sock, REQUEST_MAP_MOVE, userInfo, sizeof(User));
+			packetManagerServer->sendRequest(sock, REQUEST_MAP_MOVE, userInfo, sizeof(User));
 
 			fieldUserList = userService->getFieldLoginUserAll(user.getField());
 			userService->updateUserInfo(user);
@@ -639,14 +462,14 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 				if (iter->getSock() == sock)
 					continue;
 
-				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
+				packetManagerServer->sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, userInfo, sizeof(User));
 			}
 
-			sendRequest(sock, REQUEST_MAP_MOVE_FINISH, "map_move_finish", strlen("map_move_finish") + 1);
+			packetManagerServer->sendRequest(sock, REQUEST_MAP_MOVE_FINISH, "map_move_finish", strlen("map_move_finish") + 1);
 		}
 		else if (user.getAction() == ACTION_MAP_POTAL)
 		{
-			sendRequest(sock, REQUEST_MAP_MOVE, userInfo, sizeof(User));
+			packetManagerServer->sendRequest(sock, REQUEST_MAP_MOVE, userInfo, sizeof(User));
 
 			moveUser = userService->getUserInfo(user.getName());
 			regionFieldUserList = userService->getFieldLoginUserAll(moveUser.getField());
@@ -658,7 +481,7 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 					continue;
 
 				memcpy(message, &moveUser, sizeof(User));
-				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+				packetManagerServer->sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
 			}
 
 			fieldUserList = userService->getFieldLoginUserAll(user.getField());
@@ -671,11 +494,11 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 					continue;
 
 				memcpy(message, &user, sizeof(User));
-				sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
+				packetManagerServer->sendRequest(iter->getSock(), OTHER_USER_MAP_MOVE, message, sizeof(User));
 
 				iter->setAction(ACTION_MAP_IN);
 				memcpy(message, &(*iter), sizeof(User));
-				sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
+				packetManagerServer->sendRequest(sock, OTHER_USER_MAP_MOVE, message, sizeof(User));
 			}
 
 			mapMonsterList = mapManageService->getFieldMonster(user.getField());
@@ -683,7 +506,7 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 			for (monsterIter = mapMonsterList.begin(); monsterIter != mapMonsterList.end(); monsterIter++)
 			{
 				memcpy(message, &(*monsterIter), sizeof(MapInfo));
-				sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
+				packetManagerServer->sendRequest(sock, REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
 			}
 
 			mapObjectList = mapManageService->getFieldObject(user.getField());
@@ -691,7 +514,7 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 			for (objectIter = mapObjectList.begin(); objectIter != mapObjectList.end(); objectIter++)
 			{
 				memcpy(message, &(*objectIter), sizeof(MapInfo));
-				sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
+				packetManagerServer->sendRequest(sock, REQUEST_FIELD_OBJECT_INFO, message, sizeof(MapInfo));
 			}
 
 			mapItemList = mapManageService->getFieldItem(user.getField());
@@ -699,15 +522,15 @@ void GameServer::updateMoveInfo(int sock, const char* userInfo)
 			for (itemIter = mapItemList.begin(); itemIter != mapItemList.end(); itemIter++)
 			{
 				memcpy(message, &(*itemIter), sizeof(MapInfo));
-				sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
+				packetManagerServer->sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
 			}
 
-			sendRequest(sock, REQUEST_MAP_POTAL_FINISH, "map_potal_finish", strlen("map_potal_finish") + 1);
+			packetManagerServer->sendRequest(sock, REQUEST_MAP_POTAL_FINISH, "map_potal_finish", strlen("map_potal_finish") + 1);
 		}
 	}
 	catch (const runtime_error& error)
 	{
-		sendRequest(sock, REQUEST_MAP_MOVE, "map_move_fail", strlen("map_move_fail") + 1);
+		packetManagerServer->sendRequest(sock, REQUEST_MAP_MOVE, "map_move_fail", strlen("map_move_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -753,10 +576,10 @@ void GameServer::createThrowItemOnMap(int sock, const char* inventoryInfo)
 
 		for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 		{
-			sendRequest(iter->getSock(), REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
+			packetManagerServer->sendRequest(iter->getSock(), REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
 		}
 
-		sendRequest(sock, REQUEST_THROW_ITEM_FINISH, inventoryInfo, sizeof(InventoryInfo));
+		packetManagerServer->sendRequest(sock, REQUEST_THROW_ITEM_FINISH, inventoryInfo, sizeof(InventoryInfo));
 	}
 	catch (const runtime_error& error)
 	{
@@ -804,7 +627,7 @@ void GameServer::userGetMapItem(int sock, const char* userInfo)
 					for (iter = loginUserList.begin(); iter != loginUserList.end(); iter++)
 					{
 						memcpy(message, &itemInfo, sizeof(MapInfo));
-						sendRequest(iter->getSock(), DELETE_FIELD_ITEM, message, sizeof(MapInfo));
+						packetManagerServer->sendRequest(iter->getSock(), DELETE_FIELD_ITEM, message, sizeof(MapInfo));
 					}
 
 					inventoryInfo.setItemName(itemInfo.getName());
@@ -818,14 +641,14 @@ void GameServer::userGetMapItem(int sock, const char* userInfo)
 					userService->addInventoryItem(inventoryInfo);
 
 					memcpy(message, &inventoryInfo, sizeof(InventoryInfo));
-					sendRequest(sock, REQUEST_EAT_ITEM, message, sizeof(InventoryInfo));
-					sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
+					packetManagerServer->sendRequest(sock, REQUEST_EAT_ITEM, message, sizeof(InventoryInfo));
+					packetManagerServer->sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
 					return;
 				}
 			}
 		}
 
-		sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
+		packetManagerServer->sendRequest(sock, REQUEST_GET_ITEM_FINISH, "get_item_finish", strlen("get_item_finish") + 1);
 	}
 	catch (const runtime_error& error)
 	{
@@ -871,7 +694,7 @@ void GameServer::moveInventoryInfo(int sock, const char* inventoryInfo)
 		{
 			userService->moveInventoryItem(inventoryItemInfo, inventoryItemInfo.getXpos(), inventoryItemInfo.getYpos());
 
-			sendRequest(sock, MOVE_INVENTORY_ITEM, inventoryInfo, sizeof(InventoryInfo));
+			packetManagerServer->sendRequest(sock, MOVE_INVENTORY_ITEM, inventoryInfo, sizeof(InventoryInfo));
 		}
 		else
 		{
@@ -882,10 +705,10 @@ void GameServer::moveInventoryInfo(int sock, const char* inventoryInfo)
 			imsiInventoryItemInfo->setYpos(targetInventoryItemInfo->getYpos());
 
 			memcpy(message, imsiInventoryItemInfo, sizeof(InventoryInfo));
-			sendRequest(sock, MOVE_INVENTORY_ITEM, message, sizeof(InventoryInfo));
-			sendRequest(sock, MOVE_INVENTORY_ITEM, inventoryInfo, sizeof(InventoryInfo));
+			packetManagerServer->sendRequest(sock, MOVE_INVENTORY_ITEM, message, sizeof(InventoryInfo));
+			packetManagerServer->sendRequest(sock, MOVE_INVENTORY_ITEM, inventoryInfo, sizeof(InventoryInfo));
 		}
-		sendRequest(sock, MOVE_INVENTORY_ITEM_FINISH, "move_inventory_item_finish", strlen("move_inventory_item_finish") + 1);
+		packetManagerServer->sendRequest(sock, MOVE_INVENTORY_ITEM_FINISH, "move_inventory_item_finish", strlen("move_inventory_item_finish") + 1);
 	}
 	catch (const runtime_error& error)
 	{
@@ -916,14 +739,14 @@ void GameServer::updateUserInfo(int sock, const char* userInfo)
 			if (iter->getSock() == sock)
 				continue;
 
-			sendRequest(iter->getSock(), UPDATE_USER_INFO, userInfo, sizeof(User));
+			packetManagerServer->sendRequest(iter->getSock(), UPDATE_USER_INFO, userInfo, sizeof(User));
 		}
 
-		sendRequest(sock, UPDATE_USER_INFO_FINISH, "update_user_finish", strlen("update_user_finish") + 1);
+		packetManagerServer->sendRequest(sock, UPDATE_USER_INFO_FINISH, "update_user_finish", strlen("update_user_finish") + 1);
 	}
 	catch (const runtime_error& error)
 	{
-		sendRequest(sock, REQUEST_MAP_MOVE, "update_user_fail", strlen("update_user_fail") + 1);
+		packetManagerServer->sendRequest(sock, REQUEST_MAP_MOVE, "update_user_fail", strlen("update_user_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -953,16 +776,16 @@ void GameServer::insertUserInfo(int sock, const char* userInfo)
 		user.setLastLogout("2018-03-17 10:43:00");
 		user.setJoinDate("2018-01-01 10:00:00");
 
-		if(userService->insertUserInfo(user) == true)
-			sendRequest(sock, REQUEST_JOIN, "join_user_success", strlen("join_user_success") + 1);
+		if (userService->insertUserInfo(user) == true)
+			packetManagerServer->sendRequest(sock, REQUEST_JOIN, "join_user_success", strlen("join_user_success") + 1);
 		else
-			sendRequest(sock, REQUEST_JOIN, "join_user_fail", strlen("join_user_fail") + 1);
+			packetManagerServer->sendRequest(sock, REQUEST_JOIN, "join_user_fail", strlen("join_user_fail") + 1);
 
-		sendRequest(sock, REQUEST_JOIN_FINISH, "join_user_finish", strlen("join_user_finish") + 1);
+		packetManagerServer->sendRequest(sock, REQUEST_JOIN_FINISH, "join_user_finish", strlen("join_user_finish") + 1);
 	}
 	catch (const runtime_error& error)
 	{
-		sendRequest(sock, REQUEST_JOIN_FINISH, "join_user_fail", strlen("join_user_fail") + 1);
+		packetManagerServer->sendRequest(sock, REQUEST_JOIN_FINISH, "join_user_fail", strlen("join_user_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
@@ -973,19 +796,8 @@ void GameServer::closeClient(SOCKET sock)
 void GameServer::closeClient(int sock)
 #endif
 {
-#ifdef _WIN32
 	updateLogout(sock);
-	printf("closed client : %d\n", sock);
-
-	//FD_CLR(sock);
-	closesocket(sock);
-#elif __linux__
-	updateLogout(sock);
-	clientCount--;
-
-	epoll_ctl(epfd, EPOLL_CTL_DEL, sock, NULL);
-	close(sock);
-#endif
+	packetManagerServer->closeClient(sock);
 }
 
 void GameServer::regenMonster()

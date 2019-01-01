@@ -19,75 +19,18 @@
 #include "service/ChattingService.h"
 #include "service/MapManageService.h"
 
-#define BUF_SIZE 1024
-#define EPOLL_SIZE 50
+#include "Packet/PacketManagerServer.h"
+
 #define INVENTORY_X_SIZE 3
 #define INVENTORY_Y_SIZE 5
-
-#define REQUEST_USER_INFO				1
-#define REQUEST_LOGIN					2
-#define CHATTING_PROCESS				3
-#define USER_MOVE_UPDATE				4
-#define OTHER_USER_MAP_MOVE				5
-#define REQUEST_JOIN					6
-#define UPDATE_LOGIN_TIME				7
-#define REQUEST_TILED_MAP				8
-#define REQUEST_IMAGE					9
-#define DELETE_FIELD_ITEM				10
-#define REQUEST_FIELD_OBJECT_INFO		11
-#define REQUEST_FIELD_MONSTER_INFO		12
-#define REQUEST_INVENTORY_ITEM_INFO		13
-#define REQUEST_FIELD_ITEM_INFO			14
-#define MOVE_INVENTORY_ITEM				15
-#define REQUEST_THROW_ITEM				16
-#define REQUEST_EAT_ITEM				17
-#define REGEN_MONSTER					18
-#define ATTACK_FILED_OBJECT				19
-#define REQUEST_LOGOUT					20
-#define REQUEST_MAP_MOVE				21
-#define REQUEST_MAP_POTAL_FINISH		22
-#define REQUEST_THROW_ITEM_FINISH		23
-#define REQUEST_GET_ITEM_FINISH			24
-#define REQUEST_CHATTING_FINISH			25
-#define REQUEST_MAP_MOVE_FINISH			26
-#define UPDATE_USER_INFO				27
-#define UPDATE_USER_INFO_FINISH			28
-#define REQUEST_JOIN_FINISH				29
-#define OTHER_USER_CHATTING_PROCESS		30
-#define MOVE_INVENTORY_ITEM_FINISH		31
-#define OTHER_REQUEST					100
-#define REQUEST_ERROR					255
-#define TEST							555
-#define CUR_PATH						"/home/gkf9876/server/Resources/"
-//#define CUR_PATH						"/home/pi/server/Resources/"
 
 using namespace std;
 
 class GameServer
 {
 private:
-#ifdef _WIN32
-	WSADATA wsaData;
-	SOCKET hServSock, hClntSock;
-	SOCKADDR_IN servAddr, clntAddr;
-	TIMEVAL timeout;
-	fd_set reads, cpyReads;
-	int adrSz;
-	int fdNum;
-	int strLen;
-	char buffer[BUF_SIZE];
-#elif __linux__
-	int hServSock, hClntSock;
-	struct sockaddr_in servAddr, clntAddr;
-	socklen_t adr_sz;
-	int strLen;
-	char buffer[BUF_SIZE];
+	PacketManagerServer* packetManagerServer;
 
-	struct epoll_event* ep_events;
-	struct epoll_event event;
-	int epfd, event_cnt;
-	int clientCount;
-#endif
 	UserService* userService;
 	ChattingService* chattingService;
 	MapManageService* mapManageService;
@@ -98,21 +41,15 @@ public:
 	void setChattingService(ChattingService* chattingService);
 	void setMapManageService(MapManageService* mapManageService);
 
-	void ErrorHandling(const char* message);
+	int getClientCount();
 
 	void openServer(int port);
 	void closeServer();
 
-	int getClientCount();
-
-#ifdef _WIN32
 	void accept_win();
 
-	void sends(SOCKET sock, const char* data, int size);
-	int recvs(SOCKET sock, char* data, int size);
-
-	int sendRequest(SOCKET sock, int code, const char* data, int size);
-	int recvRequest(SOCKET sock, int* code, char* data);
+#ifdef _WIN32
+	void run(SOCKET sock, int code, const char* buffer, int size);
 
 	void getUserInfo(SOCKET sock, const char* name);
 	void updateLogin(SOCKET sock, const char* name);
@@ -131,13 +68,7 @@ public:
 	void closeClient(SOCKET sock);
 
 #elif __linux__
-	void accept_linux();
-
-	void sends(int sock, const char* data, int size);
-	int recvs(int sock, char* data, int size);
-
-	int sendRequest(int sock, int code, const char* data, int size);
-	int recvRequest(int sock, int* code, char* data);
+	void run(int sock, int code, const char* buffer, int size);
 
 	void getUserInfo(int sock, const char* name);
 	void updateLogin(int sock, const char* name);

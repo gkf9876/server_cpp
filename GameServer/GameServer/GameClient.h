@@ -12,7 +12,7 @@
 #include "domain/MapInfo.h"
 #include "domain/Chatting.h"
 
-#include "PacketManager.h"
+#include "Packet/PacketManagerClient.h"
 
 #define INVENTORY_X_SIZE 3
 #define INVENTORY_Y_SIZE 5
@@ -20,7 +20,7 @@
 class GameClient
 {
 private:
-	PacketManager * packetManager;
+	PacketManagerClient * packetManagerClient;
 
 	User mainUser;
 	Chatting mainChatting;
@@ -32,10 +32,8 @@ private:
 	InventoryInfo * inventory_items_Info[3][5];						//아이템창에 있는 아이템 목록
 
 	bool isLogin = false;
-	bool isGetUserInfo = false;
 	bool popupLoginFail = false;
 
-	bool isRequestLoginFinish = false;
 
 	vector<string> * log = NULL;
 
@@ -92,13 +90,8 @@ public:
 
 	void setIsLogin(bool value);
 	bool getIsLogin();
-	void setIsGetUserInfo(bool value);
-	bool getIsGetUserInfo();
 	void setPopupLoginFail(bool value);
 	bool getPopupLoginFail();
-
-	void setIsRequestLoginFinish(bool value);
-	bool getIsRequestLoginFinish();
 
 	void setLogout(bool value);
 	bool getLogout();

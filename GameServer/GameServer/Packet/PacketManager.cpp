@@ -1,66 +1,32 @@
 ﻿#include "PacketManager.h"
 
-void PacketManager::openClient(const char* addr, int port)
-{
-#ifdef _WIN32
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-		ErrorHandling("WSAStartup() error!");
-
-	hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	if (hSocket == INVALID_SOCKET)
-		ErrorHandling("socket() error");
-
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = inet_addr(addr);
-	servAddr.sin_port = port;
-
-	if (connect(hSocket, (SOCKADDR*)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
-		ErrorHandling("connect() error!");
-#elif __linux__
-	hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	if (hSocket == -1)
-		ErrorHandling("socket() error");
-
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = inet_addr(addr);
-	servAddr.sin_port = port;
-
-	if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
-		ErrorHandling("connect() error!");
-#elif __APPLE__
-	hSocket = socket(PF_INET, SOCK_STREAM, 0);
-	if (hSocket == -1)
-		ErrorHandling("socket() error");
-
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = inet_addr(addr);
-	servAddr.sin_port = port;
-
-	if (connect(hSocket, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
-		ErrorHandling("connect() error!");
-#endif
-}
-
-void PacketManager::closeClient()
-{
-#ifdef _WIN32
-	closesocket(hSocket);
-	WSACleanup();
-#elif __linux__
-	close(hSocket);
-#elif __APPLE__
-	close(hSocket);
-#endif
-}
 
 void PacketManager::ErrorHandling(const char* message)
 {
 	fputs(message, stderr);
 	fputc('\n', stderr);
 	exit(1);
+}
+
+
+void PacketManager::setIsGetUserInfo(bool value)
+{
+	this->isGetUserInfo = value;
+}
+
+bool PacketManager::getIsGetUserInfo()
+{
+	return this->isGetUserInfo;
+}
+
+void PacketManager::setIsRequestLoginFinish(bool value)
+{
+	this->isRequestLoginFinish = value;
+}
+
+bool PacketManager::getIsRequestLoginFinish()
+{
+	return this->isRequestLoginFinish;
 }
 
 void PacketManager::setIsGetObjectInfo(bool value)
@@ -193,29 +159,32 @@ bool PacketManager::getIsJoinUserSeccess()
 	return this->isJoinUserSeccess;
 }
 
-void PacketManager::sendc(const char* data, int size)
+#if defined(_WIN32)
+void PacketManager::sendc(SOCKET sock, const char* data, int size)
 {
-#ifdef _WIN32
-	send(hSocket, data, size, 0);
-#elif __linux__
-	write(hSocket, data, size);
-#elif __APPLE__
-	write(hSocket, data, size);
-#endif
+	send(sock, data, size, 0);
 }
-
-int PacketManager::recvc(char* data, int size)
+#elif defined(__linux__) || defined(__APPLE__)
+void PacketManager::sendc(int sock, const char * data, int size)
 {
-#ifdef _WIN32
-	return recv(hSocket, data, size, 0);
-#elif __linux__
-	return read(hSocket, data, size);
-#elif __APPLE__
-	return read(hSocket, data, size);
-#endif
+	write(sock, data, size);
 }
+#endif
 
-void PacketManager::sendRequest(int code, const char* data, int size)
+#if defined(_WIN32)
+int PacketManager::recvc(SOCKET sock, char* data, int size)
+{
+	return recv(sock, data, size, 0);
+}
+#elif defined(__linux__) || defined(__APPLE__)
+int PacketManager::recvc(int sock, char* data, int size)
+{
+	return read(sock, data, size);
+}
+#endif
+
+#if defined(_WIN32)
+void PacketManager::sendRequest(SOCKET sock, int code, const char* data, int size)
 {
 	int writeLen;
 	char* buffer = new char[size + 8];
@@ -224,23 +193,62 @@ void PacketManager::sendRequest(int code, const char* data, int size)
 	memcpy(&buffer[4], &code, sizeof(int));
 	memcpy(&buffer[8], data, size);
 
-	sendc(buffer, size + 8);
+	sendc(sock, buffer, size + 8);
 	free(buffer);
 }
+#elif defined(__linux__) || defined(__APPLE__)
+void PacketManager::sendRequest(int sock, int code, const char* data, int size)
+{
+	int writeLen;
+	char* buffer = new char[size + 8];
 
-int PacketManager::recvRequest(int* code, char* data)
+	memcpy(&buffer[0], &size, sizeof(int));
+	memcpy(&buffer[4], &code, sizeof(int));
+	memcpy(&buffer[8], data, size);
+
+	sendc(sock, buffer, size + 8);
+	free(buffer);
+}
+#endif
+
+#if defined(_WIN32)
+int PacketManager::recvRequest(SOCKET sock, int* code, char* data)
 {
 	int size;
-	int readLen;
+	int readLen1, readLen2, readLen3;
 	char buffer[BUF_SIZE];
 
-	readLen = recvc(buffer, 4);
+	if ((readLen1 = recvc(sock, buffer, 4)) == 0)
+		return 0;
 	memcpy(&size, buffer, sizeof(int));
 
-	readLen += recvc(buffer, 4);
+	if ((readLen2 = recvc(sock, buffer, 4)) == 0)
+		return 0;
 	memcpy(code, buffer, sizeof(int));
 
-	readLen += recvc(data, size);
-
-	return readLen;
+	if ((readLen3 = recvc(sock, data, size)) == size)
+		return (readLen1 + readLen2 + readLen3);
+	else
+		return 0;
 }
+#elif defined(__linux__) || defined(__APPLE__)
+int PacketManager::recvRequest(int sock, int* code, char* data)
+{
+	int size;
+	int readLen1, readLen2, readLen3;
+	char buffer[BUF_SIZE];
+
+	if ((readLen1 = recvc(sock, buffer, 4)) == 0)
+		return 0;
+	memcpy(&size, buffer, sizeof(int));
+
+	if ((readLen2 = recvc(sock, buffer, 4)) == 0)
+		return 0;
+	memcpy(code, buffer, sizeof(int));
+
+	if ((readLen3 = recvc(sock, data, size)) == size)
+		return (readLen1 + readLen2 + readLen3);
+	else
+		return 0;
+}
+#endif

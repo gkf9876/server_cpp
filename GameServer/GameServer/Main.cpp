@@ -102,11 +102,7 @@ int main()
 
 		while (1)
 		{
-#ifdef _WIN32
 			gameServer->accept_win();
-#elif __linux__
-			gameServer->accept_linux();
-#endif
 		}
 
 		gameServer->closeServer();
