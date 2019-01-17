@@ -16,6 +16,7 @@
 #include "../service/MapManageService.h"
 #include "../service/UserService.h"
 #include "../service/LoadingScreenService.h"
+#include "../service/ServerInfoService.h"
 
 #include "../GameServer.h"
 
@@ -35,6 +36,7 @@ private:
 	MapManageService* mapManageServiceInstance = NULL;
 	UserService* userServiceInstance = NULL;
 	LoadingScreenService* loadingScreenServiceInstance = NULL;
+	ServerInfoService* serverInfoServiceInstance = NULL;
 
 	GameServer* gameServerInstance = NULL;
 
@@ -59,6 +61,7 @@ public:
 	MapManageService* mapManageService();
 	UserService* userService();
 	LoadingScreenService* loadingScreenService();
+	ServerInfoService* serverInfoService();
 
 	GameServer* gameServer();
 };

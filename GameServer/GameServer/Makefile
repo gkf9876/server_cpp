@@ -1,13 +1,13 @@
 server : Main.o ApplicationContext.o TestApplicationContext.o Assert.o DataSource.o \
 	Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o LoadingScreen.o \
 	ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o LoadingScreenDao.o LoadingScreenDaoTest.o \
-	ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o \
+	ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o ServerInfoService.o ServerInfoServiceTest.o \
 	PacketManager.o PacketManagerServer.o PacketManagerClient.o \
 	GameClient.o GameServer.o GameServerTest.o
 	gcc -o server Main.o ApplicationContext.o TestApplicationContext.o Assert.o DataSource.o \
 		Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o LoadingScreen.o \
 		ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o LoadingScreenDao.o LoadingScreenDaoTest.o \
-		ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o \
+		ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o ServerInfoService.o ServerInfoServiceTest.o \
 		PacketManager.o PacketManagerServer.o PacketManagerClient.o \
 		GameClient.o GameServer.o GameServerTest.o \
 		libtmx.a `xml2-config --libs` -lz -lpthread -lmysqlclient -lstdc++ -o server
@@ -120,6 +120,12 @@ LoadingScreenService.o : service/LoadingScreenService.cpp
 
 LoadingScreenServiceTest.o : service/LoadingScreenServiceTest.cpp
 	gcc -c -o LoadingScreenServiceTest.o service/LoadingScreenServiceTest.cpp
+
+ServerInfoService.o : service/ServerInfoService.cpp
+	gcc -c -o ServerInfoService.o service/ServerInfoService.cpp
+
+ServerInfoServiceTest.o : service/ServerInfoServiceTest.cpp
+	gcc -c -o ServerInfoServiceTest.o service/ServerInfoServiceTest.cpp
 
 PacketManager.o : Packet/PacketManager.cpp
 	gcc -c -o PacketManager.o Packet/PacketManager.cpp

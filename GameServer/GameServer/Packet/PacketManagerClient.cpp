@@ -94,6 +94,7 @@ void PacketManagerClient::sendRequestMessage(int code, void* data, int size){
 		}
 		else
 		{
+			//다른 맵 이동이 마칠때까지
 			while (getIsMapPotalFinish() != true);
 			setIsMapPotalFinish(false);
 		}

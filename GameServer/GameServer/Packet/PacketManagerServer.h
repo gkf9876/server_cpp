@@ -14,7 +14,6 @@
 #endif
 
 #include "PacketManager.h"
-#include "../domain/User.h"
 
 using namespace std;
 
@@ -25,18 +24,13 @@ private:
 	WSADATA wsaData;
 	SOCKET hServSock, hClntSock;
 	SOCKADDR_IN servAddr, clntAddr;
-	TIMEVAL timeout;
 	fd_set reads, cpyReads;
 	int adrSz;
 	int fdNum;
-	int strLen;
-	char buffer[BUF_SIZE];
 #elif defined(__linux__) || defined(__APPLE__)
 	int hServSock, hClntSock;
 	struct sockaddr_in servAddr, clntAddr;
 	socklen_t adr_sz;
-	int strLen;
-	char buffer[BUF_SIZE];
 
 	struct epoll_event* ep_events;
 	struct epoll_event event;

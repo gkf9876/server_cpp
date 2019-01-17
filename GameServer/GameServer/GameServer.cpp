@@ -25,6 +25,11 @@ void GameServer::setMapManageService(MapManageService* mapManageService)
 	this->mapManageService = mapManageService;
 }
 
+void GameServer::setServerInfoService(ServerInfoService * serverInfoService)
+{
+	this->serverInfoService = serverInfoService;
+}
+
 
 int GameServer::getClientCount()
 {
@@ -787,6 +792,30 @@ void GameServer::insertUserInfo(int sock, const char* userInfo)
 	{
 		packetManagerServer->sendRequest(sock, REQUEST_JOIN_FINISH, "join_user_fail", strlen("join_user_fail") + 1);
 		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+#ifdef _WIN32
+void GameServer::connectionConfirm(int idx)
+#elif __linux__
+void GameServer::connectionConfirm(int idx)
+#endif
+{
+	char message[BUF_SIZE];
+	ServerInfo serverInfo;
+	serverInfo.setIdx(idx);
+
+	list<User> loginUser = userService->getLoginUserAll();
+	list<User>::iterator iter;
+
+	serverInfoService->updateServerInfo(serverInfo);
+	serverInfo = serverInfoService->getServerInfo(idx);
+
+	memcpy(message, &serverInfo, sizeof(ServerInfo));
+
+	for (iter = loginUser.begin(); iter != loginUser.end(); iter++)
+	{
+		packetManagerServer->sendRequest(iter->getSock(), REQUEST_SERVER_INFO, message, sizeof(ServerInfo));
 	}
 }
 

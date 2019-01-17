@@ -72,6 +72,7 @@ int PacketManagerServer::readyRecv()
 {
 #ifdef _WIN32
 	cpyReads = reads;
+	TIMEVAL timeout;
 	timeout.tv_sec = 5;
 	timeout.tv_usec = 5000;
 
@@ -80,7 +81,7 @@ int PacketManagerServer::readyRecv()
 	else
 		return 1;
 #elif __linux__
-	event_cnt = epoll_wait(epfd, ep_events, EPOLL_SIZE, -1);
+	event_cnt = epoll_wait(epfd, ep_events, EPOLL_SIZE, 10);
 	if (event_cnt == -1)
 	{
 		puts("epoll_wait() error");
@@ -112,6 +113,8 @@ int PacketManagerServer::recvDataAnalysis(int i, SOCKET* outputSock, int* output
 {
 	int code;
 	int size;
+	int strLen;
+	char buffer[BUF_SIZE];
 
 	strLen = recvRequest(reads.fd_array[i], &code, buffer);
 	size = strLen - 8;
@@ -144,6 +147,8 @@ int PacketManagerServer::recvDataAnalysis(int i, int* outputSock, int* outputCod
 {
 	int code;
 	int size;
+	int strLen;
+	char buffer[BUF_SIZE];
 
 	strLen = recvRequest(ep_events[i].data.fd, &code, buffer);
 	size = strLen - 8;

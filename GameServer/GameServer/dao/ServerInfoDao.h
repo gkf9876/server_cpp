@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <sstream>
+#include <list>
 #include "../datasource/DataSource.h"
 #include "../domain/ServerInfo.h"
 
@@ -16,6 +18,9 @@ public:
 	ServerInfoDao();
 	~ServerInfoDao();
 	void setDataSource(DataSource* dataSource);
+
+	void update(ServerInfo info);
+	ServerInfo get(int idx);
 };
 
 #endif

@@ -48,6 +48,7 @@
 #define REQUEST_JOIN_FINISH				29
 #define OTHER_USER_CHATTING_PROCESS		30
 #define MOVE_INVENTORY_ITEM_FINISH		31
+#define REQUEST_SERVER_INFO				32
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define TEST                            555

@@ -16,6 +16,7 @@
 #include "service/UserServiceTest.h"
 #include "service/ChattingServiceTest.h"
 #include "service/LoadingScreenServiceTest.h"
+#include "service/ServerInfoServiceTest.h"
 
 int main()
 {
@@ -76,6 +77,11 @@ int main()
 	loadingScreenServiceTest->run();
 	delete loadingScreenServiceTest;
 
+	ServerInfoServiceTest* serverInfoServiceTest = new ServerInfoServiceTest();
+	serverInfoServiceTest->setApplicationContext(testContext);
+	serverInfoServiceTest->run();
+	delete serverInfoServiceTest;
+
 #ifdef _WIN32
 #elif __linux__
 	GameServerTest * gameServerTest = new GameServerTest();
@@ -96,6 +102,7 @@ int main()
 
 	try
 	{
+		int timeCount = 0;
 		gameServer->openServer(9190);
 
 		std::cout << "--------------- Server start!! ---------------" << std::endl;
@@ -103,6 +110,14 @@ int main()
 		while (1)
 		{
 			gameServer->accept_win();
+
+			//1초마다 유저들 접속 확인
+			timeCount++;
+			if (timeCount >= 100)
+			{
+				gameServer->connectionConfirm(1);
+				timeCount = 0;
+			}
 		}
 
 		gameServer->closeServer();
