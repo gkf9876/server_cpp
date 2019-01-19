@@ -11,6 +11,7 @@
 #include "domain/Monster.h"
 #include "domain/MapInfo.h"
 #include "domain/Chatting.h"
+#include "domain/ServerInfo.h"
 
 #include "Packet/PacketManagerClient.h"
 
@@ -20,8 +21,6 @@
 class GameClient
 {
 private:
-	PacketManagerClient * packetManagerClient;
-
 	User mainUser;
 	Chatting mainChatting;
 	vector<User*> * usersInfo = NULL;								//현재 맵의 다른 유저들
@@ -30,6 +29,7 @@ private:
 	vector<MapInfo*> * itemInfo = NULL;
 	vector<Chatting*> * chattingInfo = NULL;						//현재 맵의 채팅
 	InventoryInfo * inventory_items_Info[3][5];						//아이템창에 있는 아이템 목록
+	ServerInfo serverInfo;
 
 	bool isLogin = false;
 	bool popupLoginFail = false;
@@ -39,6 +39,8 @@ private:
 
 	bool logout = false;
 public:
+	PacketManagerClient * packetManagerClient;
+
 	GameClient();
 	~GameClient();
 	void recvRun();
@@ -88,6 +90,9 @@ public:
 	void removeInventoryInfo(int xpos, int ypos);
 	void moveInventoryInfo(int xpos, int ypos, int to_xpos, int to_ypos);
 
+	void setServerInfo(ServerInfo serverInfo);
+	ServerInfo getServerInfo();
+
 	void setIsLogin(bool value);
 	bool getIsLogin();
 	void setPopupLoginFail(bool value);
@@ -116,6 +121,9 @@ public:
 
 	void requestUpdateUserInfo();
 	void requestJoinUser(User userInfo);
+
+	bool getIsGetItemInfo();
+	bool getIsJoinUserSeccess();
 };
 
 #endif

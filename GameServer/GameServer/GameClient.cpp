@@ -268,6 +268,13 @@ void GameClient::recvRun()
 				if (!strcmp(message, "move_inventory_item_finish"))
 					packetManagerClient->setIsMoveItemFinish(true);
 				break;
+			case REQUEST_SERVER_INFO:
+				{
+					ServerInfo serverInfo;
+					memcpy(&serverInfo, message, sizeof(ServerInfo));
+					this->serverInfo = serverInfo;
+				}
+				break;
 			case TEST:
 				break;
 			default:
@@ -585,6 +592,16 @@ void GameClient::moveInventoryInfo(int xpos, int ypos, int to_xpos, int to_ypos)
 	inventory_items_Info[to_xpos][to_ypos] = temp;
 }
 
+void GameClient::setServerInfo(ServerInfo serverInfo)
+{
+	this->serverInfo = serverInfo;
+}
+
+ServerInfo GameClient::getServerInfo()
+{
+	return this->serverInfo;
+}
+
 void GameClient::setIsLogin(bool value)
 {
 	this->isLogin = value;
@@ -710,4 +727,14 @@ void GameClient::requestUpdateUserInfo()
 void GameClient::requestJoinUser(User userInfo)
 {
 	packetManagerClient->sendRequestMessage(REQUEST_JOIN, &userInfo, sizeof(User));
+}
+
+bool GameClient::getIsGetItemInfo()
+{
+	return packetManagerClient->getIsGetItemInfo();
+}
+
+bool GameClient::getIsJoinUserSeccess()
+{
+	return packetManagerClient->getIsJoinUserSeccess();
 }
