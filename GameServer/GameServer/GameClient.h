@@ -12,8 +12,10 @@
 #include "domain/MapInfo.h"
 #include "domain/Chatting.h"
 #include "domain/ServerInfo.h"
+#include "domain/EventInfo.h"
 
 #include "Packet/PacketManagerClient.h"
+#include "event/EventProcedure.h"
 
 #define INVENTORY_X_SIZE 3
 #define INVENTORY_Y_SIZE 5
@@ -37,6 +39,8 @@ private:
 
 	vector<string> * log = NULL;
 
+	EventProcedure * eventProcedure;
+
 	bool logout = false;
 public:
 	PacketManagerClient * packetManagerClient;
@@ -52,6 +56,9 @@ public:
 
 	void setMainChatting(Chatting chatting);
 	Chatting getMainChatting();
+
+	EventProcedure * getEventProcedure();
+	void addEventInfo(EventInfo eventInfo);
 
 	void addUsersInfo(User* user);
 	void removeUsersInfo(const char* userName);
@@ -124,6 +131,8 @@ public:
 
 	bool getIsGetItemInfo();
 	bool getIsJoinUserSeccess();
+
+	void setRunEventInfo(EventInfo eventInfo);
 };
 
 #endif

@@ -11,12 +11,14 @@
 #include "dao/MapInfoDaoTest.h"
 #include "dao/MonsterDaoTest.h"
 #include "dao/LoadingScreenDaoTest.h"
+#include "dao/EventInfoDaoTest.h"
 
 #include "service/MapManageServiceTest.h"
 #include "service/UserServiceTest.h"
 #include "service/ChattingServiceTest.h"
 #include "service/LoadingScreenServiceTest.h"
 #include "service/ServerInfoServiceTest.h"
+#include "service/EventInfoServiceTest.h"
 
 int main()
 {
@@ -57,6 +59,11 @@ int main()
 	loadingScreenDaoTest->run();
 	delete loadingScreenDaoTest;
 
+	EventInfoDaoTest * eventInfoDaoTest = new EventInfoDaoTest();
+	eventInfoDaoTest->setApplicationContext(testContext);
+	eventInfoDaoTest->run();
+	delete eventInfoDaoTest;
+
 	MapManageServiceTest* mapManageServiceTest = new MapManageServiceTest();
 	mapManageServiceTest->setApplicationContext(testContext);
 	mapManageServiceTest->run();
@@ -81,6 +88,11 @@ int main()
 	serverInfoServiceTest->setApplicationContext(testContext);
 	serverInfoServiceTest->run();
 	delete serverInfoServiceTest;
+
+	EventInfoServiceTest* eventInfoServiceTest = new EventInfoServiceTest();
+	eventInfoServiceTest->setApplicationContext(testContext);
+	eventInfoServiceTest->run();
+	delete eventInfoServiceTest;
 
 #ifdef _WIN32
 #elif __linux__

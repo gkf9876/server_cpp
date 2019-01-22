@@ -20,6 +20,7 @@ GameClient::GameClient()
 	}
 
 	log = new vector<string>();
+	eventProcedure = new EventProcedure();
 }
 
 GameClient::~GameClient()
@@ -42,6 +43,7 @@ GameClient::~GameClient()
 	}
 
 	delete log;
+	delete eventProcedure;
 }
 
 void GameClient::recvRun()
@@ -316,6 +318,24 @@ void GameClient::setMainChatting(Chatting chatting)
 Chatting GameClient::getMainChatting()
 {
 	return this->mainChatting;
+}
+
+EventProcedure * GameClient::getEventProcedure()
+{
+	return this->eventProcedure;
+}
+
+void GameClient::addEventInfo(EventInfo eventInfo)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		EventSequence * eventSequence = this->eventProcedure->getEventSequence(i);
+		if (!strcmp(eventSequence->getName().c_str(), eventInfo.getName()))
+		{
+			eventSequence->setProgress(true);
+			break;
+		}
+	}
 }
 
 void GameClient::addUsersInfo(User* user)
@@ -737,4 +757,9 @@ bool GameClient::getIsGetItemInfo()
 bool GameClient::getIsJoinUserSeccess()
 {
 	return packetManagerClient->getIsJoinUserSeccess();
+}
+
+void GameClient::setRunEventInfo(EventInfo eventInfo)
+{
+	packetManagerClient->sendRequestMessage(RUN_EVENT_INFO_PROCESS, &eventInfo, sizeof(EventInfo));
 }

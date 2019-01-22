@@ -30,6 +30,11 @@ void GameServer::setServerInfoService(ServerInfoService * serverInfoService)
 	this->serverInfoService = serverInfoService;
 }
 
+void GameServer::setEventInfoService(EventInfoService * eventInfoService)
+{
+	this->eventInfoService = eventInfoService;
+}
+
 
 int GameServer::getClientCount()
 {
@@ -111,6 +116,9 @@ void GameServer::run(SOCKET sock, int code, const char* buffer, int size)
 		case UPDATE_USER_INFO:
 			updateUserInfo(sock, buffer);
 			break;
+		case RUN_EVENT_INFO_PROCESS:
+			processingRunEvent(sock, buffer);
+			break;
 		default:
 			packetManagerServer->sendRequest(sock, code, buffer, size);
 			break;
@@ -186,6 +194,9 @@ void GameServer::run(int sock, int code, const char* buffer, int size)
 			break;
 		case UPDATE_USER_INFO:
 			updateUserInfo(sock, buffer);
+			break;
+		case RUN_EVENT_INFO_PROCESS:
+			processingRunEvent(sock, buffer);
 			break;
 		default:
 			packetManagerServer->sendRequest(sock, code, buffer, size);
@@ -278,6 +289,9 @@ void GameServer::updateLogin(int sock, const char* name)
 	list<MapInfo> itemList;
 	list<MapInfo>::iterator itemIter;
 
+	list<EventInfo> eventList;
+	list<EventInfo>::iterator eventIter;
+
 	int code;
 
 	try
@@ -343,6 +357,14 @@ void GameServer::updateLogin(int sock, const char* name)
 		{
 			memcpy(message, &(*itemIter), sizeof(MapInfo));
 			packetManagerServer->sendRequest(sock, REQUEST_FIELD_ITEM_INFO, message, sizeof(MapInfo));
+		}
+
+		eventList = eventInfoService->getEventInfoList(loginUser.getName());
+
+		for (eventIter = eventList.begin(); eventIter != eventList.end(); eventIter++)
+		{
+			memcpy(message, &(*eventIter), sizeof(EventInfo));
+			packetManagerServer->sendRequest(sock, REQUEST_EVENT_INFO, message, sizeof(EventInfo));
 		}
 	}
 	catch (const runtime_error& error)
@@ -816,6 +838,30 @@ void GameServer::connectionConfirm(int idx)
 	for (iter = loginUser.begin(); iter != loginUser.end(); iter++)
 	{
 		packetManagerServer->sendRequest(iter->getSock(), REQUEST_SERVER_INFO, message, sizeof(ServerInfo));
+	}
+}
+
+#ifdef _WIN32
+void GameServer::processingRunEvent(SOCKET sock, const char* eventInfo)
+#elif __linux__
+void GameServer::processingRunEvent(int sock, const char* eventInfo)
+#endif
+{
+	char message[BUF_SIZE];
+	EventInfo imsiEventInfo;
+
+	try
+	{
+		memcpy(&imsiEventInfo, eventInfo, sizeof(EventInfo));
+
+		eventInfoService->addRunEvent(imsiEventInfo);
+
+		packetManagerServer->sendRequest(sock, RUN_EVENT_INFO_FINISH, "run_event_info_finish", strlen("run_event_info_finish") + 1);
+	}
+	catch (const runtime_error& error)
+	{
+		packetManagerServer->sendRequest(sock, RUN_EVENT_INFO_FINISH, "run_event_info_fail", strlen("run_event_info_fail") + 1);
+		std::cout << '\t' << error.what() << std::endl;
 	}
 }
 

@@ -33,6 +33,9 @@ ApplicationContext::~ApplicationContext()
 	if (loadingScreenDaoInstance != NULL)
 		delete this->loadingScreenDaoInstance;
 
+	if (eventInfoDaoInstance != NULL)
+		delete this->eventInfoDaoInstance;
+
 	if (chattingServiceInstance != NULL)
 		delete this->chattingServiceInstance;
 
@@ -47,6 +50,9 @@ ApplicationContext::~ApplicationContext()
 
 	if (serverInfoServiceInstance != NULL)
 		delete this->serverInfoServiceInstance;
+
+	if (eventInfoServiceInstance != NULL)
+		delete this->eventInfoServiceInstance;
 
 	if (gameServerInstance != NULL)
 		delete this->gameServerInstance;
@@ -159,6 +165,18 @@ LoadingScreenDao * ApplicationContext::loadingScreenDao()
 	}
 }
 
+EventInfoDao * ApplicationContext::eventInfoDao()
+{
+	if (this->eventInfoDaoInstance != NULL)
+		return this->eventInfoDaoInstance;
+	else
+	{
+		this->eventInfoDaoInstance = new EventInfoDao();
+		this->eventInfoDaoInstance->setDataSource(dataSource());
+		return this->eventInfoDaoInstance;
+	}
+}
+
 ChattingService* ApplicationContext::chattingService()
 {
 	if (this->chattingServiceInstance != NULL)
@@ -223,6 +241,18 @@ ServerInfoService * ApplicationContext::serverInfoService()
 	}
 }
 
+EventInfoService * ApplicationContext::eventInfoService()
+{
+	if (this->eventInfoServiceInstance != NULL)
+		return this->eventInfoServiceInstance;
+	else
+	{
+		this->eventInfoServiceInstance = new EventInfoService();
+		this->eventInfoServiceInstance->setEventInfoDao(eventInfoDao());
+		return this->eventInfoServiceInstance;
+	}
+}
+
 GameServer* ApplicationContext::gameServer()
 {
 	if (this->gameServerInstance != NULL)
@@ -234,6 +264,7 @@ GameServer* ApplicationContext::gameServer()
 		this->gameServerInstance->setChattingService(chattingService());
 		this->gameServerInstance->setMapManageService(mapManageService());
 		this->gameServerInstance->setServerInfoService(serverInfoService());
+		this->gameServerInstance->setEventInfoService(eventInfoService());
 		return this->gameServerInstance;
 	}
 }

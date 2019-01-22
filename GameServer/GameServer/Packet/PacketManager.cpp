@@ -159,6 +159,16 @@ bool PacketManager::getIsJoinUserSeccess()
 	return this->isJoinUserSeccess;
 }
 
+void PacketManager::setIsRunEventInfoFinish(bool value)
+{
+	this->isRunEventInfoFinish = value;
+}
+
+bool PacketManager::getIsRunEventInfoFinish()
+{
+	return this->isRunEventInfoFinish;
+}
+
 #if defined(_WIN32)
 void PacketManager::sendc(SOCKET sock, const char* data, int size)
 {

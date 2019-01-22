@@ -1,16 +1,20 @@
 server : Main.o ApplicationContext.o TestApplicationContext.o Assert.o DataSource.o \
-	Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o LoadingScreen.o \
-	ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o LoadingScreenDao.o LoadingScreenDaoTest.o \
-	ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o ServerInfoService.o ServerInfoServiceTest.o \
+	Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o LoadingScreen.o EventInfo.o \
+	ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o LoadingScreenDao.o LoadingScreenDaoTest.o EventInfoDao.o EventInfoDaoTest.o \
+	ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o ServerInfoService.o ServerInfoServiceTest.o EventInfoService.o EventInfoServiceTest.o \
+	EventCondition.o EventObject.o EventProcedure.o EventSequence.o \
 	PacketManager.o PacketManagerServer.o PacketManagerClient.o \
+	cJSON.o Util.o \
 	GameClient.o GameServer.o GameServerTest.o
 	gcc -o server Main.o ApplicationContext.o TestApplicationContext.o Assert.o DataSource.o \
-		Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o LoadingScreen.o \
-		ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o LoadingScreenDao.o LoadingScreenDaoTest.o \
-		ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o ServerInfoService.o ServerInfoServiceTest.o \
+		Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o LoadingScreen.o EventInfo.o \
+		ChattingDao.o ChattingDaoTest.o InventoryInfoDao.o InventoryInfoDaoTest.o MapDao.o MapDaoTest.o MapInfoDao.o MapInfoDaoTest.o MonsterDao.o MonsterDaoTest.o ServerInfoDao.o UserDao.o UserDaoTest.o LoadingScreenDao.o LoadingScreenDaoTest.o EventInfoDao.o EventInfoDaoTest.o \
+		ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o ServerInfoService.o ServerInfoServiceTest.o EventInfoService.o EventInfoServiceTest.o \
+		EventCondition.o EventObject.o EventProcedure.o EventSequence.o \
 		PacketManager.o PacketManagerServer.o PacketManagerClient.o \
+		cJSON.o Util.o \
 		GameClient.o GameServer.o GameServerTest.o \
-		libtmx.a `xml2-config --libs` -lz -lpthread -lmysqlclient -lstdc++ -o server
+		libtmx.a `xml2-config --libs` -lz -lpthread -lmysqlclient -lstdc++ -lm -o server
 
 
 Main.o : Main.cpp
@@ -51,6 +55,9 @@ User.o : domain/User.cpp
 
 LoadingScreen.o : domain/LoadingScreen.cpp
 	gcc -c -o LoadingScreen.o domain/LoadingScreen.cpp
+	
+EventInfo.o : domain/EventInfo.cpp
+	gcc -c -o EventInfo.o domain/EventInfo.cpp
 
 ChattingDao.o : dao/ChattingDao.cpp
 	gcc -c -o ChattingDao.o dao/ChattingDao.cpp
@@ -97,6 +104,12 @@ LoadingScreenDao.o : dao/LoadingScreenDao.cpp
 LoadingScreenDaoTest.o : dao/LoadingScreenDaoTest.cpp
 	gcc -c -o LoadingScreenDaoTest.o dao/LoadingScreenDaoTest.cpp
 
+EventInfoDao.o : dao/EventInfoDao.cpp
+	gcc -c -o EventInfoDao.o dao/EventInfoDao.cpp
+
+EventInfoDaoTest.o : dao/EventInfoDaoTest.cpp
+	gcc -c -o EventInfoDaoTest.o dao/EventInfoDaoTest.cpp
+
 ChattingService.o : service/ChattingService.cpp
 	gcc -c -o ChattingService.o service/ChattingService.cpp
 
@@ -126,6 +139,24 @@ ServerInfoService.o : service/ServerInfoService.cpp
 
 ServerInfoServiceTest.o : service/ServerInfoServiceTest.cpp
 	gcc -c -o ServerInfoServiceTest.o service/ServerInfoServiceTest.cpp
+	
+EventInfoService.o : service/EventInfoService.cpp
+	gcc -c -o EventInfoService.o service/EventInfoService.cpp
+
+EventInfoServiceTest.o : service/EventInfoServiceTest.cpp
+	gcc -c -o EventInfoServiceTest.o service/EventInfoServiceTest.cpp
+	
+EventCondition.o : event/EventCondition.cpp
+	gcc -c -o EventCondition.o event/EventCondition.cpp
+	
+EventObject.o : event/EventObject.cpp
+	gcc -c -o EventObject.o event/EventObject.cpp
+	
+EventProcedure.o : event/EventProcedure.cpp
+	gcc -c -o EventProcedure.o event/EventProcedure.cpp
+	
+EventSequence.o : event/EventSequence.cpp
+	gcc -c -o EventSequence.o event/EventSequence.cpp
 
 PacketManager.o : Packet/PacketManager.cpp
 	gcc -c -o PacketManager.o Packet/PacketManager.cpp
@@ -135,6 +166,12 @@ PacketManagerServer.o : Packet/PacketManagerServer.cpp
 
 PacketManagerClient.o : Packet/PacketManagerClient.cpp
 	gcc -c -o PacketManagerClient.o Packet/PacketManagerClient.cpp
+
+cJSON.o : util/cJSON.c
+	gcc -c -o cJSON.o util/cJSON.c
+	
+Util.o : util/Util.cpp
+	gcc -c -o Util.o util/Util.cpp
 
 GameClient.o : GameClient.cpp
 	gcc -c -o GameClient.o GameClient.cpp

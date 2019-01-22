@@ -11,12 +11,14 @@
 #include "../dao/ServerInfoDao.h"
 #include "../dao/UserDao.h"
 #include "../dao/LoadingScreenDao.h"
+#include "../dao/EventInfoDao.h"
 
 #include "../service/ChattingService.h"
 #include "../service/MapManageService.h"
 #include "../service/UserService.h"
 #include "../service/LoadingScreenService.h"
 #include "../service/ServerInfoService.h"
+#include "../service/EventInfoService.h"
 
 #include "../GameServer.h"
 
@@ -31,12 +33,14 @@ private:
 	ServerInfoDao* serverInfoDaoInstance = NULL;
 	UserDao* userDaoInstance = NULL;
 	LoadingScreenDao* loadingScreenDaoInstance = NULL;
+	EventInfoDao* eventInfoDaoInstance = NULL;
 
 	ChattingService* chattingServiceInstance = NULL;
 	MapManageService* mapManageServiceInstance = NULL;
 	UserService* userServiceInstance = NULL;
 	LoadingScreenService* loadingScreenServiceInstance = NULL;
 	ServerInfoService* serverInfoServiceInstance = NULL;
+	EventInfoService* eventInfoServiceInstance = NULL;
 
 	GameServer* gameServerInstance = NULL;
 
@@ -56,12 +60,14 @@ public:
 	ServerInfoDao* serverInfoDao();
 	UserDao* userDao();
 	LoadingScreenDao* loadingScreenDao();
+	EventInfoDao* eventInfoDao();
 
 	ChattingService* chattingService();
 	MapManageService* mapManageService();
 	UserService* userService();
 	LoadingScreenService* loadingScreenService();
 	ServerInfoService* serverInfoService();
+	EventInfoService* eventInfoService();
 
 	GameServer* gameServer();
 };

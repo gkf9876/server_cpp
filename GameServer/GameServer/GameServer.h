@@ -19,6 +19,7 @@
 #include "service/ChattingService.h"
 #include "service/MapManageService.h"
 #include "service/ServerInfoService.h"
+#include "service/EventInfoService.h"
 
 #include "Packet/PacketManagerServer.h"
 
@@ -36,6 +37,7 @@ private:
 	ChattingService* chattingService;
 	MapManageService* mapManageService;
 	ServerInfoService* serverInfoService;
+	EventInfoService* eventInfoService;
 public:
 	GameServer();
 	~GameServer();
@@ -43,6 +45,7 @@ public:
 	void setChattingService(ChattingService* chattingService);
 	void setMapManageService(MapManageService* mapManageService);
 	void setServerInfoService(ServerInfoService* serverInfoService);
+	void setEventInfoService(EventInfoService* eventInfoService);
 
 	int getClientCount();
 
@@ -70,6 +73,8 @@ public:
 
 	void connectionConfirm(int idx);
 
+	void processingRunEvent(SOCKET sock, const char* eventInfo);
+
 	void closeClient(SOCKET sock);
 
 #elif __linux__
@@ -90,6 +95,8 @@ public:
 	void insertUserInfo(int sock, const char* userInfo);
 
 	void connectionConfirm(int idx);
+
+	void processingRunEvent(int sock, const char* eventInfo);
 
 	void closeClient(int sock);
 

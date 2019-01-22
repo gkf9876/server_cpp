@@ -99,6 +99,10 @@ void PacketManagerClient::sendRequestMessage(int code, void* data, int size){
 			setIsMapPotalFinish(false);
 		}
 		break;
+	case RUN_EVENT_INFO_FINISH:
+		while (getIsRunEventInfoFinish() != true);
+		setIsRunEventInfoFinish(false);
+		break;
 	default:
 		break;
 	}
