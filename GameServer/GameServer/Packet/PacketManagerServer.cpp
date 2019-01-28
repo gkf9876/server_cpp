@@ -13,7 +13,7 @@ void PacketManagerServer::openServer(int port)
 	memset(&servAddr, 0, sizeof(servAddr));
 	servAddr.sin_family = AF_INET;
 	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	servAddr.sin_port = port;
+	servAddr.sin_port = htons(port);
 
 	if (bind(hServSock, (SOCKADDR*)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
 		ErrorHandling("bind() error");
@@ -30,7 +30,7 @@ void PacketManagerServer::openServer(int port)
 	memset(&servAddr, 0, sizeof(servAddr));
 	servAddr.sin_family = AF_INET;
 	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	servAddr.sin_port = port;
+	servAddr.sin_port = htons(port);
 
 	if (bind(hServSock, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1)
 		ErrorHandling("bind() error");
