@@ -211,15 +211,51 @@ void GameServer::run(int sock, int code, const char* buffer, int size)
 
 #endif
 
+#ifdef _WIN32
+int GameServer::accept_win()
+{
+	int code;
+	int size;
+	SOCKET outputSock;
+	int outputCode;
+	char outputBuffer[BUF_SIZE];
+	int outputSize;
+
+	int flag;
+	if ((flag = packetManagerServer->server_select()) == SOCKET_ERROR)
+		return SOCKET_ERROR;
+
+	if (flag == 0)
+		return 0;
+
+	for (int i = 0; i < packetManagerServer->getClientCount(); i++)
+	{
+		if (packetManagerServer->fd_isset(i))
+		{
+			if (packetManagerServer->reads_socket(i) == packetManagerServer->getServSock())     // connection request!
+			{
+				packetManagerServer->connection_request();
+			}
+			else    // read message!
+			{
+				int num;
+				if ((num = packetManagerServer->read_message(i, &outputSock, &outputCode, outputBuffer, &outputSize)) != -1)
+					updateLogout(num);
+				else
+					run(outputSock, outputCode, outputBuffer, outputSize);
+			}
+		}
+	}
+
+	return 1;
+}
+
+#elif __linux__
 void GameServer::accept_win()
 {
 	int code;
 	int size;
-#ifdef _WIN32
-	SOCKET outputSock;
-#elif __linux__
 	int outputSock;
-#endif
 	int outputCode;
 	char outputBuffer[BUF_SIZE];
 	int outputSize;
@@ -242,6 +278,7 @@ void GameServer::accept_win()
 		}
 	}
 }
+#endif
 
 #ifdef _WIN32
 void GameServer::getUserInfo(SOCKET sock, const char* name)

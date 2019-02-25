@@ -26,7 +26,9 @@ private:
 	SOCKADDR_IN servAddr, clntAddr;
 	fd_set reads, cpyReads;
 	int adrSz;
-	int fdNum;
+	int fdNum, strLen;
+	char buf[BUF_SIZE];
+	TIMEVAL timeout;
 #elif defined(__linux__) || defined(__APPLE__)
 	int hServSock, hClntSock;
 	struct sockaddr_in servAddr, clntAddr;
@@ -40,15 +42,18 @@ private:
 public:
 	void openServer(int port);
 	void closeServer();
-	int getClientCount();
 
 	int readyRecv();
+
+	int run1(void run(SOCKET, int, const char*, int), void updateLogout(SOCKET));
+
 	void registClientSocket();
 #ifdef _WIN32
 	int recvDataAnalysis(int i, SOCKET* outputSock, int* outputCode, char* outputBuffer, int* outputSize);
 #elif __linux__
 	int recvDataAnalysis(int i, int* outputSock, int* outputCode, char* outputBuffer, int* outputSize);
 #endif
+	int fdIsset(SOCKET socket, fd_set FAR * fdSet, int i);
 	int recvSocketNum(int i);
 	int recvSocketCount();
 
@@ -57,6 +62,16 @@ public:
 #elif __linux__
 	void closeClient(int sock);
 #endif
+
+	void open();
+	int server_select();
+	void connection_request();
+	SOCKET read_message(int i, SOCKET* outputSock, int* outputCode, char* outputBuffer, int* outputSize);
+	int getClientCount();
+	SOCKET getServSock();
+	SOCKET reads_socket(int i);
+	int fd_isset(int i);
+	void close();
 };
 
 #endif

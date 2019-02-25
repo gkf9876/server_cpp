@@ -14,6 +14,8 @@
 #include <sys/socket.h>
 #endif
 
+#include "../util/Util.h"
+
 #define BUF_SIZE 1024
 #define EPOLL_SIZE 50
 

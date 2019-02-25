@@ -52,7 +52,7 @@ public:
 	void openServer(int port);
 	void closeServer();
 
-	void accept_win();
+	int accept_win();
 
 #ifdef _WIN32
 	void run(SOCKET sock, int code, const char* buffer, int size);
