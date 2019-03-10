@@ -1,0 +1,83 @@
+{
+  "name": "Test",
+  "condition": {
+    "period": {
+      "every": "none",
+      "time": "none"
+    },
+    "place": {
+      "mapName": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "xpos": "17",
+      "ypos": "4"
+    },
+    "procedeEvent": "none"
+  },
+  "script": {
+    "scean1": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "전 세계 주요 스마트폰 업체들이 연달아 신제품을 선보이고 있다. 삼성전자와 애플에 이어 LG전자도 신형 스마트폰을 출시하면서 하반기 글로벌 경쟁 대열에 합류했다. 외신들은 주요 스마트폰 제조업체인 삼성전자·LG전자·애플 3사의 신제품 모두 이전 모델보다 개선됐다며 호평했다.\r\n"
+    },
+    "scean2": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "LG전자는 3일(현지 시각) 신형 스마트폰 ‘V40 씽큐’를 해외 시장에 처음 공개했다. 이날 미국 뉴욕에서 열린 V40 씽큐 공개 행사장에서는 전면 2개·후면 3개를 합쳐 총 5개의 카메라를 장착한 이른바 ‘펜타 카메라’가 외신의 주목을 받았다. V40 씽큐의 공식 출시일은 정해지지 않았으나 이달 중순쯤 국내와 미국 시장에 동시 출시될 계획이다."
+    },
+    "scean3": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "미국 IT 전문 매체 ‘더 버지’는 V40 씽큐의 펜타 카메라를 두고 \"마치 다양한 렌즈가 담긴 카메라 가방을 스마트폰에 넣은 것과 같다\"며 \"점점 비슷해져 가는 스마트폰 시장에서 차별성을 갖게 됐다\"고 보도했다.\r\n"
+    },
+    "scean4": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "경제전문 매체 비즈니스 인사이더는 \"기본 카메라로 촬영한 사진의 색감이 다소 아쉽다\"면서도 \"다재다능한 스마트폰\"이라고 평했다. 이어 얇은 베젤로 화면의 몰입감을 높인 점과 가벼운 무게도 V40 씽큐의 장점으로 꼽았다."
+    },
+    "scean5": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "그러나 앞서 해외 스마트폰 시장에 출시된 삼성전자와 애플의 신제품들도 해외서 좋은 평가를 받고 있어 제품 경쟁이 더 치열해질 것으로 보인다."
+    },
+    "scean6": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "특히 지난 8월 공개된 삼성전자 ‘갤럭시노트9’은 해외에서 좋은 평가를 받고 있다. 최근 미국 대표 소비자 전문지 컨슈머리포트는 지금까지 시장에 출시된 스마트폰들을 대상으로 배터리 지속 능력·카메라 성능· 내구성 등을 평가한 결과, 9월 기준 갤럭시노트9이 가장 우수한 스마트폰으로 선정됐다고 밝혔다."
+    },
+    "scean7": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "더 버지도 \"갤럭시노트9이 이전 모델보다 배터리 용량이 늘고 카메라 기능이 향상됐다\"며 \"프리미엄 안드로이드 폰 중에서 가장 좋은 하드웨어 스펙을 갖고 있다\"고 전했다."
+    },
+    "scean8": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "다만 미국 IT 전문 매체 씨넷은 \"갤럭시노트9의 외형이 전작과 큰 차이가 거의 없는데도 가격이 1000달러가 넘어 가격 경쟁력이 떨어진다\"고 지적했다."
+    },
+    "scean9": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "애플의 신형 스마트폰도 무시할 수 없는 경쟁자다. 애플은 지난달 12일 아이폰 출시 행사 ‘게더 라운드(Gather Round)’를 열고 ‘아이폰X(텐)’의 후속 모델인 ‘아이폰XS’ ‘아이폰XS 맥스’ ‘아이폰XR’ 등 신제품 3종을 선보였다."
+    },
+    "scean10": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "컨슈머리포트는 \"아이폰XS의 배터리 지속 시간과 카메라 성능이 개선됐고 새로운 중앙처리장치(CPU) 프로세스를 탑재해 전반적인 성능이 강화됐다\"고 전했다. 이어 \"(최근 평가에서) 갤럭시노트9이 가장 우수한 스마트폰으로 선정됐지만 애플의 신제품과 큰 차이는 없었다\"고 했다.\r\n"
+    },
+    "scean11": {
+      "time": "00:00:05",
+      "place": "TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx",
+      "speaker": "abcd1",
+      "lines": "이 와중에 소니의 ‘엑스페리아 XZ3’, 화웨이의 ‘메이트 20 프로’도 출시를 앞두고 있어 외신들은 ‘가을 스마트폰 전쟁'이 본격화될 것으로 전망하고 있다."
+    }
+  }
+}

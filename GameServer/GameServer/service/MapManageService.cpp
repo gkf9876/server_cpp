@@ -2,10 +2,12 @@
 
 MapManageService::MapManageService()
 {
+	srand(time(NULL));
 }
 
 MapManageService::~MapManageService()
 {
+	mapData.clear();
 }
 
 void MapManageService::setMapDao(MapDao* mapDao)
@@ -28,7 +30,7 @@ void MapManageService::setDataSource(DataSource* dataSource)
 	this->dataSource = dataSource;
 }
 
-void MapManageService::regenMonster()
+list<MapInfo> MapManageService::regenMonster()
 {
 	MYSQL connection = this->dataSource->getConnection();
 	mysql_query(&connection, "BEGIN");
@@ -37,12 +39,20 @@ void MapManageService::regenMonster()
 	{
 		list<Map> mapList = this->mapDao->getAll();
 		list<Map>::iterator iter;
+		list<MapInfo> regenMonster;
 		int monster1Count;
 		int monster2Count;
 		int monster3Count;
+		int xpos;
+		int ypos;
 
 		for (iter = mapList.begin(); iter != mapList.end(); iter++)
 		{
+			TMXTileLayer* metaInfoLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "MetaInfo");
+			TMXTileLayer* backgroundLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "Background");
+			std::vector<std::vector<unsigned int>> metaInfoTileVector = metaInfoLayer->getTileVector();
+			std::vector<std::vector<unsigned int>> backgroundTileVector = backgroundLayer->getTileVector();
+
 			monster1Count = iter->getMonster1Count() - mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster1());
 			monster2Count = iter->getMonster2Count() - mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster2());
 			monster3Count = iter->getMonster3Count() - mapInfoDao->getCountFieldMonster(iter->getField(), iter->getMonster3());
@@ -58,14 +68,25 @@ void MapManageService::regenMonster()
 					monsterInfo.setObjectCode(monster.getIdx());
 					monsterInfo.setName(monster.getName());
 					monsterInfo.setType("MONSTER");
-					monsterInfo.setXpos(10);
-					monsterInfo.setYpos(12);
 					monsterInfo.setZOrder(1);
 					monsterInfo.setFileDir(monster.getFileDir());
 					monsterInfo.setCount(1);
 					monsterInfo.setHp(monster.getHp());
 
-					mapInfoDao->add(monsterInfo);
+					xpos = rand() % metaInfoLayer->getWidth();
+					ypos = rand() % metaInfoLayer->getHeight();
+
+					if (backgroundTileVector[ypos][xpos] == 130 && metaInfoTileVector[ypos][xpos] == 0)
+					{
+						monsterInfo.setXpos(xpos);
+						monsterInfo.setYpos(metaInfoLayer->getHeight() - (ypos + 1));
+						monsterInfo.setSeeDirection(26 + rand() % 4);
+						monsterInfo.setAction(0);
+						mapInfoDao->add(monsterInfo);
+						regenMonster.push_back(monsterInfo);
+					}
+					else
+						i--;
 				}
 			}
 
@@ -80,14 +101,25 @@ void MapManageService::regenMonster()
 					monsterInfo.setObjectCode(monster.getIdx());
 					monsterInfo.setName(monster.getName());
 					monsterInfo.setType("MONSTER");
-					monsterInfo.setXpos(10);
-					monsterInfo.setYpos(12);
 					monsterInfo.setZOrder(1);
 					monsterInfo.setFileDir(monster.getFileDir());
 					monsterInfo.setCount(1);
 					monsterInfo.setHp(monster.getHp());
 
-					mapInfoDao->add(monsterInfo);
+					xpos = rand() % metaInfoLayer->getWidth();
+					ypos = rand() % metaInfoLayer->getHeight();
+
+					if (backgroundTileVector[ypos][xpos] == 130 && metaInfoTileVector[ypos][xpos] == 0)
+					{
+						monsterInfo.setXpos(xpos);
+						monsterInfo.setYpos(metaInfoLayer->getHeight() - (ypos + 1));
+						monsterInfo.setSeeDirection(26 + rand() % 4);
+						monsterInfo.setAction(0);
+						mapInfoDao->add(monsterInfo);
+						regenMonster.push_back(monsterInfo);
+					}
+					else
+						i--;
 				}
 			}
 
@@ -102,19 +134,31 @@ void MapManageService::regenMonster()
 					monsterInfo.setObjectCode(monster.getIdx());
 					monsterInfo.setName(monster.getName());
 					monsterInfo.setType("MONSTER");
-					monsterInfo.setXpos(10);
-					monsterInfo.setYpos(12);
 					monsterInfo.setZOrder(1);
 					monsterInfo.setFileDir(monster.getFileDir());
 					monsterInfo.setCount(1);
 					monsterInfo.setHp(monster.getHp());
 
-					mapInfoDao->add(monsterInfo);
+					xpos = rand() % metaInfoLayer->getWidth();
+					ypos = rand() % metaInfoLayer->getHeight();
+
+					if (backgroundTileVector[ypos][xpos] == 130 && metaInfoTileVector[ypos][xpos] == 0)
+					{
+						monsterInfo.setXpos(xpos);
+						monsterInfo.setYpos(metaInfoLayer->getHeight() - (ypos + 1));
+						monsterInfo.setSeeDirection(26 + rand() % 4);
+						monsterInfo.setAction(0);
+						mapInfoDao->add(monsterInfo);
+						regenMonster.push_back(monsterInfo);
+					}
+					else
+						i--;
 				}
 			}
 		}
 
 		mysql_query(&connection, "COMMIT");
+		return regenMonster;
 	}
 	catch (const runtime_error& error)
 	{
@@ -156,6 +200,30 @@ void MapManageService::deleteMaxOrderItem(const char* field, int xpos, int ypos)
 
 		if (strcmp(maxOrderItem.getName(), "nothing"))
 			mapInfoDao->deleteMapInfo(maxOrderItem.getIdx(), maxOrderItem.getField());
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+void MapManageService::loadTMXData()
+{
+	try
+	{
+		list<Map> mapList = this->mapDao->getAll();
+		list<Map>::iterator iter;
+
+		for (iter = mapList.begin(); iter != mapList.end(); iter++)
+		{
+			char fileDir[1024];
+			sprintf(fileDir, "Resources/%s", iter->getField());
+
+			TMXLoader* loader = new TMXLoader();
+			loader->loadMap(iter->getField(), fileDir);
+
+			mapData[iter->getField()] = loader;
+		}
 	}
 	catch (const runtime_error& error)
 	{

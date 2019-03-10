@@ -201,6 +201,7 @@ void MapManageServiceTest::run()
 		getMaxOrderItem();
 		getFieldItem();
 		deleteMaxOrderItem();
+		loadTMXMap();
 	}
 	catch (const runtime_error& error)
 	{
@@ -229,6 +230,7 @@ void MapManageServiceTest::regenMonster()
 	monsterDao->add(monster9);
 
 	mapInfoDao->deleteAll();
+	mapManageService->loadTMXData();
 	mapManageService->regenMonster();
 
 	list<Map> mapList = this->mapDao->getAll();
@@ -274,7 +276,7 @@ void MapManageServiceTest::regenMonsterTransaction()
 	mapDao->add(*map1);
 	mapDao->add(*map2);
 
-	map3->setMonster1("홍길동");
+	map3->setMonster1("들개");
 	mapDao->add(*map3);
 
 	monsterDao->deleteAll();
@@ -289,6 +291,7 @@ void MapManageServiceTest::regenMonsterTransaction()
 	monsterDao->add(monster9);
 
 	mapInfoDao->deleteAll();
+	mapManageService->loadTMXData();
 	mapManageService->regenMonster();
 
 	list<Map> mapList = this->mapDao->getAll();
@@ -502,4 +505,29 @@ void MapManageServiceTest::deleteMaxOrderItem()
 		mapManageService->deleteMaxOrderItem(item[0].getField(), item[0].getXpos(), item[0].getYpos());
 		checkSameMapInfo(mapManageService->getMaxOrderItem(item[0].getField(), item[0].getXpos(), item[0].getYpos()), item[8 - i]);
 	}
+}
+
+void MapManageServiceTest::loadTMXMap()
+{
+	std::cout << "MapManageServiceTest : loadTMXMap()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	assertThat(mapInfoDao->getCount(), 0);
+
+	mapInfoDao->add(mapInfo1);
+	assertThat(mapInfoDao->getCount(), 1);
+
+	mapInfoDao->add(mapInfo2);
+	assertThat(mapInfoDao->getCount(), 2);
+
+	mapInfoDao->add(mapInfo3);
+	assertThat(mapInfoDao->getCount(), 3);
+
+	mapInfoDao->add(mapInfo4);
+	assertThat(mapInfoDao->getCount(), 4);
+
+	mapInfoDao->add(mapInfo5);
+	assertThat(mapInfoDao->getCount(), 5);
+
+	mapManageService->loadTMXData();
 }

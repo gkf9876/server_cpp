@@ -20,7 +20,7 @@ void MapInfoDao::add(MapInfo mapInfo)
 	MYSQL connection = this->dataSource->getConnection();
 	sprintf(query, "insert into ");
 	sprintf(&query[strlen(query)], "map_info(");
-	sprintf(&query[strlen(query)], "field, object_code, name, type, xpos, ypos, z_order, file_dir, count, hp) values(");
+	sprintf(&query[strlen(query)], "field, object_code, name, type, xpos, ypos, z_order, file_dir, count, hp, seeDirection, action) values(");
 	sprintf(&query[strlen(query)], "'%s', ", mapInfo.getField());
 	sprintf(&query[strlen(query)], "'%d', ", mapInfo.getObjectCode());
 	sprintf(&query[strlen(query)], "'%s', ", mapInfo.getName());
@@ -30,7 +30,9 @@ void MapInfoDao::add(MapInfo mapInfo)
 	sprintf(&query[strlen(query)], "'%d', ", mapInfo.getZOrder());
 	sprintf(&query[strlen(query)], "'%s', ", mapInfo.getFileDir());
 	sprintf(&query[strlen(query)], "'%d', ", mapInfo.getCount());
-	sprintf(&query[strlen(query)], "'%d') ", mapInfo.getHp());
+	sprintf(&query[strlen(query)], "'%d', ", mapInfo.getHp());
+	sprintf(&query[strlen(query)], "'%d', ", mapInfo.getSeeDirection());
+	sprintf(&query[strlen(query)], "'%d') ", mapInfo.getAction());
 
 	query_stat = mysql_query(&connection, query);
 
@@ -120,7 +122,7 @@ MapInfo MapInfoDao::getMonster(const char* field, int xpos, int ypos)
 	MYSQL_RES* sql_result;
 	MYSQL_ROW sql_row;
 
-	sprintf(query, "select idx, field, object_code, name, z_order, file_dir, count, hp from map_info where xpos='%d' and ypos='%d' and type = 'MONSTER' and field = '%s'", xpos, ypos, field);
+	sprintf(query, "select idx, field, object_code, name, z_order, file_dir, count, hp, seeDirection, action from map_info where xpos='%d' and ypos='%d' and type = 'MONSTER' and field = '%s'", xpos, ypos, field);
 
 	query_stat = mysql_query(&connection, query);
 
@@ -145,6 +147,8 @@ MapInfo MapInfoDao::getMonster(const char* field, int xpos, int ypos)
 		mapInfo.setFileDir(sql_row[5]);
 		mapInfo.setCount(atoi(sql_row[6]));
 		mapInfo.setHp(atoi(sql_row[7]));
+		mapInfo.setSeeDirection(atoi(sql_row[8]));
+		mapInfo.setAction(atoi(sql_row[9]));
 	}
 	else
 	{
@@ -189,6 +193,8 @@ list<MapInfo> MapInfoDao::getFieldMonster(const char* field)
 		monster.setFileDir(sql_row[8]);
 		monster.setCount(atoi(sql_row[9]));
 		monster.setHp(atoi(sql_row[10]));
+		monster.setSeeDirection(atoi(sql_row[11]));
+		monster.setAction(atoi(sql_row[12]));
 		monsterList.push_back(monster);
 	}
 
@@ -230,6 +236,8 @@ list<MapInfo> MapInfoDao::getFieldObject(const char* field)
 		object.setFileDir(sql_row[8]);
 		object.setCount(atoi(sql_row[9]));
 		object.setHp(atoi(sql_row[10]));
+		object.setSeeDirection(atoi(sql_row[11]));
+		object.setAction(atoi(sql_row[12]));
 		objectList.push_back(object);
 	}
 

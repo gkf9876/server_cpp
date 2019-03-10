@@ -44,6 +44,8 @@ int GameServer::getClientCount()
 void GameServer::openServer(int port)
 {
 	packetManagerServer->openServer(port);
+
+	mapManageService->loadTMXData();
 }
 
 void GameServer::closeServer()
@@ -914,5 +916,26 @@ void GameServer::closeClient(int sock)
 
 void GameServer::regenMonster()
 {
-	this->mapManageService->regenMonster();
+	try
+	{
+		char message[BUF_SIZE];
+		list<MapInfo> regenMosnter = this->mapManageService->regenMonster();
+		list<MapInfo>::iterator monsterIter;
+		list<User>::iterator userIter;
+
+		for (monsterIter = regenMosnter.begin(); monsterIter != regenMosnter.end(); monsterIter++)
+		{
+			list<User> loginUser = userService->getFieldLoginUserAll(monsterIter->getField());
+
+			for (userIter = loginUser.begin(); userIter != loginUser.end(); userIter++)
+			{
+				memcpy(message, &(*monsterIter), sizeof(MapInfo));
+				packetManagerServer->sendRequest(userIter->getSock(), REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
+			}
+		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
 }

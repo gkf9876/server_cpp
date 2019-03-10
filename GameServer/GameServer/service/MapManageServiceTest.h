@@ -54,6 +54,7 @@ public:
 	void getMaxOrderItem();
 	void getFieldItem();
 	void deleteMaxOrderItem();
+	void loadTMXMap();
 };
 
 #endif

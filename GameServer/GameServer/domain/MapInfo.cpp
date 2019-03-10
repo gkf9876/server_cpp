@@ -124,3 +124,23 @@ int MapInfo::getHp()
 {
 	return this->hp;
 }
+
+void MapInfo::setSeeDirection(int seeDirection)
+{
+	this->seeDirection = seeDirection;
+}
+
+int MapInfo::getSeeDirection()
+{
+	return this->seeDirection;
+}
+
+void MapInfo::setAction(int action)
+{
+	this->action = action;
+}
+
+int MapInfo::getAction()
+{
+	return this->action;
+}
