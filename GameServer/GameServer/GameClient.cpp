@@ -1,4 +1,4 @@
-﻿#include "GameClient.h"
+#include "GameClient.h"
 
 GameClient::GameClient()
 {
@@ -20,7 +20,6 @@ GameClient::GameClient()
 	}
 
 	log = new vector<string>();
-	eventProcedure = new EventProcedure();
 }
 
 GameClient::~GameClient()
@@ -320,6 +319,11 @@ Chatting GameClient::getMainChatting()
 	return this->mainChatting;
 }
 
+void GameClient::setEventProcedure(EventProcedure * eventProcedure)
+{
+    this->eventProcedure = eventProcedure;
+}
+
 EventProcedure * GameClient::getEventProcedure()
 {
 	return this->eventProcedure;
@@ -327,7 +331,7 @@ EventProcedure * GameClient::getEventProcedure()
 
 void GameClient::addEventInfo(EventInfo eventInfo)
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < this->eventProcedure->getEventListSize(); i++)
 	{
 		EventSequence * eventSequence = this->eventProcedure->getEventSequence(i);
 		if (!strcmp(eventSequence->getName().c_str(), eventInfo.getName()))
@@ -464,6 +468,22 @@ MapInfo GameClient::getMonsterInfo(int idx)
 void GameClient::clearMonsterInfo()
 {
 	this->monsterInfo->clear();
+}
+
+void GameClient::moveMonsterInfo(int idx, int xpos, int ypos, int seeDirection, int action)
+{
+	for (int i = 0; i < this->monsterInfo->size(); i++)
+	{
+		MapInfo* monster = this->monsterInfo->at(i);
+		if (monster->getIdx() == idx)
+		{
+			monster->setXpos(xpos);
+			monster->setYpos(ypos);
+			monster->setSeeDirection(seeDirection);
+            monster->setAction(action);
+			break;
+		}
+	}
 }
 
 void GameClient::addItemInfo(MapInfo* itemInfo)

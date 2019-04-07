@@ -202,6 +202,7 @@ void MapManageServiceTest::run()
 		getFieldItem();
 		deleteMaxOrderItem();
 		loadTMXMap();
+		moveMonsters();
 	}
 	catch (const runtime_error& error)
 	{
@@ -512,22 +513,115 @@ void MapManageServiceTest::loadTMXMap()
 	std::cout << "MapManageServiceTest : loadTMXMap()" << std::endl;
 
 	mapInfoDao->deleteAll();
-	assertThat(mapInfoDao->getCount(), 0);
-
-	mapInfoDao->add(mapInfo1);
-	assertThat(mapInfoDao->getCount(), 1);
-
-	mapInfoDao->add(mapInfo2);
-	assertThat(mapInfoDao->getCount(), 2);
-
-	mapInfoDao->add(mapInfo3);
-	assertThat(mapInfoDao->getCount(), 3);
-
-	mapInfoDao->add(mapInfo4);
-	assertThat(mapInfoDao->getCount(), 4);
-
-	mapInfoDao->add(mapInfo5);
-	assertThat(mapInfoDao->getCount(), 5);
+	mapDao->deleteAll();
+	mapDao->add(*map1);
+	mapDao->add(*map2);
+	mapDao->add(*map3);
 
 	mapManageService->loadTMXData();
+	mapManageService->regenMonster();
+
+	list<Map> mapList = mapDao->getAll();
+	list<Map>::iterator iter;
+
+	for (iter = mapList.begin(); iter != mapList.end(); iter++)
+	{
+		int monsterCount = iter->getMonster1Count() + iter->getMonster2Count() + iter->getMonster3Count();
+		assertThat(monsterCount, mapInfoDao->getCountFieldMonster(iter->getField()));
+	}
+}
+
+void MapManageServiceTest::moveMonsters()
+{
+	std::cout << "MapManageServiceTest : moveMonsters()" << std::endl;
+
+	mapInfoDao->deleteAll();
+	mapDao->deleteAll();
+	mapDao->add(*map1);
+	mapDao->add(*map2);
+	mapDao->add(*map3);
+
+	mapManageService->loadTMXData();
+	mapManageService->regenMonster();
+
+	std::map<std::string, TMXLoader*> mapData = mapManageService->getMapData();
+
+	mapManageService->moveMonsters();
+
+	list<Map> mapList = this->mapDao->getAll();
+	list<Map>::iterator iter;
+
+	for (iter = mapList.begin(); iter != mapList.end(); iter++)
+	{
+		TMXTileLayer* metaInfoLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "MetaInfo");
+		TMXTileLayer* backgroundLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "Background");
+		std::vector<std::vector<unsigned int>> metaInfoTileVector = metaInfoLayer->getTileVector();
+		std::vector<std::vector<unsigned int>> backgroundTileVector = backgroundLayer->getTileVector();
+
+		list<MapInfo> monsterList = mapInfoDao->getFieldMonster(iter->getField());
+		list<MapInfo>::iterator iter2;
+
+		for (iter2 = monsterList.begin(); iter2 != monsterList.end(); iter2++)
+		{
+			assertThat(backgroundTileVector[metaInfoLayer->getHeight() - (iter2->getYpos() + 1)][iter2->getXpos()], 130);
+			assertThat(metaInfoTileVector[metaInfoLayer->getHeight() - (iter2->getYpos() + 1)][iter2->getXpos()], 0);
+		}
+	}
+
+	mapManageService->moveMonsters();
+
+	for (iter = mapList.begin(); iter != mapList.end(); iter++)
+	{
+		TMXTileLayer* metaInfoLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "MetaInfo");
+		TMXTileLayer* backgroundLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "Background");
+		std::vector<std::vector<unsigned int>> metaInfoTileVector = metaInfoLayer->getTileVector();
+		std::vector<std::vector<unsigned int>> backgroundTileVector = backgroundLayer->getTileVector();
+
+		list<MapInfo> monsterList = mapInfoDao->getFieldMonster(iter->getField());
+		list<MapInfo>::iterator iter2;
+
+		for (iter2 = monsterList.begin(); iter2 != monsterList.end(); iter2++)
+		{
+			assertThat(backgroundTileVector[metaInfoLayer->getHeight() - (iter2->getYpos() + 1)][iter2->getXpos()], 130);
+			assertThat(metaInfoTileVector[metaInfoLayer->getHeight() - (iter2->getYpos() + 1)][iter2->getXpos()], 0);
+		}
+	}
+
+	mapManageService->moveMonsters();
+
+	for (iter = mapList.begin(); iter != mapList.end(); iter++)
+	{
+		TMXTileLayer* metaInfoLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "MetaInfo");
+		TMXTileLayer* backgroundLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "Background");
+		std::vector<std::vector<unsigned int>> metaInfoTileVector = metaInfoLayer->getTileVector();
+		std::vector<std::vector<unsigned int>> backgroundTileVector = backgroundLayer->getTileVector();
+
+		list<MapInfo> monsterList = mapInfoDao->getFieldMonster(iter->getField());
+		list<MapInfo>::iterator iter2;
+
+		for (iter2 = monsterList.begin(); iter2 != monsterList.end(); iter2++)
+		{
+			assertThat(backgroundTileVector[metaInfoLayer->getHeight() - (iter2->getYpos() + 1)][iter2->getXpos()], 130);
+			assertThat(metaInfoTileVector[metaInfoLayer->getHeight() - (iter2->getYpos() + 1)][iter2->getXpos()], 0);
+		}
+	}
+
+	mapManageService->moveMonsters();
+
+	for (iter = mapList.begin(); iter != mapList.end(); iter++)
+	{
+		TMXTileLayer* metaInfoLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "MetaInfo");
+		TMXTileLayer* backgroundLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "Background");
+		std::vector<std::vector<unsigned int>> metaInfoTileVector = metaInfoLayer->getTileVector();
+		std::vector<std::vector<unsigned int>> backgroundTileVector = backgroundLayer->getTileVector();
+
+		list<MapInfo> monsterList = mapInfoDao->getFieldMonster(iter->getField());
+		list<MapInfo>::iterator iter2;
+
+		for (iter2 = monsterList.begin(); iter2 != monsterList.end(); iter2++)
+		{
+			assertThat(backgroundTileVector[metaInfoLayer->getHeight() - (iter2->getYpos() + 1)][iter2->getXpos()], 130);
+			assertThat(metaInfoTileVector[metaInfoLayer->getHeight() - (iter2->getYpos() + 1)][iter2->getXpos()], 0);
+		}
+	}
 }

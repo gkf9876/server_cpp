@@ -230,3 +230,78 @@ void MapManageService::loadTMXData()
 		std::cout << '\t' << error.what() << std::endl;
 	}
 }
+
+std::map<std::string, TMXLoader*> MapManageService::getMapData()
+{
+	return this->mapData;
+}
+
+list<MapInfo> MapManageService::moveMonsters()
+{
+	MYSQL connection = this->dataSource->getConnection();
+	mysql_query(&connection, "BEGIN");
+
+	try
+	{
+		list<Map> mapList = mapDao->getAll();
+		list<Map>::iterator iter;
+		list<MapInfo> moveMonsters;
+
+		for (iter = mapList.begin(); iter != mapList.end(); iter++)
+		{
+			TMXTileLayer* metaInfoLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "MetaInfo");
+			TMXTileLayer* backgroundLayer = mapData[iter->getField()]->getTMXTileLayer(iter->getField(), "Background");
+			std::vector<std::vector<unsigned int>> metaInfoTileVector = metaInfoLayer->getTileVector();
+			std::vector<std::vector<unsigned int>> backgroundTileVector = backgroundLayer->getTileVector();
+
+			list<MapInfo> moveFieldMonsters = mapInfoDao->getFieldMonster(iter->getField());
+			list<MapInfo>::iterator monsterIter;
+
+			for (monsterIter = moveFieldMonsters.begin(); monsterIter != moveFieldMonsters.end();)
+			{
+				int xpos = monsterIter->getXpos();
+				int ypos = metaInfoLayer->getHeight() - (monsterIter->getYpos() + 1);
+				int move = rand() % 4;
+				switch (move)
+				{
+				case 0:
+					xpos += 1;
+					monsterIter->setSeeDirection(27);
+					break;
+				case 1:
+					xpos -= 1;
+					monsterIter->setSeeDirection(26);
+					break;
+				case 2:
+					ypos += 1;
+					monsterIter->setSeeDirection(28);
+					break;
+				case 3:
+					ypos -= 1;
+					monsterIter->setSeeDirection(29);
+					break;
+				}
+
+				if (backgroundTileVector[ypos][xpos] == 130 && metaInfoTileVector[ypos][xpos] == 0)
+				{
+					monsterIter->setXpos(xpos);
+					monsterIter->setYpos(metaInfoLayer->getHeight() - (ypos + 1));
+					moveMonsters.push_back(*monsterIter);
+				}
+				else
+					continue;
+
+				mapInfoDao->updatePosition(monsterIter->getIdx(), monsterIter->getXpos(), monsterIter->getYpos(), monsterIter->getSeeDirection());
+				monsterIter++;
+			}
+		}
+
+		mysql_query(&connection, "COMMIT");
+		return moveMonsters;
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+		mysql_query(&connection, "ROLLBACK");
+	}
+}

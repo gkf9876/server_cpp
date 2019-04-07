@@ -413,3 +413,17 @@ void MapInfoDao::deleteMapInfo(int idx, const char* field)
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
 }
+
+void MapInfoDao::updatePosition(int idx, int xpos, int ypos, int seeDirection)
+{
+	char query[1024];
+	int query_stat;
+	MYSQL connection = this->dataSource->getConnection();
+
+	sprintf(query, "UPDATE MAP_INFO SET XPOS = '%d', YPOS = '%d', SEEDIRECTION = '%d' WHERE IDX = '%d'", xpos, ypos, seeDirection, idx);
+
+	query_stat = mysql_query(&connection, query);
+
+	if (query_stat != 0)
+		throw runtime_error(mysql_error(&connection));
+}

@@ -38,6 +38,8 @@ private:
 	MapManageService* mapManageService;
 	ServerInfoService* serverInfoService;
 	EventInfoService* eventInfoService;
+
+	int count = 0;
 public:
 	GameServer();
 	~GameServer();
@@ -52,9 +54,9 @@ public:
 	void openServer(int port);
 	void closeServer();
 
-	int accept_win();
 
 #ifdef _WIN32
+	int accept_win();
 	void run(SOCKET sock, int code, const char* buffer, int size);
 
 	void getUserInfo(SOCKET sock, const char* name);
@@ -78,6 +80,7 @@ public:
 	void closeClient(SOCKET sock);
 
 #elif __linux__
+	int accept_win();
 	void run(int sock, int code, const char* buffer, int size);
 
 	void getUserInfo(int sock, const char* name);
@@ -103,6 +106,8 @@ public:
 #endif
 
 	void regenMonster();
+	void moveMonsters();
+	void test();
 };
 
 #endif

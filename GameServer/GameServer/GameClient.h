@@ -1,4 +1,4 @@
-﻿#ifndef __GAME_CLIENT_H__
+#ifndef __GAME_CLIENT_H__
 #define __GAME_CLIENT_H__
 
 #include <iostream>
@@ -57,6 +57,8 @@ public:
 	void setMainChatting(Chatting chatting);
 	Chatting getMainChatting();
 
+    void setEventProcedure(EventProcedure * eventProcedure);
+    
 	EventProcedure * getEventProcedure();
 	void addEventInfo(EventInfo eventInfo);
 
@@ -78,6 +80,7 @@ public:
 	int sizeMonsterInfo();
 	MapInfo getMonsterInfo(int idx);
 	void clearMonsterInfo();
+	void moveMonsterInfo(int idx, int xpos, int ypos, int seeDirection, int action);
 
 	void addItemInfo(MapInfo* itemInfo);
 	int sizeItemInfo();

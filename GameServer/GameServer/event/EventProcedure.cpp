@@ -19,7 +19,7 @@ EventProcedure::EventProcedure()
 	DIR* dp = NULL;
 	struct dirent* entry = NULL;
 
-	if ((dp = opendir("/Story")) == NULL)
+	if ((dp = opendir("Resources/Story")) == NULL)
 	{
 		printf("/Story를 열수 없습니다..\n");
 		return;

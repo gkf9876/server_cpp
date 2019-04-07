@@ -37,6 +37,8 @@ public:
 	void deleteMaxOrderItem(const char* field, int xpos, int ypos);
 
 	void loadTMXData();
+	std::map<std::string, TMXLoader*> getMapData();
+	list<MapInfo> moveMonsters();
 };
 
 #endif

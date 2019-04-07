@@ -32,6 +32,7 @@ public:
 	int getCountFieldItem(const char* field);
 	list<MapInfo> getFieldItem(const char* field);
 	void deleteMapInfo(int idx, const char* field);
+	void updatePosition(int idx, int xpos, int ypos, int seeDirection);
 };
 
 #endif

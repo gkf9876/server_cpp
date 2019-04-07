@@ -122,7 +122,6 @@ void GameServer::run(SOCKET sock, int code, const char* buffer, int size)
 			processingRunEvent(sock, buffer);
 			break;
 		default:
-			packetManagerServer->sendRequest(sock, code, buffer, size);
 			break;
 		}
 	}
@@ -241,7 +240,7 @@ int GameServer::accept_win()
 			else    // read message!
 			{
 				int num;
-				if ((num = packetManagerServer->read_message(i, &outputSock, &outputCode, outputBuffer, &outputSize)) != -1)
+				if ((num = packetManagerServer->read_message(i, &outputSock, &outputCode, outputBuffer, &outputSize)) > 0)
 					updateLogout(num);
 				else
 					run(outputSock, outputCode, outputBuffer, outputSize);
@@ -253,7 +252,7 @@ int GameServer::accept_win()
 }
 
 #elif __linux__
-void GameServer::accept_win()
+int GameServer::accept_win()
 {
 	int code;
 	int size;
@@ -263,7 +262,7 @@ void GameServer::accept_win()
 	int outputSize;
 
 	if (packetManagerServer->readyRecv() == -1)
-		return;
+		return -1;
 
 	for (int i = 0; i < packetManagerServer->recvSocketCount(); i++)
 	{
@@ -279,6 +278,8 @@ void GameServer::accept_win()
 				run(outputSock, outputCode, outputBuffer, outputSize);
 		}
 	}
+
+	return 1;
 }
 #endif
 
@@ -932,6 +933,63 @@ void GameServer::regenMonster()
 				memcpy(message, &(*monsterIter), sizeof(MapInfo));
 				packetManagerServer->sendRequest(userIter->getSock(), REQUEST_FIELD_MONSTER_INFO, message, sizeof(MapInfo));
 			}
+		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+void GameServer::moveMonsters()
+{
+	try
+	{
+		char message[BUF_SIZE];
+		list<MapInfo> moveMonsters = this->mapManageService->moveMonsters();
+		list<MapInfo>::iterator monsterIter;
+		list<User>::iterator userIter;
+
+		for (monsterIter = moveMonsters.begin(); monsterIter != moveMonsters.end(); monsterIter++)
+		{
+			list<User> loginUser = userService->getFieldLoginUserAll(monsterIter->getField());
+
+			for (userIter = loginUser.begin(); userIter != loginUser.end(); userIter++)
+			{
+				memcpy(message, &(*monsterIter), sizeof(MapInfo));
+				packetManagerServer->sendRequest(userIter->getSock(), MOVE_FIELD_MONSTER, message, sizeof(MapInfo));
+			}
+		}
+	}
+	catch (const runtime_error& error)
+	{
+		std::cout << '\t' << error.what() << std::endl;
+	}
+}
+
+void GameServer::test()
+{
+	try
+	{
+		char message[BUF_SIZE];
+		list<MapInfo> moveMonsters = this->mapManageService->moveMonsters();
+		MapInfo testInfo;
+		list<User>::iterator userIter;
+
+		list<User> loginUser = userService->getLoginUserAll();
+
+		if (loginUser.size() > 0)
+		{
+			char a[BUF_SIZE];
+			sprintf(a, "Test_%d", count++);
+			testInfo.setName(a);
+			printf("send %s\n", a);
+		}
+
+		for (userIter = loginUser.begin(); userIter != loginUser.end(); userIter++)
+		{
+			memcpy(message, &testInfo, sizeof(MapInfo));
+			packetManagerServer->sendRequest(userIter->getSock(), TEST, message, sizeof(MapInfo));
 		}
 	}
 	catch (const runtime_error& error)

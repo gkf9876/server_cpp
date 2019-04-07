@@ -54,6 +54,7 @@
 #define REQUEST_EVENT_INFO				33
 #define RUN_EVENT_INFO_PROCESS			34
 #define RUN_EVENT_INFO_FINISH			35
+#define MOVE_FIELD_MONSTER				36
 #define OTHER_REQUEST					100
 #define REQUEST_ERROR					255
 #define TEST                            555

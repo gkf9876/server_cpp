@@ -20,7 +20,7 @@
 #pragma once
 
 #include <vector>
-#include <string>
+#include <cstring>
 #include <unordered_map>
 #include <sstream>
 #include <fstream>

@@ -55,6 +55,7 @@ public:
 	void getFieldItem();
 	void deleteMaxOrderItem();
 	void loadTMXMap();
+	void moveMonsters();
 };
 
 #endif

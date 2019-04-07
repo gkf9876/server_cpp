@@ -228,18 +228,18 @@ int PacketManager::recvRequest(SOCKET sock, int* code, char* data)
 	int readLen1, readLen2, readLen3;
 	char buffer[BUF_SIZE];
 
-	if ((readLen1 = recvc(sock, buffer, 4)) == 0)
-		return 0;
+	if ((readLen1 = recvc(sock, buffer, 4)) <= 0)
+		return -1;
 	memcpy(&size, buffer, sizeof(int));
 
-	if ((readLen2 = recvc(sock, buffer, 4)) == 0)
-		return 0;
+	if ((readLen2 = recvc(sock, buffer, 4)) <= 0)
+		return -1;
 	memcpy(code, buffer, sizeof(int));
 
 	if ((readLen3 = recvc(sock, data, size)) == size)
 		return (readLen1 + readLen2 + readLen3);
 	else
-		return 0;
+		return -1;
 }
 #elif defined(__linux__) || defined(__APPLE__)
 int PacketManager::recvRequest(int sock, int* code, char* data)

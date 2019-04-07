@@ -80,58 +80,6 @@ int PacketManagerServer::readyRecv()
 #endif
 }
 
-int PacketManagerServer::run1(void run(SOCKET, int, const char*, int), void updateLogout(SOCKET))
-{
-	cpyReads = reads;
-	TIMEVAL timeout;
-	timeout.tv_sec = 5;
-	timeout.tv_usec = 5000;
-
-	int code;
-	int size;
-	int strLen;
-	char buffer[BUF_SIZE];
-
-	if ((fdNum = select(0, &cpyReads, 0, 0, &timeout)) == SOCKET_ERROR)
-		return -1;
-
-	if (fdNum == 0)
-		return 0;
-
-	for (int i = 0; i < reads.fd_count; i++)
-	{
-		if (FD_ISSET(reads.fd_array[i], &cpyReads))
-		{
-			if (reads.fd_array[i] == hServSock)
-			{
-				adrSz = sizeof(clntAddr);
-				hClntSock = accept(hServSock, (SOCKADDR*)&clntAddr, &adrSz);
-				FD_SET(hClntSock, &reads);
-				printf("connected client : %d\n", hClntSock);
-			}
-			else
-			{
-				strLen = recvRequest(reads.fd_array[i], &code, buffer);
-				size = strLen - 8;
-				strLen = recv(reads.fd_array[i], buf, BUF_SIZE - 1, 0);
-				if (strLen == 0)
-				{
-					FD_CLR(reads.fd_array[i], &reads);
-					closesocket(cpyReads.fd_array[i]);
-					printf("close client: %d\n", cpyReads.fd_array[i]);
-					updateLogout(cpyReads.fd_array[i]);
-				}
-				else
-				{
-					run(reads.fd_array[i], code, buf, strLen);
-				}
-			}
-		}
-	}
-
-	return 1;
-}
-
 void PacketManagerServer::registClientSocket()
 {
 #ifdef _WIN32
@@ -183,6 +131,11 @@ int PacketManagerServer::recvDataAnalysis(int i, SOCKET* outputSock, int* output
 		return -1;
 	}
 }
+
+int PacketManagerServer::fdIsset(SOCKET socket, fd_set FAR * fdSet, int i)
+{
+	return FD_ISSET(reads.fd_array[i], &cpyReads);
+}
 #elif __linux__
 int PacketManagerServer::recvDataAnalysis(int i, int* outputSock, int* outputCode, char* outputBuffer, int* outputSize)
 {
@@ -208,11 +161,6 @@ int PacketManagerServer::recvDataAnalysis(int i, int* outputSock, int* outputCod
 	}
 }
 #endif
-
-int PacketManagerServer::fdIsset(SOCKET socket, fd_set FAR * fdSet, int i)
-{
-	return FD_ISSET(reads.fd_array[i], &cpyReads);
-}
 
 int PacketManagerServer::recvSocketNum(int i)
 {
@@ -249,6 +197,7 @@ void PacketManagerServer::closeClient(SOCKET sock)
 {
 	FD_CLR(sock, &reads);
 	closesocket(sock);
+	printf("closed client: %d \n", sock);
 }
 #elif __linux__
 void PacketManagerServer::closeClient(int sock)
@@ -259,6 +208,8 @@ void PacketManagerServer::closeClient(int sock)
 	close(sock);
 }
 #endif
+
+#ifdef _WIN32
 
 void PacketManagerServer::open()
 {
@@ -310,13 +261,11 @@ SOCKET PacketManagerServer::read_message(int i, SOCKET* outputSock, int* outputC
 
 	strLen = recvRequest(reads.fd_array[i], &code, buf);
 	size = strLen - 8;
-	if (strLen == 0)    // close request!
+	if (strLen <= 0)    // close request!
 	{
 		FD_CLR(reads.fd_array[i], &reads);
 		closesocket(cpyReads.fd_array[i]);
 		printf("closed client: %d \n", cpyReads.fd_array[i]);
-
-		closeClient(cpyReads.fd_array[i]);
 		return cpyReads.fd_array[i];
 	}
 	else
@@ -330,6 +279,7 @@ SOCKET PacketManagerServer::read_message(int i, SOCKET* outputSock, int* outputC
 		return -1;
 	}
 }
+#endif
 
 int PacketManagerServer::getClientCount()
 {
@@ -340,6 +290,7 @@ int PacketManagerServer::getClientCount()
 #endif
 }
 
+#ifdef _WIN32
 SOCKET PacketManagerServer::getServSock()
 {
 	return hServSock;
@@ -360,3 +311,4 @@ void PacketManagerServer::close()
 	closesocket(hServSock);
 	WSACleanup();
 }
+#endif

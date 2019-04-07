@@ -4,7 +4,7 @@ server : Main.o ApplicationContext.o TestApplicationContext.o Assert.o DataSourc
 	ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o ServerInfoService.o ServerInfoServiceTest.o EventInfoService.o EventInfoServiceTest.o \
 	EventCondition.o EventObject.o EventProcedure.o EventSequence.o \
 	PacketManager.o PacketManagerServer.o PacketManagerClient.o \
-	cJSON.o Util.o \
+	cJSON.o Util.o TMXLoader.o TMXMap.o TMXTile.o TMXTileLayer.o TMXTileSet.o \
 	GameClient.o GameServer.o GameServerTest.o
 	gcc -o server Main.o ApplicationContext.o TestApplicationContext.o Assert.o DataSource.o \
 		Chatting.o InventoryInfo.o Map.o MapInfo.o Monster.o ServerInfo.o User.o LoadingScreen.o EventInfo.o \
@@ -12,7 +12,7 @@ server : Main.o ApplicationContext.o TestApplicationContext.o Assert.o DataSourc
 		ChattingService.o ChattingServiceTest.o MapManageService.o MapManageServiceTest.o UserService.o UserServiceTest.o LoadingScreenService.o LoadingScreenServiceTest.o ServerInfoService.o ServerInfoServiceTest.o EventInfoService.o EventInfoServiceTest.o \
 		EventCondition.o EventObject.o EventProcedure.o EventSequence.o \
 		PacketManager.o PacketManagerServer.o PacketManagerClient.o \
-		cJSON.o Util.o \
+		cJSON.o Util.o TMXLoader.o TMXMap.o TMXTile.o TMXTileLayer.o TMXTileSet.o \
 		GameClient.o GameServer.o GameServerTest.o \
 		libtmx.a `xml2-config --libs` -lz -lpthread -lmysqlclient -lstdc++ -lm -o server
 
@@ -172,6 +172,21 @@ cJSON.o : util/cJSON.c
 	
 Util.o : util/Util.cpp
 	gcc -c -o Util.o util/Util.cpp
+
+TMXLoader.o : util/TMXLoader/TMXLoader.cpp
+	gcc -c -o TMXLoader.o util/TMXLoader/TMXLoader.cpp -lstdc++
+	
+TMXMap.o : util/TMXLoader/TMXMap.cpp
+	gcc -c -o TMXMap.o util/TMXLoader/TMXMap.cpp -lstdc++
+
+TMXTile.o : util/TMXLoader/TMXTile.cpp
+	gcc -c -o TMXTile.o util/TMXLoader/TMXTile.cpp -lstdc++
+
+TMXTileLayer.o : util/TMXLoader/TMXTileLayer.cpp
+	gcc -c -o TMXTileLayer.o util/TMXLoader/TMXTileLayer.cpp -lstdc++
+
+TMXTileSet.o : util/TMXLoader/TMXTileSet.cpp
+	gcc -c -o TMXTileSet.o util/TMXLoader/TMXTileSet.cpp -lstdc++
 
 GameClient.o : GameClient.cpp
 	gcc -c -o GameClient.o GameClient.cpp

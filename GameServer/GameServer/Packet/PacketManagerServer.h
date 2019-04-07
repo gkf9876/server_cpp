@@ -45,15 +45,13 @@ public:
 
 	int readyRecv();
 
-	int run1(void run(SOCKET, int, const char*, int), void updateLogout(SOCKET));
-
 	void registClientSocket();
 #ifdef _WIN32
 	int recvDataAnalysis(int i, SOCKET* outputSock, int* outputCode, char* outputBuffer, int* outputSize);
+	int fdIsset(SOCKET socket, fd_set FAR * fdSet, int i);
 #elif __linux__
 	int recvDataAnalysis(int i, int* outputSock, int* outputCode, char* outputBuffer, int* outputSize);
 #endif
-	int fdIsset(SOCKET socket, fd_set FAR * fdSet, int i);
 	int recvSocketNum(int i);
 	int recvSocketCount();
 
@@ -63,15 +61,19 @@ public:
 	void closeClient(int sock);
 #endif
 
+#ifdef _WIN32
 	void open();
 	int server_select();
 	void connection_request();
 	SOCKET read_message(int i, SOCKET* outputSock, int* outputCode, char* outputBuffer, int* outputSize);
+#endif
 	int getClientCount();
+#ifdef _WIN32
 	SOCKET getServSock();
 	SOCKET reads_socket(int i);
 	int fd_isset(int i);
 	void close();
+#endif
 };
 
 #endif
