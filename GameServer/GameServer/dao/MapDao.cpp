@@ -163,7 +163,7 @@ list<Map> MapDao::getAll()
 	MYSQL_RES* sql_result;
 	MYSQL_ROW sql_row;
 
-	sprintf(query, "SELECT IDX, FIELD, MONSTER1, MONSTER2, MONSTER3, MONSTER1_COUNT, MONSTER2_COUNT, MONSTER3_COUNT FROM MAP_LIST");
+	sprintf(query, "SELECT IDX, FIELD, MONSTER1, MONSTER2, MONSTER3, MONSTER1_COUNT, MONSTER2_COUNT, MONSTER3_COUNT FROM map_list");
 
 	query_stat = mysql_query(&connection, query);
 

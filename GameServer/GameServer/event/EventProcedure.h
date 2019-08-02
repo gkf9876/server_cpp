@@ -49,6 +49,8 @@ public:
 	EventSequence * getProgressEventSequence();
 
 	void setProgress(const char * name, bool value);
+
+	int getEventListSize();
 };
 
 #endif

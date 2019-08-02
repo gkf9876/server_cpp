@@ -380,3 +380,8 @@ void EventProcedure::setProgress(const char * name, bool value)
 		}
 	}
 }
+
+int EventProcedure::getEventListSize()
+{
+	return eventList.size();
+}
