@@ -22,77 +22,77 @@
 
 int main()
 {
-	//TestApplicationContext* testContext = new TestApplicationContext();
+	TestApplicationContext* testContext = new TestApplicationContext();
 
-	//UserDaoTest * userDaoTest = new UserDaoTest();
-	//userDaoTest->setApplicationContext(testContext);
-	//userDaoTest->run();
-	//delete userDaoTest;
+	UserDaoTest * userDaoTest = new UserDaoTest();
+	userDaoTest->setApplicationContext(testContext);
+	userDaoTest->run();
+	delete userDaoTest;
 
-	//ChattingDaoTest * chattingDaoTest = new ChattingDaoTest();
-	//chattingDaoTest->setApplicationContext(testContext);
-	//chattingDaoTest->run();
-	//delete chattingDaoTest;
-	//
-	//InventoryInfoDaoTest * inventoryInfoDaoTest = new InventoryInfoDaoTest();
-	//inventoryInfoDaoTest->setApplicationContext(testContext);
-	//inventoryInfoDaoTest->run();
-	//delete inventoryInfoDaoTest;
-	//
-	//MapDaoTest * mapDaoTest = new MapDaoTest();
-	//mapDaoTest->setApplicationContext(testContext);
-	//mapDaoTest->run();
-	//delete mapDaoTest;
-	//
-	//MapInfoDaoTest * mapInfoDaoTest = new MapInfoDaoTest();
-	//mapInfoDaoTest->setApplicationContext(testContext);
-	//mapInfoDaoTest->run();
-	//delete mapInfoDaoTest;
-	//
-	//MonsterDaoTest * monsterDaoTest = new MonsterDaoTest();
-	//monsterDaoTest->setApplicationContext(testContext);
-	//monsterDaoTest->run();
-	//delete monsterDaoTest;
+	ChattingDaoTest * chattingDaoTest = new ChattingDaoTest();
+	chattingDaoTest->setApplicationContext(testContext);
+	chattingDaoTest->run();
+	delete chattingDaoTest;
+	
+	InventoryInfoDaoTest * inventoryInfoDaoTest = new InventoryInfoDaoTest();
+	inventoryInfoDaoTest->setApplicationContext(testContext);
+	inventoryInfoDaoTest->run();
+	delete inventoryInfoDaoTest;
+	
+	MapDaoTest * mapDaoTest = new MapDaoTest();
+	mapDaoTest->setApplicationContext(testContext);
+	mapDaoTest->run();
+	delete mapDaoTest;
+	
+	MapInfoDaoTest * mapInfoDaoTest = new MapInfoDaoTest();
+	mapInfoDaoTest->setApplicationContext(testContext);
+	mapInfoDaoTest->run();
+	delete mapInfoDaoTest;
+	
+	MonsterDaoTest * monsterDaoTest = new MonsterDaoTest();
+	monsterDaoTest->setApplicationContext(testContext);
+	monsterDaoTest->run();
+	delete monsterDaoTest;
 
-	//LoadingScreenDaoTest * loadingScreenDaoTest = new LoadingScreenDaoTest();
-	//loadingScreenDaoTest->setApplicationContext(testContext);
-	//loadingScreenDaoTest->run();
-	//delete loadingScreenDaoTest;
+	LoadingScreenDaoTest * loadingScreenDaoTest = new LoadingScreenDaoTest();
+	loadingScreenDaoTest->setApplicationContext(testContext);
+	loadingScreenDaoTest->run();
+	delete loadingScreenDaoTest;
 
-	//EventInfoDaoTest * eventInfoDaoTest = new EventInfoDaoTest();
-	//eventInfoDaoTest->setApplicationContext(testContext);
-	//eventInfoDaoTest->run();
-	//delete eventInfoDaoTest;
+	EventInfoDaoTest * eventInfoDaoTest = new EventInfoDaoTest();
+	eventInfoDaoTest->setApplicationContext(testContext);
+	eventInfoDaoTest->run();
+	delete eventInfoDaoTest;
 
-	//MapManageServiceTest* mapManageServiceTest = new MapManageServiceTest();
-	//mapManageServiceTest->setApplicationContext(testContext);
-	//mapManageServiceTest->run();
-	//delete mapManageServiceTest;
-	//
-	//UserServiceTest* userServiceTest = new UserServiceTest();
-	//userServiceTest->setApplicationContext(testContext);
-	//userServiceTest->run();
-	//delete userServiceTest;
-	//
-	//ChattingServiceTest* chattingServiceTest = new ChattingServiceTest();
-	//chattingServiceTest->setApplicationContext(testContext);
-	//chattingServiceTest->run();
-	//delete chattingServiceTest;
+	MapManageServiceTest* mapManageServiceTest = new MapManageServiceTest();
+	mapManageServiceTest->setApplicationContext(testContext);
+	mapManageServiceTest->run();
+	delete mapManageServiceTest;
+	
+	UserServiceTest* userServiceTest = new UserServiceTest();
+	userServiceTest->setApplicationContext(testContext);
+	userServiceTest->run();
+	delete userServiceTest;
+	
+	ChattingServiceTest* chattingServiceTest = new ChattingServiceTest();
+	chattingServiceTest->setApplicationContext(testContext);
+	chattingServiceTest->run();
+	delete chattingServiceTest;
 
-	//LoadingScreenServiceTest* loadingScreenServiceTest = new LoadingScreenServiceTest();
-	//loadingScreenServiceTest->setApplicationContext(testContext);
-	//loadingScreenServiceTest->run();
-	//delete loadingScreenServiceTest;
+	LoadingScreenServiceTest* loadingScreenServiceTest = new LoadingScreenServiceTest();
+	loadingScreenServiceTest->setApplicationContext(testContext);
+	loadingScreenServiceTest->run();
+	delete loadingScreenServiceTest;
 
-	//ServerInfoServiceTest* serverInfoServiceTest = new ServerInfoServiceTest();
-	//serverInfoServiceTest->setApplicationContext(testContext);
-	//serverInfoServiceTest->run();
-	//delete serverInfoServiceTest;
+	ServerInfoServiceTest* serverInfoServiceTest = new ServerInfoServiceTest();
+	serverInfoServiceTest->setApplicationContext(testContext);
+	serverInfoServiceTest->run();
+	delete serverInfoServiceTest;
 
-	//EventInfoServiceTest* eventInfoServiceTest = new EventInfoServiceTest();
-	//eventInfoServiceTest->setApplicationContext(testContext);
-	//eventInfoServiceTest->run();
-	//delete eventInfoServiceTest;
+	EventInfoServiceTest* eventInfoServiceTest = new EventInfoServiceTest();
+	eventInfoServiceTest->setApplicationContext(testContext);
+	eventInfoServiceTest->run();
+	delete eventInfoServiceTest;
 
 #ifdef _WIN32
 #elif __linux__
@@ -101,13 +101,13 @@ int main()
 	//gameServerTest->run();
 	//delete gameServerTest;
 #elif __APPLE__
-	GameServerTest * gameServerTest = new GameServerTest();
-	gameServerTest->setApplicationContext(testContext);
-	gameServerTest->run();
-	delete gameServerTest;
+	//GameServerTest * gameServerTest = new GameServerTest();
+	//gameServerTest->setApplicationContext(testContext);
+	//gameServerTest->run();
+	//delete gameServerTest;
 #endif
 
-	//delete testContext;
+	delete testContext;
 
 	ApplicationContext* context = new ApplicationContext();
 	GameServer * gameServer = context->gameServer();
@@ -134,6 +134,7 @@ int main()
 			{
 				gameServer->regenMonster();
 			}
+
 			if (timeCount % 2 == 0)
 			{
 				gameServer->moveMonsters();

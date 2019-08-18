@@ -21,8 +21,12 @@
   <ItemGroup>
     <ClCompile Include="dao\ChattingDao.cpp" />
     <ClCompile Include="dao\ChattingDaoTest.cpp" />
+    <ClCompile Include="dao\EventInfoDao.cpp" />
+    <ClCompile Include="dao\EventInfoDaoTest.cpp" />
     <ClCompile Include="dao\InventoryInfoDao.cpp" />
     <ClCompile Include="dao\InventoryInfoDaoTest.cpp" />
+    <ClCompile Include="dao\LoadingScreenDao.cpp" />
+    <ClCompile Include="dao\LoadingScreenDaoTest.cpp" />
     <ClCompile Include="dao\MapDao.cpp" />
     <ClCompile Include="dao\MapDaoTest.cpp" />
     <ClCompile Include="dao\MapInfoDao.cpp" />
@@ -34,7 +38,9 @@
     <ClCompile Include="dao\UserDaoTest.cpp" />
     <ClCompile Include="datasource\DataSource.cpp" />
     <ClCompile Include="domain\Chatting.cpp" />
+    <ClCompile Include="domain\EventInfo.cpp" />
     <ClCompile Include="domain\InventoryInfo.cpp" />
+    <ClCompile Include="domain\LoadingScreen.cpp" />
     <ClCompile Include="domain\Map.cpp" />
     <ClCompile Include="domain\MapInfo.cpp" />
     <ClCompile Include="domain\Monster.cpp" />
@@ -47,10 +53,19 @@
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="GameServerTest.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Packet\PacketManager.cpp" />
+    <ClCompile Include="Packet\PacketManagerClient.cpp" />
+    <ClCompile Include="Packet\PacketManagerServer.cpp" />
     <ClCompile Include="service\ChattingService.cpp" />
     <ClCompile Include="service\ChattingServiceTest.cpp" />
+    <ClCompile Include="service\EventInfoService.cpp" />
+    <ClCompile Include="service\EventInfoServiceTest.cpp" />
+    <ClCompile Include="service\LoadingScreenService.cpp" />
+    <ClCompile Include="service\LoadingScreenServiceTest.cpp" />
     <ClCompile Include="service\MapManageService.cpp" />
     <ClCompile Include="service\MapManageServiceTest.cpp" />
+    <ClCompile Include="service\ServerInfoService.cpp" />
+    <ClCompile Include="service\ServerInfoServiceTest.cpp" />
     <ClCompile Include="service\UserService.cpp" />
     <ClCompile Include="service\UserServiceTest.cpp" />
     <ClCompile Include="test\Assert.cpp" />
@@ -58,8 +73,12 @@
   <ItemGroup>
     <ClInclude Include="dao\ChattingDao.h" />
     <ClInclude Include="dao\ChattingDaoTest.h" />
+    <ClInclude Include="dao\EventInfoDao.h" />
+    <ClInclude Include="dao\EventInfoDaoTest.h" />
     <ClInclude Include="dao\InventoryInfoDao.h" />
     <ClInclude Include="dao\InventoryInfoDaoTest.h" />
+    <ClInclude Include="dao\LoadingScreenDao.h" />
+    <ClInclude Include="dao\LoadingScreenDaoTest.h" />
     <ClInclude Include="dao\MapDao.h" />
     <ClInclude Include="dao\MapDaoTest.h" />
     <ClInclude Include="dao\MapInfoDao.h" />
@@ -71,7 +90,9 @@
     <ClInclude Include="dao\UserDaoTest.h" />
     <ClInclude Include="datasource\DataSource.h" />
     <ClInclude Include="domain\Chatting.h" />
+    <ClInclude Include="domain\EventInfo.h" />
     <ClInclude Include="domain\InventoryInfo.h" />
+    <ClInclude Include="domain\LoadingScreen.h" />
     <ClInclude Include="domain\Map.h" />
     <ClInclude Include="domain\MapInfo.h" />
     <ClInclude Include="domain\Monster.h" />
@@ -83,10 +104,19 @@
     <ClInclude Include="GameClient.h" />
     <ClInclude Include="GameServer.h" />
     <ClInclude Include="GameServerTest.h" />
+    <ClInclude Include="Packet\PacketManager.h" />
+    <ClInclude Include="Packet\PacketManagerClient.h" />
+    <ClInclude Include="Packet\PacketManagerServer.h" />
     <ClInclude Include="service\ChattingService.h" />
     <ClInclude Include="service\ChattingServiceTest.h" />
+    <ClInclude Include="service\EventInfoService.h" />
+    <ClInclude Include="service\EventInfoServiceTest.h" />
+    <ClInclude Include="service\LoadingScreenService.h" />
+    <ClInclude Include="service\LoadingScreenServiceTest.h" />
     <ClInclude Include="service\MapManageService.h" />
     <ClInclude Include="service\MapManageServiceTest.h" />
+    <ClInclude Include="service\ServerInfoService.h" />
+    <ClInclude Include="service\ServerInfoServiceTest.h" />
     <ClInclude Include="service\UserService.h" />
     <ClInclude Include="service\UserServiceTest.h" />
     <ClInclude Include="test\Assert.h" />
@@ -99,32 +129,32 @@
     <ProjectGuid>{CC93CECE-86A7-4DC6-9CB2-43C222189F01}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GameServer</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
