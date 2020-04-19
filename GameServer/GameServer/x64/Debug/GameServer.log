@@ -1,2 +1,91 @@
-﻿  UserDao.cpp
-  GameServer.vcxproj -> D:\Users\USER\Desktop\server_cpp\GameServer\x64\Debug\GameServer.exe
+﻿  ChattingDaoTest.cpp
+  EventInfoDao.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  EventInfoDaoTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  InventoryInfoDao.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  InventoryInfoDaoTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  LoadingScreenDao.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  LoadingScreenDaoTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  MapDao.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  MapDaoTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  MapInfoDao.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  MapInfoDaoTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  MonsterDao.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  MonsterDaoTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  ServerInfoDao.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  UserDao.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  UserDaoTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  DataSource.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  Chatting.cpp
+  InventoryInfo.cpp
+  RunApplicationContext.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  TestApplicationContext.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  GameServer.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  GameServerTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  Main.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  PacketManager.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  PacketManagerServer.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManager.cpp(199,6): warning C4101:  'writeLen' :참조되지 않은 지역 변수입니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(89,9): warning C4477:  'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'SOCKET'입니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(89,9): message :  서식 문자열에서 '%lld'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(89,9): message :  서식 문자열에서 '%Id'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(89,9): message :  서식 문자열에서 '%I64d'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(113,29): warning C4244:  'return': 'SOCKET'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(200,9): warning C4477:  'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'SOCKET'입니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(200,9): message :  서식 문자열에서 '%lld'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(200,9): message :  서식 문자열에서 '%Id'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(200,9): message :  서식 문자열에서 '%I64d'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(254,9): warning C4477:  'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'SOCKET'입니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(254,9): message :  서식 문자열에서 '%lld'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(254,9): message :  서식 문자열에서 '%Id'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(254,9): message :  서식 문자열에서 '%I64d'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(268,10): warning C4477:  'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'SOCKET'입니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(268,10): message :  서식 문자열에서 '%lld'을(를) 사용하는 것이 좋습니다.
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(268,10): message :  서식 문자열에서 '%Id'을(를) 사용하는 것이 좋습니다.
+  EventInfoService.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\Packet\PacketManagerServer.cpp(268,10): message :  서식 문자열에서 '%I64d'을(를) 사용하는 것이 좋습니다.
+  EventInfoServiceTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  LoadingScreenService.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  LoadingScreenServiceTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  MapManageService.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  MapManageServiceTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  ServerInfoService.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  ServerInfoServiceTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  UserService.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  UserServiceTest.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  Assert.cpp
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory
+  코드를 생성하고 있습니다...
+D:\Users\gkf98\OneDrive\문서\dev\server_cpp\GameServer\GameServer\datasource\DataSource.h(7,10): error C1083:  포함 파일을 열 수 없습니다. 'mysql/mysql.h': No such file or directory

@@ -25,6 +25,8 @@ public:
 	void deleteAll();
 	int getCount();
 	LoadingScreen get(int idx);
+
+	void showLog(char* qurey);
 };
 
 #endif

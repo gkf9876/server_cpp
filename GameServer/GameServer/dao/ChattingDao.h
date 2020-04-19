@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <list>
+#include <time.h>
 #include "../datasource/DataSource.h"
 #include "../domain/Chatting.h"
 
@@ -26,6 +27,8 @@ public:
 	Chatting get(int idx);
 	list<Chatting> getFieldChatting(const char* field);
 	list<Chatting> getUserFieldChatting(const char* userName, const char* field);
+
+	void showLog(char* qurey);
 };
 
 #endif

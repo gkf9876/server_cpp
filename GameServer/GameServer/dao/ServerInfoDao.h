@@ -21,6 +21,8 @@ public:
 
 	void update(ServerInfo info);
 	ServerInfo get(int idx);
+
+	void showLog(char* qurey);
 };
 
 #endif

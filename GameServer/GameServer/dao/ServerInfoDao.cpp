@@ -29,6 +29,7 @@ void ServerInfoDao::update(ServerInfo info)
 	sprintf(&query[strlen(query)], "idx = '1'");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -45,6 +46,7 @@ ServerInfo ServerInfoDao::get(int idx)
 	sprintf(query, "select idx, inputdate from server_info where idx='%d'", idx);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -73,4 +75,12 @@ ServerInfo ServerInfoDao::get(int idx)
 	mysql_free_result(sql_result);
 
 	return info;
+}
+
+void ServerInfoDao::showLog(char* query) {
+	time_t timer;
+	struct tm* t;
+	timer = time(NULL);
+	t = localtime(&timer);
+	printf("[%4d.%2d.%2d %2d:%2d:%2d]%s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, query);
 }

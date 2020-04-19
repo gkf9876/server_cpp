@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : vmware_ubuntu19.04
-Source Server Version : 50727
-Source Host           : 192.168.198.128:3306
-Source Database       : gameServer
+Source Server         : vmware_ubuntu18.04
+Source Server Version : 50729
+Source Host           : 192.168.235.128:3306
+Source Database       : gameserver
 
 Target Server Type    : MYSQL
-Target Server Version : 50727
+Target Server Version : 50729
 File Encoding         : 65001
 
-Date: 2019-08-18 19:00:14
+Date: 2020-04-19 21:24:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,7 +25,7 @@ CREATE TABLE `chatting` (
   `content` varchar(100) DEFAULT '',
   `field` varchar(100) DEFAULT '',
   PRIMARY KEY (`idx`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of chatting
@@ -60,6 +60,7 @@ INSERT INTO `chatting` VALUES ('27', '2018-05-03 17:09:48', 'abcd6', 'Hello Worl
 INSERT INTO `chatting` VALUES ('28', '2018-05-03 17:09:48', 'abcd2', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
 INSERT INTO `chatting` VALUES ('29', '2018-05-03 17:09:48', 'abcd0', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor0.tmx');
 INSERT INTO `chatting` VALUES ('30', '2018-05-03 17:09:48', 'abcd3', 'Hello World3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor3.tmx');
+INSERT INTO `chatting` VALUES ('31', '2020-04-19 11:32:50', 'abcd3', 'Hello World', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx');
 
 -- ----------------------------
 -- Table structure for `event_info`
@@ -74,11 +75,14 @@ CREATE TABLE `event_info` (
   `xpos` int(11) DEFAULT NULL,
   `ypos` int(11) DEFAULT NULL,
   PRIMARY KEY (`idx`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of event_info
 -- ----------------------------
+INSERT INTO `event_info` VALUES ('154', '2019-08-18 12:08:47', 'abcd0', '/Story/NewsGisa1.json', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1', '1', '2');
+INSERT INTO `event_info` VALUES ('155', '2019-08-18 12:08:47', 'abcd1', '/Story/NewsGisa2.json', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2', '3', '4');
+INSERT INTO `event_info` VALUES ('156', '2019-08-18 12:08:47', 'abcd2', '/Story/NewsGisa3.json', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3', '5', '6');
 
 -- ----------------------------
 -- Table structure for `inventory_info`
@@ -99,86 +103,86 @@ CREATE TABLE `inventory_info` (
 -- ----------------------------
 -- Records of inventory_info
 -- ----------------------------
-INSERT INTO `inventory_info` VALUES ('12', '토마토_3', 'abcd1', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('13', '토마토_4', 'abcd1', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('14', '토마토_5', 'abcd1', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('15', '토마토_6', 'abcd1', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('16', '토마토_7', 'abcd1', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('20', '토마토_3', 'abcd2', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('21', '토마토_4', 'abcd2', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('22', '토마토_5', 'abcd2', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('23', '토마토_6', 'abcd2', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('24', '토마토_7', 'abcd2', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('28', '토마토_3', 'abcd3', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('29', '토마토_4', 'abcd3', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('30', '토마토_5', 'abcd3', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('31', '토마토_6', 'abcd3', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('32', '토마토_7', 'abcd3', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('36', '토마토_3', 'abcd4', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('37', '토마토_4', 'abcd4', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('38', '토마토_5', 'abcd4', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('39', '토마토_6', 'abcd4', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('40', '토마토_7', 'abcd4', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('44', '토마토_3', 'abcd5', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('45', '토마토_4', 'abcd5', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('46', '토마토_5', 'abcd5', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('47', '토마토_6', 'abcd5', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('48', '토마토_7', 'abcd5', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('52', '토마토_3', 'abcd6', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('53', '토마토_4', 'abcd6', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('54', '토마토_5', 'abcd6', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('55', '토마토_6', 'abcd6', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('56', '토마토_7', 'abcd6', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('57', '토마토_0', 'abcd7', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('59', '토마토_2', 'abcd7', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('62', '토마토_5', 'abcd7', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('63', '토마토_6', 'abcd7', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('64', '토마토_7', 'abcd7', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('65', '토마토_0', 'abcd8', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('68', '토마토_3', 'abcd8', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('70', '토마토_5', 'abcd8', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('71', '토마토_6', 'abcd8', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('72', '토마토_7', 'abcd8', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('74', '토마토_1', 'abcd9', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('75', '토마토_2', 'abcd9', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('76', '토마토_3', 'abcd9', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('79', '토마토_6', 'abcd9', 'ITEM', '1', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('80', '토마토_7', 'abcd9', 'ITEM', '1', '2', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('81', '토마토_0', 'abcd4', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('83', '토마토_3', 'abcd7', 'ITEM', '0', '3', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('84', '토마토_0', 'abcd5', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('85', '토마토_2', 'abcd8', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('86', '토마토_0', 'abcd6', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('87', '토마토_0', 'abcd1', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('88', '토마토_0', 'abcd3', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('89', '토마토_0', 'abcd9', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('90', '토마토_0', 'abcd2', 'ITEM', '0', '0', 'Resources/items/토마토_0.jpg', '1');
-INSERT INTO `inventory_info` VALUES ('91', '토마토_1', 'abcd4', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('92', '토마토_1', 'abcd8', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('93', '토마토_1', 'abcd5', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('94', '토마토_4', 'abcd7', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('96', '토마토_2', 'abcd4', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('97', '토마토_1', 'abcd6', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('98', '토마토_1', 'abcd1', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('99', '토마토_2', 'abcd5', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('100', '토마토_4', 'abcd9', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('101', '토마토_1', 'abcd3', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('103', '토마토_1', 'abcd2', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('104', '토마토_4', 'abcd8', 'ITEM', '0', '4', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('105', '토마토_1', 'abcd7', 'ITEM', '0', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('106', '토마토_2', 'abcd6', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('107', '토마토_2', 'abcd2', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('108', '토마토_5', 'abcd9', 'ITEM', '1', '0', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('109', '토마토_2', 'abcd1', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('110', '토마토_2', 'abcd3', 'ITEM', '0', '2', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('111', '토마토_7', 'abcd0', 'ITEM', '0', '0', 'Resources/items/토마토_7.jpg', '8');
-INSERT INTO `inventory_info` VALUES ('112', '토마토_6', 'abcd0', 'ITEM', '0', '1', 'Resources/items/토마토_6.jpg', '7');
-INSERT INTO `inventory_info` VALUES ('113', '토마토_5', 'abcd0', 'ITEM', '0', '2', 'Resources/items/토마토_5.jpg', '6');
-INSERT INTO `inventory_info` VALUES ('114', '토마토_4', 'abcd0', 'ITEM', '0', '3', 'Resources/items/토마토_4.jpg', '5');
-INSERT INTO `inventory_info` VALUES ('115', '토마토_3', 'abcd0', 'ITEM', '0', '4', 'Resources/items/토마토_3.jpg', '4');
-INSERT INTO `inventory_info` VALUES ('116', '토마토_2', 'abcd0', 'ITEM', '1', '0', 'Resources/items/토마토_2.jpg', '3');
-INSERT INTO `inventory_info` VALUES ('117', '토마토_1', 'abcd0', 'ITEM', '1', '1', 'Resources/items/토마토_1.jpg', '2');
-INSERT INTO `inventory_info` VALUES ('118', '토마토_0', 'abcd0', 'ITEM', '1', '2', 'Resources/items/토마토_0.jpg', '1');
+INSERT INTO `inventory_info` VALUES ('12', 'tomato_3', 'abcd1', 'ITEM', '0', '3', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('13', 'tomato_4', 'abcd1', 'ITEM', '0', '4', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('14', 'tomato_5', 'abcd1', 'ITEM', '1', '0', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('15', 'tomato_6', 'abcd1', 'ITEM', '1', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('16', 'tomato_7', 'abcd1', 'ITEM', '1', '2', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('20', 'tomato_3', 'abcd2', 'ITEM', '0', '3', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('21', 'tomato_4', 'abcd2', 'ITEM', '0', '4', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('22', 'tomato_5', 'abcd2', 'ITEM', '1', '0', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('23', 'tomato_6', 'abcd2', 'ITEM', '1', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('24', 'tomato_7', 'abcd2', 'ITEM', '1', '2', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('28', 'tomato_3', 'abcd3', 'ITEM', '0', '3', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('29', 'tomato_4', 'abcd3', 'ITEM', '0', '4', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('30', 'tomato_5', 'abcd3', 'ITEM', '1', '0', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('31', 'tomato_6', 'abcd3', 'ITEM', '1', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('32', 'tomato_7', 'abcd3', 'ITEM', '1', '2', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('36', 'tomato_3', 'abcd4', 'ITEM', '0', '3', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('37', 'tomato_4', 'abcd4', 'ITEM', '0', '4', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('38', 'tomato_5', 'abcd4', 'ITEM', '1', '0', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('39', 'tomato_6', 'abcd4', 'ITEM', '1', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('40', 'tomato_7', 'abcd4', 'ITEM', '1', '2', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('44', 'tomato_3', 'abcd5', 'ITEM', '0', '3', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('45', 'tomato_4', 'abcd5', 'ITEM', '0', '4', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('46', 'tomato_5', 'abcd5', 'ITEM', '1', '0', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('47', 'tomato_6', 'abcd5', 'ITEM', '1', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('48', 'tomato_7', 'abcd5', 'ITEM', '1', '2', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('52', 'tomato_3', 'abcd6', 'ITEM', '0', '3', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('53', 'tomato_4', 'abcd6', 'ITEM', '0', '4', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('54', 'tomato_5', 'abcd6', 'ITEM', '1', '0', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('55', 'tomato_6', 'abcd6', 'ITEM', '1', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('56', 'tomato_7', 'abcd6', 'ITEM', '1', '2', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('57', 'tomato_0', 'abcd7', 'ITEM', '0', '0', 'items/tomato_0.png', '1');
+INSERT INTO `inventory_info` VALUES ('59', 'tomato_2', 'abcd7', 'ITEM', '0', '2', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('62', 'tomato_5', 'abcd7', 'ITEM', '1', '0', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('63', 'tomato_6', 'abcd7', 'ITEM', '1', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('64', 'tomato_7', 'abcd7', 'ITEM', '1', '2', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('65', 'tomato_0', 'abcd8', 'ITEM', '0', '0', 'items/tomato_0.png', '1');
+INSERT INTO `inventory_info` VALUES ('68', 'tomato_3', 'abcd8', 'ITEM', '0', '3', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('70', 'tomato_5', 'abcd8', 'ITEM', '1', '0', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('71', 'tomato_6', 'abcd8', 'ITEM', '1', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('72', 'tomato_7', 'abcd8', 'ITEM', '1', '2', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('74', 'tomato_1', 'abcd9', 'ITEM', '0', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('75', 'tomato_2', 'abcd9', 'ITEM', '0', '2', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('76', 'tomato_3', 'abcd9', 'ITEM', '0', '3', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('79', 'tomato_6', 'abcd9', 'ITEM', '1', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('80', 'tomato_7', 'abcd9', 'ITEM', '1', '2', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('81', 'tomato_0', 'abcd4', 'ITEM', '0', '0', 'items/tomato_0.png', '1');
+INSERT INTO `inventory_info` VALUES ('83', 'tomato_3', 'abcd7', 'ITEM', '0', '3', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('84', 'tomato_0', 'abcd5', 'ITEM', '0', '0', 'items/tomato_0.png', '1');
+INSERT INTO `inventory_info` VALUES ('85', 'tomato_2', 'abcd8', 'ITEM', '0', '2', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('86', 'tomato_0', 'abcd6', 'ITEM', '0', '0', 'items/tomato_0.png', '1');
+INSERT INTO `inventory_info` VALUES ('87', 'tomato_0', 'abcd1', 'ITEM', '0', '0', 'items/tomato_0.png', '1');
+INSERT INTO `inventory_info` VALUES ('88', 'tomato_0', 'abcd3', 'ITEM', '0', '0', 'items/tomato_0.png', '1');
+INSERT INTO `inventory_info` VALUES ('89', 'tomato_0', 'abcd9', 'ITEM', '0', '0', 'items/tomato_0.png', '1');
+INSERT INTO `inventory_info` VALUES ('90', 'tomato_0', 'abcd2', 'ITEM', '0', '0', 'items/tomato_0.png', '1');
+INSERT INTO `inventory_info` VALUES ('91', 'tomato_1', 'abcd4', 'ITEM', '0', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('92', 'tomato_1', 'abcd8', 'ITEM', '0', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('93', 'tomato_1', 'abcd5', 'ITEM', '0', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('94', 'tomato_4', 'abcd7', 'ITEM', '0', '4', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('96', 'tomato_2', 'abcd4', 'ITEM', '0', '2', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('97', 'tomato_1', 'abcd6', 'ITEM', '0', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('98', 'tomato_1', 'abcd1', 'ITEM', '0', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('99', 'tomato_2', 'abcd5', 'ITEM', '0', '2', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('100', 'tomato_4', 'abcd9', 'ITEM', '0', '4', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('101', 'tomato_1', 'abcd3', 'ITEM', '0', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('103', 'tomato_1', 'abcd2', 'ITEM', '0', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('104', 'tomato_4', 'abcd8', 'ITEM', '0', '4', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('105', 'tomato_1', 'abcd7', 'ITEM', '0', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('106', 'tomato_2', 'abcd6', 'ITEM', '0', '2', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('107', 'tomato_2', 'abcd2', 'ITEM', '0', '2', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('108', 'tomato_5', 'abcd9', 'ITEM', '1', '0', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('109', 'tomato_2', 'abcd1', 'ITEM', '0', '2', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('110', 'tomato_2', 'abcd3', 'ITEM', '0', '2', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('111', 'tomato_7', 'abcd0', 'ITEM', '0', '0', 'items/tomato_7.png', '8');
+INSERT INTO `inventory_info` VALUES ('112', 'tomato_6', 'abcd0', 'ITEM', '0', '1', 'items/tomato_6.png', '7');
+INSERT INTO `inventory_info` VALUES ('113', 'tomato_5', 'abcd0', 'ITEM', '0', '2', 'items/tomato_5.png', '6');
+INSERT INTO `inventory_info` VALUES ('114', 'tomato_4', 'abcd0', 'ITEM', '0', '3', 'items/tomato_4.png', '5');
+INSERT INTO `inventory_info` VALUES ('115', 'tomato_3', 'abcd0', 'ITEM', '0', '4', 'items/tomato_3.png', '4');
+INSERT INTO `inventory_info` VALUES ('116', 'tomato_2', 'abcd0', 'ITEM', '1', '0', 'items/tomato_2.png', '3');
+INSERT INTO `inventory_info` VALUES ('117', 'tomato_1', 'abcd0', 'ITEM', '1', '1', 'items/tomato_1.png', '2');
+INSERT INTO `inventory_info` VALUES ('118', 'tomato_0', 'abcd0', 'ITEM', '1', '2', 'items/tomato_0.png', '1');
 
 -- ----------------------------
 -- Table structure for `loading_screen`
@@ -328,21 +332,21 @@ INSERT INTO `map_info` VALUES ('106', 'TileMaps/KonyangUniv.Daejeon/JukhunDigita
 INSERT INTO `map_info` VALUES ('107', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx', '16', '자동차', 'OBJECT', '68', '98', '20', 'Images/자동차.jpg', '20', '150', null, null);
 INSERT INTO `map_info` VALUES ('108', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx', '16', '자동차', 'OBJECT', '69', '99', '21', 'Images/자동차.jpg', '21', '150', null, null);
 INSERT INTO `map_info` VALUES ('109', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor7.tmx', '16', '자동차', 'OBJECT', '70', '100', '22', 'Images/자동차.jpg', '22', '150', null, null);
-INSERT INTO `map_info` VALUES ('110', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '34', '11', '1', 'monster/squirrel', '1', '50', '29', '0');
-INSERT INTO `map_info` VALUES ('111', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '39', '13', '1', 'monster/squirrel', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('112', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '29', '6', '1', 'monster/squirrel', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('113', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '31', '10', '1', 'monster/squirrel', '1', '50', '28', '0');
-INSERT INTO `map_info` VALUES ('114', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '4', '10', '1', 'monster/squirrel', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('115', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '32', '11', '1', 'monster/deer', '1', '100', '28', '0');
-INSERT INTO `map_info` VALUES ('116', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '18', '4', '1', 'monster/deer', '1', '100', '26', '0');
-INSERT INTO `map_info` VALUES ('117', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '24', '13', '1', 'monster/deer', '1', '100', '26', '0');
-INSERT INTO `map_info` VALUES ('118', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '34', '12', '1', 'monster/deer', '1', '100', '29', '0');
-INSERT INTO `map_info` VALUES ('119', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '28', '3', '1', 'monster/deer', '1', '100', '27', '0');
-INSERT INTO `map_info` VALUES ('120', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '19', '12', '1', 'monster/deer', '1', '100', '27', '0');
-INSERT INTO `map_info` VALUES ('121', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '28', '1', '1', 'monster/deer', '1', '100', '26', '0');
-INSERT INTO `map_info` VALUES ('122', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '27', '5', '1', 'monster/deer', '1', '100', '28', '0');
-INSERT INTO `map_info` VALUES ('123', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '21', '6', '1', 'monster/deer', '1', '100', '27', '0');
-INSERT INTO `map_info` VALUES ('124', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '17', '4', '1', 'monster/deer', '1', '100', '29', '0');
+INSERT INTO `map_info` VALUES ('110', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '16', '11', '1', 'monster/squirrel', '1', '50', '27', '0');
+INSERT INTO `map_info` VALUES ('111', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '34', '10', '1', 'monster/squirrel', '1', '50', '26', '0');
+INSERT INTO `map_info` VALUES ('112', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '18', '7', '1', 'monster/squirrel', '1', '50', '28', '0');
+INSERT INTO `map_info` VALUES ('113', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '17', '12', '1', 'monster/squirrel', '1', '50', '26', '0');
+INSERT INTO `map_info` VALUES ('114', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', 'squirrel', 'MONSTER', '18', '6', '1', 'monster/squirrel', '1', '50', '26', '0');
+INSERT INTO `map_info` VALUES ('115', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '24', '11', '1', 'monster/deer', '1', '100', '29', '0');
+INSERT INTO `map_info` VALUES ('116', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '3', '11', '1', 'monster/deer', '1', '100', '26', '0');
+INSERT INTO `map_info` VALUES ('117', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '23', '12', '1', 'monster/deer', '1', '100', '27', '0');
+INSERT INTO `map_info` VALUES ('118', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '28', '4', '1', 'monster/deer', '1', '100', '26', '0');
+INSERT INTO `map_info` VALUES ('119', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '34', '11', '1', 'monster/deer', '1', '100', '28', '0');
+INSERT INTO `map_info` VALUES ('120', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '35', '10', '1', 'monster/deer', '1', '100', '26', '0');
+INSERT INTO `map_info` VALUES ('121', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '18', '11', '1', 'monster/deer', '1', '100', '27', '0');
+INSERT INTO `map_info` VALUES ('122', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '21', '5', '1', 'monster/deer', '1', '100', '28', '0');
+INSERT INTO `map_info` VALUES ('123', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '24', '11', '1', 'monster/deer', '1', '100', '26', '0');
+INSERT INTO `map_info` VALUES ('124', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', 'deer', 'MONSTER', '24', '3', '1', 'monster/deer', '1', '100', '28', '0');
 
 -- ----------------------------
 -- Table structure for `map_list`
@@ -487,7 +491,7 @@ CREATE TABLE `server_info` (
 -- ----------------------------
 -- Records of server_info
 -- ----------------------------
-INSERT INTO `server_info` VALUES ('1', '2019-08-18 10:00:17');
+INSERT INTO `server_info` VALUES ('1', '2020-04-19 12:21:30');
 
 -- ----------------------------
 -- Table structure for `user_list`
@@ -512,3 +516,13 @@ CREATE TABLE `user_list` (
 -- ----------------------------
 -- Records of user_list
 -- ----------------------------
+INSERT INTO `user_list` VALUES ('0', 'abcd0', '5678', '21', '10', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '26', '4', '0', '2020-04-19 11:26:07', '2020-04-19 12:21:19', '2019-08-18 12:10:45');
+INSERT INTO `user_list` VALUES ('0', 'abcd1', '5678', '19', '11', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '29', '4', '0', '2020-04-19 11:27:50', '2020-04-19 12:21:17', '2020-04-19 11:27:48');
+INSERT INTO `user_list` VALUES ('0', 'abcd10', '5678', '21', '11', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '29', '4', '0', '2020-04-19 11:32:17', '2020-04-19 12:21:24', '2020-04-19 11:32:14');
+INSERT INTO `user_list` VALUES ('0', 'abcd3', '5678', '20', '10', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '29', '4', '0', '2020-04-19 11:28:21', '2020-04-19 12:21:20', '2020-04-19 11:28:18');
+INSERT INTO `user_list` VALUES ('0', 'abcd4', '5678', '19', '10', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '26', '4', '0', '2020-04-19 11:28:58', '2020-04-19 12:21:26', '2020-04-19 11:28:54');
+INSERT INTO `user_list` VALUES ('0', 'abcd5', '5678', '20', '11', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '26', '4', '0', '2020-04-19 11:29:49', '2020-04-19 12:21:18', '2020-04-19 11:29:46');
+INSERT INTO `user_list` VALUES ('0', 'abcd6', '5678', '24', '11', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '29', '4', '0', '2020-04-19 11:30:31', '2020-04-19 12:21:11', '2020-04-19 11:30:29');
+INSERT INTO `user_list` VALUES ('0', 'abcd7', '5678', '22', '11', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '26', '4', '0', '2020-04-19 11:30:58', '2020-04-19 12:21:24', '2020-04-19 11:30:54');
+INSERT INTO `user_list` VALUES ('0', 'abcd8', '5678', '22', '10', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '26', '4', '0', '2020-04-19 11:31:23', '2020-04-19 12:21:20', '2020-04-19 11:31:20');
+INSERT INTO `user_list` VALUES ('0', 'abcd9', '5678', '23', '10', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '29', '4', '0', '2020-04-19 11:31:48', '2020-04-19 12:21:16', '2020-04-19 11:31:45');

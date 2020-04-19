@@ -25,6 +25,8 @@ public:
 	int getCount(const char * name, const char * content);
 	EventInfo get(const char* name, const char * content);
 	list<EventInfo> getEventList(const char * name);
+
+	void showLog(char* qurey);
 };
 
 #endif

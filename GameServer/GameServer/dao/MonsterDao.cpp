@@ -28,6 +28,7 @@ void MonsterDao::add(Monster monster)
 	sprintf(&query[strlen(query)], "'%d') ", monster.getHp());
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -49,6 +50,7 @@ void MonsterDao::update(Monster Monster)
 	sprintf(&query[strlen(query)], "name = '%s'", Monster.getName());
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -63,6 +65,7 @@ void MonsterDao::deleteAll()
 	sprintf(query, "delete from monster_list");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -79,6 +82,7 @@ void MonsterDao::initAutoIncrement()
 	sprintf(query, "alter table monster_list auto_increment=1");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -95,6 +99,7 @@ int MonsterDao::getCount()
 	sprintf(query, "select count(name) as count from monster_list");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -117,6 +122,7 @@ Monster MonsterDao::get(const char* name)
 	sprintf(query, "select idx, type, file_dir, hp from monster_list where name='%s'", name);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -144,4 +150,12 @@ Monster MonsterDao::get(const char* name)
 	mysql_free_result(sql_result);
 
 	return Monster;
+}
+
+void MonsterDao::showLog(char* query) {
+	time_t timer;
+	struct tm* t;
+	timer = time(NULL);
+	t = localtime(&timer);
+	printf("[%4d.%2d.%2d %2d:%2d:%2d]%s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, query);
 }

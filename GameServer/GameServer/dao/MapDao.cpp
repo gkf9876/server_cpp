@@ -31,6 +31,7 @@ void MapDao::add(Map map)
 	sprintf(&query[strlen(query)], "'%d') ", map.getMonster3Count());
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -45,6 +46,7 @@ void MapDao::deleteAll()
 	sprintf(query, "delete from map_list");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -61,6 +63,7 @@ void MapDao::initAutoIncrement()
 	sprintf(query, "alter table map_list auto_increment=1");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -77,6 +80,7 @@ int MapDao::getCount()
 	sprintf(query, "select count(field) as count from map_list");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -99,6 +103,7 @@ Map MapDao::get(const char* field)
 	sprintf(query, "select idx, monster1, monster2, monster3, monster1_count, monster2_count, monster3_count from map_list where field='%s'", field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -150,6 +155,7 @@ void MapDao::update(Map map)
 	sprintf(&query[strlen(query)], "field = '%s'", map.getField ());
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -166,6 +172,7 @@ list<Map> MapDao::getAll()
 	sprintf(query, "select idx, field, monster1, monster2, monster3, monster1_count, monster2_count, monster3_count from map_list");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -191,4 +198,12 @@ list<Map> MapDao::getAll()
 	mysql_free_result(sql_result);
 
 	return mapList;
+}
+
+void MapDao::showLog(char* query) {
+	time_t timer;
+	struct tm* t;
+	timer = time(NULL);
+	t = localtime(&timer);
+	printf("[%4d.%2d.%2d %2d:%2d:%2d]%s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, query);
 }

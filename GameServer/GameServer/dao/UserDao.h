@@ -31,6 +31,8 @@ public:
 	list<User> getLoginUserAll();
 	list<User> getFieldLoginUserAll(const char* field);
 	list<User> getAllUser();
+
+	void showLog(char* qurey);
 };
 
 #endif

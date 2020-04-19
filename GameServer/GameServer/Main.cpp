@@ -135,7 +135,7 @@ int main()
 				gameServer->regenMonster();
 			}
 
-			if (timeCount % 2 == 0)
+			if (timeCount % 180 == 0)
 			{
 				gameServer->moveMonsters();
 			}

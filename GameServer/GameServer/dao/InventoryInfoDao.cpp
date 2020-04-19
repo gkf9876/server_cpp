@@ -31,6 +31,7 @@ void InventoryInfoDao::add(InventoryInfo InventoryInfo)
 	sprintf(&query[strlen(query)], "'%d') ", InventoryInfo.getCount());
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -45,6 +46,7 @@ void InventoryInfoDao::deleteAll()
 	sprintf(query, "delete from inventory_info");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -61,6 +63,7 @@ void InventoryInfoDao::initAutoIncrement()
 	sprintf(query, "alter table inventory_info auto_increment=1");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -77,6 +80,7 @@ int InventoryInfoDao::getCount()
 	sprintf(query, "select count(itemName) as count from inventory_info");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -99,6 +103,7 @@ InventoryInfo InventoryInfoDao::get(const char* itemName)
 	sprintf(query, "select idx, userName, type, xpos, ypos, file_dir, count from inventory_info where itemName='%s'", itemName);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -150,6 +155,7 @@ void InventoryInfoDao::update(InventoryInfo inventoryInfo)
 	sprintf(&query[strlen(query)], " and userName = '%s'", inventoryInfo.getUserName());
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -166,6 +172,7 @@ list<InventoryInfo> InventoryInfoDao::getUserInventoryList(const char* userName)
 	sprintf(query, "select idx, itemName, userName, type, xpos, ypos, file_dir, count from inventory_info where userName='%s' order by xpos asc, ypos asc", userName);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -203,7 +210,16 @@ void InventoryInfoDao::deleteInventoryInfo(const char* userName, int xpos, int y
 	sprintf(query, "delete from inventory_info where userName = '%s' and xpos = '%d' and ypos = '%d'", userName, xpos, ypos);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
+}
+
+void InventoryInfoDao::showLog(char* query) {
+	time_t timer;
+	struct tm* t;
+	timer = time(NULL);
+	t = localtime(&timer);
+	printf("[%4d.%2d.%2d %2d:%2d:%2d]%s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, query);
 }

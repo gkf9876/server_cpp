@@ -28,6 +28,7 @@ void ChattingDao::add(Chatting chatting)
 	sprintf(&query[strlen(query)], "'%s') ", chatting.getField());
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -42,6 +43,7 @@ void ChattingDao::deleteAll()
 	sprintf(query, "delete from chatting");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -58,6 +60,7 @@ void ChattingDao::initAutoIncrement()
 	sprintf(query, "alter table chatting auto_increment=1");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -74,6 +77,7 @@ int ChattingDao::getCount()
 	sprintf(query, "select count(name) as count from chatting");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -96,6 +100,7 @@ Chatting ChattingDao::get(int idx)
 	sprintf(query, "select inputdate, name, content, field from chatting where idx='%d'", idx);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -140,6 +145,7 @@ list<Chatting> ChattingDao::getFieldChatting(const char* field)
 	sprintf(query, "select * from chatting where field='%s'", field);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -175,6 +181,7 @@ list<Chatting> ChattingDao::getUserFieldChatting(const char* userName, const cha
 	sprintf(query, "select * from chatting where name = '%s' and field='%s'", userName, field);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -197,4 +204,12 @@ list<Chatting> ChattingDao::getUserFieldChatting(const char* userName, const cha
 	mysql_free_result(sql_result);
 
 	return chattingList;
+}
+
+void ChattingDao::showLog(char * query) {
+	time_t timer;
+	struct tm* t;
+	timer = time(NULL);
+	t = localtime(&timer);
+	printf("[%4d.%2d.%2d %2d:%2d:%2d]%s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, query);
 }

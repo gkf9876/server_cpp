@@ -33,6 +33,8 @@ public:
 	list<MapInfo> getFieldItem(const char* field);
 	void deleteMapInfo(int idx, const char* field);
 	void updatePosition(int idx, int xpos, int ypos, int seeDirection);
+
+	void showLog(char* qurey);
 };
 
 #endif

@@ -26,6 +26,8 @@ public:
 	void update(InventoryInfo inventoryInfo);
 	list<InventoryInfo> getUserInventoryList(const char* userName);
 	void deleteInventoryInfo(const char* userName, int xpos, int ypos);
+
+	void showLog(char* qurey);
 };
 
 #endif

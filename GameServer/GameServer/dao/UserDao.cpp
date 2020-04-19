@@ -36,6 +36,7 @@ void UserDao::add(User user)
 	sprintf(&query[strlen(query)], "sysdate()) ");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -65,6 +66,7 @@ void UserDao::update(User user)
 	sprintf(&query[strlen(query)], "name = '%s'"			, user.getName());
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -79,6 +81,7 @@ void UserDao::deleteAll()
 	sprintf(query, "delete from user_list");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -95,6 +98,7 @@ int UserDao::getCount()
 	sprintf(query, "select count(name) as count from user_list");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -117,6 +121,7 @@ int UserDao::getCount(const char* field)
 	sprintf(query, "select count(name) as count from user_list where field = '%s'", field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -139,6 +144,7 @@ User UserDao::get(const char* name)
 	sprintf(query, "select sock, password, xpos, ypos, field, seeDirection, action, login, lastLogin, lastLogout, joinDate from user_list where name='%s'", name);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -186,6 +192,7 @@ User UserDao::get(int sock)
 	sprintf(query, "select name, password, xpos, ypos, field, seeDirection, action, login, lastLogin, lastLogout, joinDate from user_list where sock='%d'", sock);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -235,6 +242,7 @@ void UserDao::updateLogout(const char* name)
 	sprintf(query, "update user_list set login = '0', sock = '0', lastLogout = sysdate() where name = '%s' and login = '1'", name);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -249,6 +257,7 @@ void UserDao::updateLogin(int sock, const char* name)
 	sprintf(query, "update user_list set action = '%d', login = '1', sock = '%d', lastLogin = sysdate() where name = '%s'", ACTION_MAP_IN, sock, name);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -265,6 +274,7 @@ list<User> UserDao::getLoginUserAll()
 	sprintf(query, "select * from user_list where login='1'");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -307,6 +317,7 @@ list<User> UserDao::getFieldLoginUserAll(const char* field)
 	sprintf(query, "select * from user_list where login='1' and field='%s'", field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -349,6 +360,7 @@ list<User> UserDao::getAllUser()
 	sprintf(query, "select * from user_list");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -378,4 +390,12 @@ list<User> UserDao::getAllUser()
 	mysql_free_result(sql_result);
 
 	return userList;
+}
+
+void UserDao::showLog(char* query) {
+	time_t timer;
+	struct tm* t;
+	timer = time(NULL);
+	t = localtime(&timer);
+	printf("[%4d.%2d.%2d %2d:%2d:%2d]%s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, query);
 }

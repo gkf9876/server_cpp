@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : vmware_ubuntu19.04
-Source Server Version : 50727
-Source Host           : 192.168.198.128:3306
+Source Server         : vmware_ubuntu18.04
+Source Server Version : 50729
+Source Host           : 192.168.235.128:3306
 Source Database       : test
 
 Target Server Type    : MYSQL
-Target Server Version : 50727
+Target Server Version : 50729
 File Encoding         : 65001
 
-Date: 2019-08-18 19:00:26
+Date: 2020-04-19 21:24:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,10 +30,10 @@ CREATE TABLE `chatting` (
 -- ----------------------------
 -- Records of chatting
 -- ----------------------------
-INSERT INTO `chatting` VALUES ('1', '2019-08-18 10:00:01', 'GKF1234', '안녕하세요 ~ !', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1');
-INSERT INTO `chatting` VALUES ('2', '2019-08-18 10:00:01', 'GKF9876', '안녕하세요 ~ ! 123', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2');
-INSERT INTO `chatting` VALUES ('3', '2019-08-18 10:00:01', 'GKF1234', '안녕하세요 ~ !', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1');
-INSERT INTO `chatting` VALUES ('4', '2019-08-18 10:00:01', 'GKF9876', '안녕하세요 ~ ! 123', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2');
+INSERT INTO `chatting` VALUES ('1', '2020-04-19 11:25:51', 'GKF1234', '안녕하세요 ~ !', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1');
+INSERT INTO `chatting` VALUES ('2', '2020-04-19 11:25:51', 'GKF9876', '안녕하세요 ~ ! 123', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2');
+INSERT INTO `chatting` VALUES ('3', '2020-04-19 11:25:51', 'GKF1234', '안녕하세요 ~ !', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1');
+INSERT INTO `chatting` VALUES ('4', '2020-04-19 11:25:51', 'GKF9876', '안녕하세요 ~ ! 123', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2');
 
 -- ----------------------------
 -- Table structure for `event_info`
@@ -48,14 +48,14 @@ CREATE TABLE `event_info` (
   `xpos` int(11) DEFAULT NULL,
   `ypos` int(11) DEFAULT NULL,
   PRIMARY KEY (`idx`)
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=385 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of event_info
 -- ----------------------------
-INSERT INTO `event_info` VALUES ('94', '2019-08-18 10:00:01', 'abcd0', '/Story/NewsGisa1.json', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1', '1', '2');
-INSERT INTO `event_info` VALUES ('95', '2019-08-18 10:00:01', 'abcd1', '/Story/NewsGisa2.json', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2', '3', '4');
-INSERT INTO `event_info` VALUES ('96', '2019-08-18 10:00:01', 'abcd2', '/Story/NewsGisa3.json', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3', '5', '6');
+INSERT INTO `event_info` VALUES ('382', '2020-04-19 11:25:51', 'abcd0', '/Story/NewsGisa1.json', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx1', '1', '2');
+INSERT INTO `event_info` VALUES ('383', '2020-04-19 11:25:51', 'abcd1', '/Story/NewsGisa2.json', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx2', '3', '4');
+INSERT INTO `event_info` VALUES ('384', '2020-04-19 11:25:51', 'abcd2', '/Story/NewsGisa3.json', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx3', '5', '6');
 
 -- ----------------------------
 -- Table structure for `inventory_info`
@@ -138,95 +138,95 @@ CREATE TABLE `map_info` (
 -- ----------------------------
 -- Records of map_info
 -- ----------------------------
-INSERT INTO `map_info` VALUES ('1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '17', '13', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
-INSERT INTO `map_info` VALUES ('2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '19', '5', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
-INSERT INTO `map_info` VALUES ('3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '26', '7', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '28', '0');
-INSERT INTO `map_info` VALUES ('4', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '27', '13', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
-INSERT INTO `map_info` VALUES ('5', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '30', '12', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '29', '0');
-INSERT INTO `map_info` VALUES ('6', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '20', '1', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '26', '0');
-INSERT INTO `map_info` VALUES ('7', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '3', '13', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
-INSERT INTO `map_info` VALUES ('8', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '7', '13', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
-INSERT INTO `map_info` VALUES ('9', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '13', '10', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
-INSERT INTO `map_info` VALUES ('10', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '20', '10', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
-INSERT INTO `map_info` VALUES ('11', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '27', '13', '1', 'Resources/monster/사슴.jpg', '1', '12', '27', '0');
-INSERT INTO `map_info` VALUES ('12', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '3', '12', '1', 'Resources/monster/사슴.jpg', '1', '12', '28', '0');
-INSERT INTO `map_info` VALUES ('13', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '31', '11', '1', 'Resources/monster/사슴.jpg', '1', '12', '26', '0');
-INSERT INTO `map_info` VALUES ('14', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '16', '3', '1', 'Resources/monster/사슴.jpg', '1', '12', '29', '0');
-INSERT INTO `map_info` VALUES ('15', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '17', '2', '1', 'Resources/monster/사슴.jpg', '1', '12', '27', '0');
-INSERT INTO `map_info` VALUES ('16', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '3', '호랑이', 'MONSTER', '12', '10', '1', 'Resources/monster/호랑이.jpg', '1', '20', '27', '0');
-INSERT INTO `map_info` VALUES ('17', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '3', '호랑이', 'MONSTER', '20', '5', '1', 'Resources/monster/호랑이.jpg', '1', '20', '27', '0');
-INSERT INTO `map_info` VALUES ('18', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '3', '호랑이', 'MONSTER', '9', '10', '1', 'Resources/monster/호랑이.jpg', '1', '20', '26', '0');
-INSERT INTO `map_info` VALUES ('19', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '24', '2', '1', 'Resources/monster/토끼.jpg', '1', '25', '28', '0');
-INSERT INTO `map_info` VALUES ('20', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '25', '11', '1', 'Resources/monster/토끼.jpg', '1', '25', '28', '0');
-INSERT INTO `map_info` VALUES ('21', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '19', '13', '1', 'Resources/monster/토끼.jpg', '1', '25', '29', '0');
-INSERT INTO `map_info` VALUES ('22', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '40', '10', '1', 'Resources/monster/토끼.jpg', '1', '25', '27', '0');
-INSERT INTO `map_info` VALUES ('23', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '11', '10', '1', 'Resources/monster/토끼.jpg', '1', '25', '27', '0');
-INSERT INTO `map_info` VALUES ('24', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '30', '13', '1', 'Resources/monster/토끼.jpg', '1', '25', '27', '0');
-INSERT INTO `map_info` VALUES ('25', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '26', '11', '1', 'Resources/monster/토끼.jpg', '1', '25', '27', '0');
-INSERT INTO `map_info` VALUES ('26', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '6', '13', '1', 'Resources/monster/토끼.jpg', '1', '25', '29', '0');
-INSERT INTO `map_info` VALUES ('27', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '39', '13', '1', 'Resources/monster/토끼.jpg', '1', '25', '27', '0');
-INSERT INTO `map_info` VALUES ('28', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '25', '11', '1', 'Resources/monster/토끼.jpg', '1', '25', '27', '0');
-INSERT INTO `map_info` VALUES ('29', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '28', '7', '1', 'Resources/monster/토끼.jpg', '1', '25', '28', '0');
-INSERT INTO `map_info` VALUES ('30', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '4', '12', '1', 'Resources/monster/너구리.jpg', '1', '28', '29', '0');
-INSERT INTO `map_info` VALUES ('31', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '20', '11', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
-INSERT INTO `map_info` VALUES ('32', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '29', '10', '1', 'Resources/monster/너구리.jpg', '1', '28', '26', '0');
-INSERT INTO `map_info` VALUES ('33', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '36', '12', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
-INSERT INTO `map_info` VALUES ('34', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '40', '11', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
-INSERT INTO `map_info` VALUES ('35', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '2', '10', '1', 'Resources/monster/너구리.jpg', '1', '28', '26', '0');
-INSERT INTO `map_info` VALUES ('36', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '7', '11', '1', 'Resources/monster/너구리.jpg', '1', '28', '26', '0');
-INSERT INTO `map_info` VALUES ('37', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '17', '12', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
-INSERT INTO `map_info` VALUES ('38', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '9', '11', '1', 'Resources/monster/너구리.jpg', '1', '28', '29', '0');
-INSERT INTO `map_info` VALUES ('39', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '29', '10', '1', 'Resources/monster/너구리.jpg', '1', '28', '26', '0');
-INSERT INTO `map_info` VALUES ('40', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '26', '6', '1', 'Resources/monster/너구리.jpg', '1', '28', '26', '0');
-INSERT INTO `map_info` VALUES ('41', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '29', '6', '1', 'Resources/monster/너구리.jpg', '1', '28', '29', '0');
-INSERT INTO `map_info` VALUES ('42', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '37', '13', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
-INSERT INTO `map_info` VALUES ('43', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '37', '11', '1', 'Resources/monster/너구리.jpg', '1', '28', '29', '0');
-INSERT INTO `map_info` VALUES ('44', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '16', '2', '1', 'Resources/monster/너구리.jpg', '1', '28', '28', '0');
-INSERT INTO `map_info` VALUES ('45', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '18', '7', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('46', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '4', '12', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('47', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '40', '13', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('48', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '18', '2', '1', 'Resources/monster/쥐.jpg', '1', '15', '28', '0');
-INSERT INTO `map_info` VALUES ('49', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '20', '8', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('50', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '26', '1', '1', 'Resources/monster/쥐.jpg', '1', '15', '26', '0');
-INSERT INTO `map_info` VALUES ('51', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '39', '12', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('52', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '36', '13', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('53', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '20', '4', '1', 'Resources/monster/쥐.jpg', '1', '15', '26', '0');
-INSERT INTO `map_info` VALUES ('54', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '21', '12', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('55', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '12', '13', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
-INSERT INTO `map_info` VALUES ('56', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '27', '11', '1', 'Resources/monster/쥐.jpg', '1', '15', '26', '0');
-INSERT INTO `map_info` VALUES ('57', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '17', '7', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('58', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '12', '11', '1', 'Resources/monster/쥐.jpg', '1', '15', '28', '0');
-INSERT INTO `map_info` VALUES ('59', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '27', '4', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('60', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '19', '5', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
-INSERT INTO `map_info` VALUES ('61', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '22', '4', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
-INSERT INTO `map_info` VALUES ('62', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '7', '들개', 'MONSTER', '1', '11', '1', 'Resources/monster/들개.jpg', '1', '30', '28', '0');
-INSERT INTO `map_info` VALUES ('63', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '7', '들개', 'MONSTER', '17', '1', '1', 'Resources/monster/들개.jpg', '1', '30', '26', '0');
-INSERT INTO `map_info` VALUES ('64', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '21', '13', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '26', '0');
-INSERT INTO `map_info` VALUES ('65', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '31', '11', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '29', '0');
-INSERT INTO `map_info` VALUES ('66', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '24', '2', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('67', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '27', '6', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('68', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '8', '13', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '29', '0');
-INSERT INTO `map_info` VALUES ('69', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '18', '8', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '28', '0');
-INSERT INTO `map_info` VALUES ('70', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '2', '13', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('71', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '28', '5', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '26', '0');
-INSERT INTO `map_info` VALUES ('72', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '27', '12', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '28', '0');
-INSERT INTO `map_info` VALUES ('73', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '29', '5', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('74', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '4', '10', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '28', '0');
-INSERT INTO `map_info` VALUES ('75', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '38', '10', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('76', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '18', '12', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('77', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '38', '12', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '29', '0');
-INSERT INTO `map_info` VALUES ('78', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '9', '12', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('79', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '27', '13', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('80', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '18', '5', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('81', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '18', '2', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('82', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '21', '6', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
-INSERT INTO `map_info` VALUES ('83', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '21', '3', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '26', '0');
-INSERT INTO `map_info` VALUES ('84', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '19', '12', '1', 'Resources/monster/고라니.jpg', '1', '27', '27', '0');
-INSERT INTO `map_info` VALUES ('85', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '20', '3', '1', 'Resources/monster/고라니.jpg', '1', '27', '28', '0');
-INSERT INTO `map_info` VALUES ('86', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '32', '10', '1', 'Resources/monster/고라니.jpg', '1', '27', '28', '0');
-INSERT INTO `map_info` VALUES ('87', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '19', '6', '1', 'Resources/monster/고라니.jpg', '1', '27', '26', '0');
-INSERT INTO `map_info` VALUES ('88', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '17', '7', '1', 'Resources/monster/고라니.jpg', '1', '27', '26', '0');
-INSERT INTO `map_info` VALUES ('89', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '22', '3', '1', 'Resources/monster/고라니.jpg', '1', '27', '29', '0');
+INSERT INTO `map_info` VALUES ('1', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '20', '9', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '29', '0');
+INSERT INTO `map_info` VALUES ('2', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '26', '4', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '26', '0');
+INSERT INTO `map_info` VALUES ('3', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '28', '13', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
+INSERT INTO `map_info` VALUES ('4', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '21', '4', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
+INSERT INTO `map_info` VALUES ('5', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '19', '6', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
+INSERT INTO `map_info` VALUES ('6', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '28', '13', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '26', '0');
+INSERT INTO `map_info` VALUES ('7', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '40', '12', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '28', '0');
+INSERT INTO `map_info` VALUES ('8', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '26', '12', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '27', '0');
+INSERT INTO `map_info` VALUES ('9', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '26', '8', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '29', '0');
+INSERT INTO `map_info` VALUES ('10', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '1', '다람쥐', 'MONSTER', '28', '8', '1', 'Resources/monster/다람쥐.jpg', '1', '10', '29', '0');
+INSERT INTO `map_info` VALUES ('11', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '17', '3', '1', 'Resources/monster/사슴.jpg', '1', '12', '26', '0');
+INSERT INTO `map_info` VALUES ('12', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '27', '13', '1', 'Resources/monster/사슴.jpg', '1', '12', '27', '0');
+INSERT INTO `map_info` VALUES ('13', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '23', '12', '1', 'Resources/monster/사슴.jpg', '1', '12', '27', '0');
+INSERT INTO `map_info` VALUES ('14', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '21', '4', '1', 'Resources/monster/사슴.jpg', '1', '12', '26', '0');
+INSERT INTO `map_info` VALUES ('15', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '2', '사슴', 'MONSTER', '31', '12', '1', 'Resources/monster/사슴.jpg', '1', '12', '26', '0');
+INSERT INTO `map_info` VALUES ('16', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '3', '호랑이', 'MONSTER', '28', '12', '1', 'Resources/monster/호랑이.jpg', '1', '20', '28', '0');
+INSERT INTO `map_info` VALUES ('17', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '3', '호랑이', 'MONSTER', '29', '3', '1', 'Resources/monster/호랑이.jpg', '1', '20', '27', '0');
+INSERT INTO `map_info` VALUES ('18', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx', '3', '호랑이', 'MONSTER', '23', '11', '1', 'Resources/monster/호랑이.jpg', '1', '20', '29', '0');
+INSERT INTO `map_info` VALUES ('19', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '1', '13', '1', 'Resources/monster/토끼.jpg', '1', '25', '29', '0');
+INSERT INTO `map_info` VALUES ('20', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '29', '12', '1', 'Resources/monster/토끼.jpg', '1', '25', '26', '0');
+INSERT INTO `map_info` VALUES ('21', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '27', '10', '1', 'Resources/monster/토끼.jpg', '1', '25', '29', '0');
+INSERT INTO `map_info` VALUES ('22', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '26', '5', '1', 'Resources/monster/토끼.jpg', '1', '25', '29', '0');
+INSERT INTO `map_info` VALUES ('23', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '26', '13', '1', 'Resources/monster/토끼.jpg', '1', '25', '26', '0');
+INSERT INTO `map_info` VALUES ('24', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '28', '1', '1', 'Resources/monster/토끼.jpg', '1', '25', '26', '0');
+INSERT INTO `map_info` VALUES ('25', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '8', '12', '1', 'Resources/monster/토끼.jpg', '1', '25', '28', '0');
+INSERT INTO `map_info` VALUES ('26', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '24', '10', '1', 'Resources/monster/토끼.jpg', '1', '25', '27', '0');
+INSERT INTO `map_info` VALUES ('27', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '35', '10', '1', 'Resources/monster/토끼.jpg', '1', '25', '26', '0');
+INSERT INTO `map_info` VALUES ('28', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '28', '5', '1', 'Resources/monster/토끼.jpg', '1', '25', '28', '0');
+INSERT INTO `map_info` VALUES ('29', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '4', '토끼', 'MONSTER', '39', '13', '1', 'Resources/monster/토끼.jpg', '1', '25', '27', '0');
+INSERT INTO `map_info` VALUES ('30', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '12', '10', '1', 'Resources/monster/너구리.jpg', '1', '28', '28', '0');
+INSERT INTO `map_info` VALUES ('31', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '20', '1', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
+INSERT INTO `map_info` VALUES ('32', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '26', '4', '1', 'Resources/monster/너구리.jpg', '1', '28', '29', '0');
+INSERT INTO `map_info` VALUES ('33', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '40', '13', '1', 'Resources/monster/너구리.jpg', '1', '28', '29', '0');
+INSERT INTO `map_info` VALUES ('34', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '29', '2', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
+INSERT INTO `map_info` VALUES ('35', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '5', '13', '1', 'Resources/monster/너구리.jpg', '1', '28', '26', '0');
+INSERT INTO `map_info` VALUES ('36', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '12', '13', '1', 'Resources/monster/너구리.jpg', '1', '28', '29', '0');
+INSERT INTO `map_info` VALUES ('37', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '20', '5', '1', 'Resources/monster/너구리.jpg', '1', '28', '26', '0');
+INSERT INTO `map_info` VALUES ('38', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '29', '13', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
+INSERT INTO `map_info` VALUES ('39', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '29', '11', '1', 'Resources/monster/너구리.jpg', '1', '28', '26', '0');
+INSERT INTO `map_info` VALUES ('40', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '38', '13', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
+INSERT INTO `map_info` VALUES ('41', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '2', '11', '1', 'Resources/monster/너구리.jpg', '1', '28', '28', '0');
+INSERT INTO `map_info` VALUES ('42', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '23', '3', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
+INSERT INTO `map_info` VALUES ('43', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '13', '10', '1', 'Resources/monster/너구리.jpg', '1', '28', '27', '0');
+INSERT INTO `map_info` VALUES ('44', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '5', '너구리', 'MONSTER', '2', '10', '1', 'Resources/monster/너구리.jpg', '1', '28', '28', '0');
+INSERT INTO `map_info` VALUES ('45', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '2', '11', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
+INSERT INTO `map_info` VALUES ('46', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '33', '13', '1', 'Resources/monster/쥐.jpg', '1', '15', '26', '0');
+INSERT INTO `map_info` VALUES ('47', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '30', '11', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
+INSERT INTO `map_info` VALUES ('48', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '29', '7', '1', 'Resources/monster/쥐.jpg', '1', '15', '27', '0');
+INSERT INTO `map_info` VALUES ('49', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '19', '10', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
+INSERT INTO `map_info` VALUES ('50', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '16', '7', '1', 'Resources/monster/쥐.jpg', '1', '15', '26', '0');
+INSERT INTO `map_info` VALUES ('51', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '16', '8', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
+INSERT INTO `map_info` VALUES ('52', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '19', '4', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
+INSERT INTO `map_info` VALUES ('53', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '26', '13', '1', 'Resources/monster/쥐.jpg', '1', '15', '26', '0');
+INSERT INTO `map_info` VALUES ('54', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '27', '2', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
+INSERT INTO `map_info` VALUES ('55', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '22', '11', '1', 'Resources/monster/쥐.jpg', '1', '15', '26', '0');
+INSERT INTO `map_info` VALUES ('56', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '28', '4', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
+INSERT INTO `map_info` VALUES ('57', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '28', '11', '1', 'Resources/monster/쥐.jpg', '1', '15', '28', '0');
+INSERT INTO `map_info` VALUES ('58', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '17', '9', '1', 'Resources/monster/쥐.jpg', '1', '15', '26', '0');
+INSERT INTO `map_info` VALUES ('59', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '38', '11', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
+INSERT INTO `map_info` VALUES ('60', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '28', '3', '1', 'Resources/monster/쥐.jpg', '1', '15', '29', '0');
+INSERT INTO `map_info` VALUES ('61', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_07/floor.tmx', '6', '쥐', 'MONSTER', '27', '13', '1', 'Resources/monster/쥐.jpg', '1', '15', '26', '0');
+INSERT INTO `map_info` VALUES ('62', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '7', '들개', 'MONSTER', '28', '7', '1', 'Resources/monster/들개.jpg', '1', '30', '26', '0');
+INSERT INTO `map_info` VALUES ('63', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '7', '들개', 'MONSTER', '7', '10', '1', 'Resources/monster/들개.jpg', '1', '30', '28', '0');
+INSERT INTO `map_info` VALUES ('64', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '23', '3', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '26', '0');
+INSERT INTO `map_info` VALUES ('65', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '26', '13', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
+INSERT INTO `map_info` VALUES ('66', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '18', '11', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
+INSERT INTO `map_info` VALUES ('67', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '25', '12', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '26', '0');
+INSERT INTO `map_info` VALUES ('68', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '20', '2', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '29', '0');
+INSERT INTO `map_info` VALUES ('69', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '24', '4', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '29', '0');
+INSERT INTO `map_info` VALUES ('70', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '20', '5', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
+INSERT INTO `map_info` VALUES ('71', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '14', '11', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
+INSERT INTO `map_info` VALUES ('72', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '20', '5', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '29', '0');
+INSERT INTO `map_info` VALUES ('73', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '19', '2', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '26', '0');
+INSERT INTO `map_info` VALUES ('74', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '19', '4', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '26', '0');
+INSERT INTO `map_info` VALUES ('75', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '21', '6', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
+INSERT INTO `map_info` VALUES ('76', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '23', '2', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '28', '0');
+INSERT INTO `map_info` VALUES ('77', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '29', '4', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '29', '0');
+INSERT INTO `map_info` VALUES ('78', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '23', '3', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '29', '0');
+INSERT INTO `map_info` VALUES ('79', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '18', '7', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '29', '0');
+INSERT INTO `map_info` VALUES ('80', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '16', '13', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '27', '0');
+INSERT INTO `map_info` VALUES ('81', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '38', '12', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '28', '0');
+INSERT INTO `map_info` VALUES ('82', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '17', '5', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '26', '0');
+INSERT INTO `map_info` VALUES ('83', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '8', '사냥꾼', 'MONSTER', '38', '10', '1', 'Resources/monster/사냥꾼.jpg', '1', '50', '28', '0');
+INSERT INTO `map_info` VALUES ('84', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '24', '2', '1', 'Resources/monster/고라니.jpg', '1', '27', '28', '0');
+INSERT INTO `map_info` VALUES ('85', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '8', '10', '1', 'Resources/monster/고라니.jpg', '1', '27', '26', '0');
+INSERT INTO `map_info` VALUES ('86', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '20', '13', '1', 'Resources/monster/고라니.jpg', '1', '27', '29', '0');
+INSERT INTO `map_info` VALUES ('87', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '16', '11', '1', 'Resources/monster/고라니.jpg', '1', '27', '28', '0');
+INSERT INTO `map_info` VALUES ('88', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '3', '11', '1', 'Resources/monster/고라니.jpg', '1', '27', '26', '0');
+INSERT INTO `map_info` VALUES ('89', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_06/floor.tmx', '9', '고라니', 'MONSTER', '13', '10', '1', 'Resources/monster/고라니.jpg', '1', '27', '27', '0');
 
 -- ----------------------------
 -- Table structure for `map_list`
@@ -315,5 +315,5 @@ CREATE TABLE `user_list` (
 -- ----------------------------
 -- Records of user_list
 -- ----------------------------
-INSERT INTO `user_list` VALUES ('5', 'GKF1234', '12345', '105', '125', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx15', '295', '0', '1', '2019-08-18 10:00:01', '2019-08-18 10:00:01', '2019-08-18 10:00:01');
-INSERT INTO `user_list` VALUES ('2', 'GKF5678', '5678', '27', '4', 'abc', '29', '0', '0', '2019-08-18 10:00:01', '2019-08-18 10:00:01', '2019-08-18 10:00:01');
+INSERT INTO `user_list` VALUES ('5', 'GKF1234', '12345', '105', '125', 'TileMaps/KonyangUniv.Daejeon/JukhunDigitalFacilitie/floor_08/floor.tmx15', '295', '0', '1', '2020-04-19 11:25:50', '2020-04-19 11:25:50', '2020-04-19 11:25:50');
+INSERT INTO `user_list` VALUES ('2', 'GKF5678', '5678', '27', '4', 'abc', '29', '0', '0', '2020-04-19 11:25:50', '2020-04-19 11:25:50', '2020-04-19 11:25:50');

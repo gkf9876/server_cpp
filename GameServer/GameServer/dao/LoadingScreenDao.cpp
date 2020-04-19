@@ -22,6 +22,7 @@ void LoadingScreenDao::setIdxAutoIncrement(int value)
 	sprintf(query, "ALTER TABLE loading_screen AUTO_INCREMENT=%d;", value);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -40,6 +41,7 @@ void LoadingScreenDao::add(LoadingScreen loadingScreen)
 	sprintf(&query[strlen(query)], "'%s')", loadingScreen.getFilePath());
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -60,6 +62,7 @@ void LoadingScreenDao::update(LoadingScreen loadingScreen)
 	sprintf(&query[strlen(query)], "idx = '%d'", loadingScreen.getIdx());
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -74,6 +77,7 @@ void LoadingScreenDao::deleteAll()
 	sprintf(query, "delete from loading_screen");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -90,6 +94,7 @@ int LoadingScreenDao::getCount()
 	sprintf(query, "select count(name) as count from loading_screen");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -112,6 +117,7 @@ LoadingScreen LoadingScreenDao::get(int idx)
 	sprintf(query, "select name, file_path from loading_screen where idx='%d'", idx);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -141,4 +147,12 @@ LoadingScreen LoadingScreenDao::get(int idx)
 	mysql_free_result(sql_result);
 
 	return loadingScreen;
+}
+
+void LoadingScreenDao::showLog(char* query) {
+	time_t timer;
+	struct tm* t;
+	timer = time(NULL);
+	t = localtime(&timer);
+	printf("[%4d.%2d.%2d %2d:%2d:%2d]%s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, query);
 }

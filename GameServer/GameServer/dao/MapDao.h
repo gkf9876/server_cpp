@@ -25,6 +25,8 @@ public:
 	Map get(const char* field);
 	void update(Map map);
 	list<Map> getAll();
+
+	void showLog(char* qurey);
 };
 
 #endif

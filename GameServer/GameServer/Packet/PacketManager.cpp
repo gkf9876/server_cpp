@@ -205,6 +205,7 @@ void PacketManager::sendRequest(SOCKET sock, int code, const char* data, int siz
 
 	sendc(sock, buffer, size + 8);
 	free(buffer);
+	Sleep(10);
 }
 #elif defined(__linux__) || defined(__APPLE__)
 void PacketManager::sendRequest(int sock, int code, const char* data, int size)

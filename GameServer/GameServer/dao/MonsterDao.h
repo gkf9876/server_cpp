@@ -23,6 +23,8 @@ public:
 	void initAutoIncrement();
 	int getCount();
 	Monster get(const char* name);
+
+	void showLog(char* qurey);
 };
 
 #endif

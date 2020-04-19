@@ -35,6 +35,7 @@ void MapInfoDao::add(MapInfo mapInfo)
 	sprintf(&query[strlen(query)], "'%d') ", mapInfo.getAction());
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -49,6 +50,7 @@ void MapInfoDao::deleteAll()
 	sprintf(query, "delete from map_info");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -65,6 +67,7 @@ void MapInfoDao::initAutoIncrement()
 	sprintf(query, "alter table map_info auto_increment=1");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -81,6 +84,7 @@ int MapInfoDao::getCount()
 	sprintf(query, "select count(idx) as count from map_info");
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -103,6 +107,7 @@ int MapInfoDao::getCountFieldMonster(const char* field, const char* name)
 	sprintf(query, "select count(name) as count from map_info where field = '%s' and name = '%s' and type = 'MONSTER'", field, name);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -125,6 +130,7 @@ MapInfo MapInfoDao::getMonster(const char* field, int xpos, int ypos)
 	sprintf(query, "select idx, field, object_code, name, z_order, file_dir, count, hp, seeDirection, action from map_info where xpos='%d' and ypos='%d' and type = 'MONSTER' and field = '%s'", xpos, ypos, field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -171,6 +177,7 @@ list<MapInfo> MapInfoDao::getFieldMonster(const char* field)
 	sprintf(query, "select * from map_info where field='%s' and type='MONSTER'", field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -214,6 +221,7 @@ list<MapInfo> MapInfoDao::getFieldObject(const char* field)
 	sprintf(query, "select * from map_info where field='%s' and type='OBJECT'", field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -257,6 +265,7 @@ int MapInfoDao::getCountFieldMonster(const char* field)
 	sprintf(query, "select count(name) as count from map_info where field = '%s' and type = 'MONSTER'", field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -279,6 +288,7 @@ int MapInfoDao::getCountFieldObject(const char* field)
 	sprintf(query, "select count(name) as count from map_info where field = '%s' and type = 'OBJECT'", field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -301,6 +311,7 @@ MapInfo MapInfoDao::getMaxOrderItem(const char* field, int xpos, int ypos)
 	sprintf(query, "select A.idx, A.field, A.object_code, A.name, A.z_order, A.file_dir, A.count, A.hp from map_info A,(select max(z_order) as z_order from map_info where xpos='%d' and ypos='%d' and type = 'ITEM' and field = '%s') B where xpos='%d' and ypos='%d' and type = 'ITEM' and field = '%s' and B.z_order = A.z_order", xpos, ypos, field, xpos, ypos, field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -348,6 +359,7 @@ int MapInfoDao::getCountFieldItem(const char* field)
 	sprintf(query, "select count(name) as count from map_info where field = '%s' and type = 'ITEM'", field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -370,6 +382,7 @@ list<MapInfo> MapInfoDao::getFieldItem(const char* field)
 	sprintf(query, "select * from map_info where field='%s' and type='ITEM'", field);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -409,6 +422,7 @@ void MapInfoDao::deleteMapInfo(int idx, const char* field)
 	sprintf(query, "delete from map_info where field='%s' and idx='%d'", field, idx);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -423,7 +437,16 @@ void MapInfoDao::updatePosition(int idx, int xpos, int ypos, int seeDirection)
 	sprintf(query, "UPDATE map_info SET XPOS = '%d', YPOS = '%d', SEEDIRECTION = '%d' WHERE IDX = '%d'", xpos, ypos, seeDirection, idx);
 
 	query_stat = mysql_query(&connection, query);
+	//showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
+}
+
+void MapInfoDao::showLog(char* query) {
+	time_t timer;
+	struct tm* t;
+	timer = time(NULL);
+	t = localtime(&timer);
+	printf("[%4d.%2d.%2d %2d:%2d:%2d]%s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, query);
 }

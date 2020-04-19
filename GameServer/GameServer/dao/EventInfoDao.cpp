@@ -31,6 +31,7 @@ void EventInfoDao::add(EventInfo eventInfo)
 	sprintf(&query[strlen(query)], ") ");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -45,6 +46,7 @@ void EventInfoDao::deleteAll()
 	sprintf(query, "delete from event_info");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -61,6 +63,7 @@ int EventInfoDao::getCount()
 	sprintf(query, "select count(name) as count from event_info");
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -83,6 +86,7 @@ int EventInfoDao::getCount(const char * name, const char * content)
 	sprintf(query, "select count(content) as count from event_info where name = '%s' and content = '%s'", name, content);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -105,6 +109,7 @@ EventInfo EventInfoDao::get(const char * name, const char * content)
 	sprintf(query, "select idx, inputdate, name, content, field, xpos, ypos from event_info where name='%s' and content='%s'", name, content);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -149,6 +154,7 @@ list<EventInfo> EventInfoDao::getEventList(const char * name)
 	sprintf(query, "select * from event_info where name='%s'", name);
 
 	query_stat = mysql_query(&connection, query);
+	showLog(query);
 
 	if (query_stat != 0)
 		throw runtime_error(mysql_error(&connection));
@@ -173,4 +179,12 @@ list<EventInfo> EventInfoDao::getEventList(const char * name)
 	mysql_free_result(sql_result);
 
 	return eventInfoList;
+}
+
+void EventInfoDao::showLog(char* query) {
+	time_t timer;
+	struct tm* t;
+	timer = time(NULL);
+	t = localtime(&timer);
+	printf("[%4d.%2d.%2d %2d:%2d:%2d]%s\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, query);
 }
